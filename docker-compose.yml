@@ -1,0 +1,10 @@
+﻿services:
+  wowtogo.api:
+    image: wowtogo.api
+    container_name: WowToGo.Api
+    build:
+      context: .
+      dockerfile: src/API/WowToGo.Api/Dockerfile
+    ports:
+      - 5000:8080
+      - 5001:8081
