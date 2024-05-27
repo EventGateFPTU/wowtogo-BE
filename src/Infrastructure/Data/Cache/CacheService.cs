@@ -9,7 +9,7 @@ public class CacheService(IMemoryCache memoryCache) : ICacheService
 
     public T? GetData<T>(string key)
     {
-        if (string.IsNullOrEmpty(key)) return default(T);
+        if (string.IsNullOrEmpty(key)) return default;
         return _memoryCache.Get<T>(key);
     }
 
@@ -23,6 +23,6 @@ public class CacheService(IMemoryCache memoryCache) : ICacheService
     {
         if (string.IsNullOrEmpty(key)) return;
         TimeSpan expiredTime = expirationTime ?? TimeSpan.FromMinutes(5);
-        _memoryCache.Set<T>(key, value, expiredTime);
+        _memoryCache.Set(key, value, expiredTime);
     }
 }
