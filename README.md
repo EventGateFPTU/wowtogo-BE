@@ -1,6 +1,6 @@
 # WOWToGo WebAPI
 
-Welcome to WOWToGo WebAPI! This project serves as the backend for WOWToGo, a web application designed to provide users with information and services related to World of Warcraft.
+Welcome to WOWToGo WebAPI! This project serves as the backend for WOWToGo, a web application designed to provide users with events registering features.
 
 ## Table of Contents
 
@@ -14,16 +14,15 @@ Welcome to WOWToGo WebAPI! This project serves as the backend for WOWToGo, a web
 
 ## Introduction
 
-WOWToGo WebAPI is built on .NET 8 and provides a RESTful API for accessing and managing data related to World of Warcraft. Whether you're fetching character information, querying item data, or managing guilds, WOWToGo WebAPI has you covered.
+EventGate WebAPI is built on .NET 8 and provides a RESTful API for registering tickets for events. 
+Furthermore, users can also host events for audiences to join in.
 
 ## Features
 
-- **Character Information**: Retrieve detailed information about characters, including stats, equipment, achievements, and more.
-- **Item Database**: Access a comprehensive database of items available in World of Warcraft.
-- **Guild Management**: Query and manage guild information, including membership, ranks, and activities.
-- **Authentication and Authorization**: Secure endpoints using JWT tokens for authentication and authorization.
+- **Event Managing**: Managing events that are hosted in FU.
+- **Event Registering**: Register events as guest or user.
 
-## Convention
+## Conventions
 
 - Github commit conventions : https://gist.github.com/qoomon/5dfcdf8eec66a051ecd85625518cfd13#types
 - .NET conventions : https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions
@@ -45,4 +44,6 @@ To run WOWToGo WebAPI locally, follow these steps:
    ```
    dotnet run : run the project
    dotnet watch : run the project with hot reload
+   dotnet build : build the project
+   dotnet restore : restore the solution
    ```

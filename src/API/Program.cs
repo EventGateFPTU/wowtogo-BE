@@ -27,9 +27,4 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseExceptionHandler();
 
-app.MapGet("/", () =>
-{
-    throw new NotImplementedException();
-});
-
 app.Run();
