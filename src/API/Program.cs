@@ -1,6 +1,10 @@
 using UseCases;
 using Infrastructure;
 using API.ExceptionMiddlewares;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
+using API.Endpoints;
+using API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,5 +30,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseHttpsRedirection();
 app.UseExceptionHandler();
+
+app.MapWowToGoEndpoints();
 
 app.Run();
