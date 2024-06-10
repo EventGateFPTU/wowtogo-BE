@@ -33,13 +33,10 @@ public class UnitOfWork(WowToGoDBContext context) : IUnitOfWork
 
     public async Task<bool> Dispose(bool disposing)
     {
-        if (disposing)
-        {
-            await _context.DisposeAsync();
-            GC.SuppressFinalize(this);
-            return true;
-        }
-        return false;
+        if (!disposing) return false;
+        await _context.DisposeAsync();
+        GC.SuppressFinalize(this);
+        return true;
     }
 
     public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)

@@ -13,11 +13,11 @@ public static class EventEnumExtensions
     {
         return value switch
         {
-            (int)EventStatusEnum.Canceled => "Canceled",
-            (int)EventStatusEnum.Draft => "Draft",
-            (int)EventStatusEnum.Published => "Published",
-            (int)EventStatusEnum.Completed => "Completed",
-            _ => "Canceled",
+            (int)EventStatusEnum.Canceled => EventStatusEnum.Canceled.ToString(),
+            (int)EventStatusEnum.Draft => EventStatusEnum.Draft.ToString(),
+            (int)EventStatusEnum.Published => EventStatusEnum.Published.ToString(),
+            (int)EventStatusEnum.Completed => EventStatusEnum.Completed.ToString(),
+            _ => EventStatusEnum.Draft.ToString(),
         };
     }
     public static int ToEventEnumNumber(this string value)

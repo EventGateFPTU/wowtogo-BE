@@ -13,10 +13,10 @@ public static class UserStatusEnumExtensions
     {
         return value switch
         {
-            (int)OrderStatusEnum.Canceled => "Canceled",
-            (int)OrderStatusEnum.Pending => "Pending",
-            (int)OrderStatusEnum.Paid => "Paid",
-            (int)OrderStatusEnum.Refunded => "Refunded",
+            (int)OrderStatusEnum.Canceled => OrderStatusEnum.Canceled.ToString(),
+            (int)OrderStatusEnum.Pending => OrderStatusEnum.Pending.ToString(),
+            (int)OrderStatusEnum.Paid => OrderStatusEnum.Paid.ToString(),
+            (int)OrderStatusEnum.Refunded => OrderStatusEnum.Refunded.ToString(),
             _ => "Canceled",
         };
     }

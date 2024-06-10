@@ -1,3 +1,5 @@
+using Domain.Models;
+
 namespace Domain.Enums;
 public enum ArticleStatusEnum
 {
@@ -12,11 +14,11 @@ public static class ArticleEnumExtensions
     {
         return value switch
         {
-            (int)ArticleStatusEnum.Canceled => "Canceled",
-            (int)ArticleStatusEnum.Draft => "Draft",
-            (int)ArticleStatusEnum.Published => "Published",
-            (int)ArticleStatusEnum.Completed => "Completed",
-            _ => "Canceled",
+            (int)ArticleStatusEnum.Canceled => ArticleStatusEnum.Canceled.ToString(),
+            (int)ArticleStatusEnum.Draft => ArticleStatusEnum.Draft.ToString(),
+            (int)ArticleStatusEnum.Published => ArticleStatusEnum.Published.ToString(),
+            (int)ArticleStatusEnum.Completed => ArticleStatusEnum.Completed.ToString(),
+            _ => ArticleStatusEnum.Draft.ToString(),
         };
     }
     public static int ToArticleEnumNumber(this string value)
@@ -29,5 +31,10 @@ public static class ArticleEnumExtensions
             "Completed" => (int)ArticleStatusEnum.Completed,
             _ => (int)ArticleStatusEnum.Draft,
         };
+    }
+
+    public static string fuckyou(){
+        int number = 1;
+        return number.ToArticleEnumString();
     }
 }
