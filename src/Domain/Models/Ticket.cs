@@ -8,7 +8,7 @@ public class Ticket : BaseEntity
     public required Guid OrderId { get; set; }
     public string Code { get; set; } = string.Empty;
     public required UsedInFormatEnum UsedInFormat { get; set; } = UsedInFormatEnum.Code;
-    public DateTime UsedAt { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset UsedAt { get; set; } = DateTimeOffset.UtcNow;
     //----------------------------------------- 
     [ForeignKey(nameof(AttendeeId))]
     public Attendee Attendee { get; set; } = null!;
