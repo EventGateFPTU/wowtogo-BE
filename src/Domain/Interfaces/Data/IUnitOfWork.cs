@@ -5,7 +5,6 @@ public interface IUnitOfWork : IDisposable
 {
     IArticleRepository Articles { get; }
     IEventRepository Events { get; }
-    IOrderItemRepository OrderItems { get; }
     IOrderRepository Orders { get; }
     IUserRepository Users { get; }
     ITicketRepository Tickets { get; }

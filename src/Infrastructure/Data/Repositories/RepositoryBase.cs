@@ -3,10 +3,9 @@ using Domain.Interfaces.Data.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data.Repositories;
-public class RepositoryBase<T>(WowToGoDBContext context) : IRepositoryBase<T> where T : class
+public class RepositoryBase<T>(WowToGoDBContext dbContext) : IRepositoryBase<T> where T : class
 {
-    protected readonly WowToGoDBContext _context = context;
-    protected readonly DbSet<T> _dbSet = context.Set<T>();
+    protected readonly DbSet<T> _dbSet = dbContext.Set<T>();
     public void Add(T entity)
         => _dbSet.Add(entity);
 

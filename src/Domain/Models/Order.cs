@@ -1,12 +1,18 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Enums;
 using Domain.Models.Shared;
 namespace Domain.Models;
 public class Order : BaseEntity
 {
-    public float TotalPrice { get; set; } = 0;
+    public decimal TotalPrice { get; set; } = 0;
+    public OrderStatusEnum Status { get; set; } = OrderStatusEnum.Pending;
     public string Currency { get; set; } = string.Empty;
-    public bool TicketsIssued { get; set; } = false;
-    public required Guid CustomerId { get; set; }
-    [ForeignKey(nameof(CustomerId))]
-    public User Customer { get; set; } = null!;
+    // public required Guid TicketId { get; set; }
+    public required Guid TicketTypeId { get; set; }
+    //----------------------------------------- 
+    // [ForeignKey(nameof(TicketId))]
+    // public Ticket Ticket { get; set; } = null!;
+    [ForeignKey(nameof(TicketTypeId))]
+    public TicketType TicketType { get; set; } = null!;
 }

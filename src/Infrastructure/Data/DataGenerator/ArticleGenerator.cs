@@ -1,4 +1,5 @@
 using Bogus;
+using Domain.Enums;
 using Domain.Models;
 
 namespace Infrastructure.Data.DataGenerator;
@@ -14,7 +15,7 @@ public static class ArticleGenerator
         .RuleFor(x => x.Title, f => f.Lorem.Sentence())
         .RuleFor(x => x.Description, f => f.Lorem.Paragraph())
         .RuleFor(x => x.Location, f => f.Address.City())
-        .RuleFor(x => x.Status, f => f.Random.Number(0, 3))
+        .RuleFor(x => x.Status, f => f.Random.Enum<ArticleStatusEnum>())
         .Generate(200)
         .ToArray();
 }

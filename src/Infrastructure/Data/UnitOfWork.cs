@@ -9,7 +9,6 @@ public class UnitOfWork(WowToGoDBContext context) : IUnitOfWork
     private IArticleRepository _articleRepository = null!;
     private IEventRepository _eventRepository = null!;
     private IOrderRepository _orderRepository = null!;
-    private IOrderItemRepository _orderItemRepository = null!;
     private IUserRepository _userRepository = null!;
     private ITicketRepository _ticketRepository = null!;
     private bool _disposed = true;
@@ -18,7 +17,6 @@ public class UnitOfWork(WowToGoDBContext context) : IUnitOfWork
 
     public IEventRepository Events => _eventRepository ??= new EventRepository(_context);
 
-    public IOrderItemRepository OrderItems => _orderItemRepository ??= new OrderItemRepository(_context);
 
     public IOrderRepository Orders => _orderRepository ??= new OrderRepository(_context);
 
