@@ -1,10 +1,13 @@
-﻿services:
-  wowtogo.api:
-    image: wowtogo.api
-    container_name: WowToGo.Api
+﻿version: '3.9'
+
+services:
+  wowtogobe:
+    image: wowtogobe
+    container_name: WowToGoBE
     build:
       context: .
-      dockerfile: src/API/WowToGo.Api/Dockerfile
+      dockerfile: Dockerfile
     ports:
-      - 5000:8080
-      - 5001:8081
+      - '5000:8080'
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
