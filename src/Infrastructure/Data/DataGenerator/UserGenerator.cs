@@ -13,6 +13,8 @@ public static class UserGenerator
         .RuleFor(x => x.FirstName, f => f.Name.FirstName())
         .RuleFor(x => x.LastName, f => f.Name.LastName())
         .RuleFor(x => x.Password, f => f.Internet.Password())
+        .RuleFor(x => x.CreatedAt, f => f.Date.Past())
+        .RuleFor(x => x.UpdatedAt, f => f.Date.Past())
         .Generate(50)
         .ToArray();
 

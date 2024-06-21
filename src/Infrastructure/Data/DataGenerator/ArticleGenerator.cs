@@ -16,6 +16,8 @@ public static class ArticleGenerator
         .RuleFor(x => x.Description, f => f.Lorem.Paragraph())
         .RuleFor(x => x.Location, f => f.Address.City())
         .RuleFor(x => x.Status, f => f.Random.Enum<ArticleStatusEnum>())
+        .RuleFor(x => x.CreatedAt, f => f.Date.Past())
+        .RuleFor(x => x.UpdatedAt, f => f.Date.Past())
         .Generate(200)
         .ToArray();
 }

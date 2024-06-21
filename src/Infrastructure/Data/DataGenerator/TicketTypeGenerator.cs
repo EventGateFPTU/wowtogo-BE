@@ -19,6 +19,8 @@ public static class TicketTypeGenerator
             .RuleFor(tt => tt.Amount, f => f.Random.Number(1, 100))
             .RuleFor(tt => tt.LeastAmountBuy, f => f.Random.Number(1, 100))
             .RuleFor(tt => tt.MostAmountBuy, f => f.Random.Number(100, 10000))
+            .RuleFor(tt => tt.CreatedAt, f => f.Date.Past())
+            .RuleFor(tt => tt.UpdatedAt, f => f.Date.Past())
             .Generate(200)
             .ToArray();
 }
