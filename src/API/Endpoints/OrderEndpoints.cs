@@ -7,7 +7,7 @@ public static class OrderEndpoints
     public static RouteGroupBuilder MapOrderEndpoints(this RouteGroupBuilder group)
     {
         group.MapPost("", CreateOrderEndpointHandler.Handle);
-        group.MapPost("confirm-paid", ConfirmPaidOrderHandler.Handle);
+        group.MapPost("confirm-paid/{orderId}", ConfirmPaidOrderEndpointHandler.Handle);
         return group;
     }
 }

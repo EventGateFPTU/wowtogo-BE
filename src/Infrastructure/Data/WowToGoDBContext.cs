@@ -17,7 +17,7 @@ public class WowToGoDBContext(DbContextOptions<WowToGoDBContext> options) : DbCo
     public DbSet<Ticket> Tickets => Set<Ticket>();
     public DbSet<TicketType> TicketTypes => Set<TicketType>();
     public DbSet<User> Users => Set<User>();
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -32,9 +32,9 @@ public class WowToGoDBContext(DbContextOptions<WowToGoDBContext> options) : DbCo
         Staff[] staffs = StaffGenerator.GenerateStaff(users, events);
         Show[] shows = ShowGenerator.GenerateShows(events);
         TicketType[] ticketTypes = TicketTypeGenerator.GenerateTicketTypes(shows);
-        Attendee[] attendees = AttendeeGenerator.GenerateAttendees(users,events);
-        Order[] orders = OrderGenerator.GenerateOrders(ticketTypes);
-        Ticket[] tickets = TicketGenerator.GenerateTickets(attendees, orders);
+        Attendee[] attendees = AttendeeGenerator.GenerateAttendees(users, events);
+        Order[] orders = OrderGenerator.GenerateOrders(ticketTypes, users);
+        Ticket[] tickets = TicketGenerator.GenerateTickets(attendees, ticketTypes);
         // Seed data
         modelBuilder.Entity<Article>().HasData(articles);
         modelBuilder.Entity<User>().HasData(users);

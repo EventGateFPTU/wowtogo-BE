@@ -18,13 +18,18 @@ builder.Services.AddUseCases();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
+// var provider = app.Services.GetRequiredService<iapiversion>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.DisplayRequestDuration();
+    });
 }
+
 
 // app.UseHttpsRedirection();
 app.UseExceptionHandler();
