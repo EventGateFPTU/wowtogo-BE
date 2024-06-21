@@ -25,7 +25,7 @@ public class CreateOrderHandler(IUnitOfWork unitOfWork, ISender sender) : IReque
         {
             TicketTypeId = request.TicketTypeId,
             UserId = request.UserId,
-            TotalPrice = request.TotalPrice,
+            TotalPrice = ticketType.Price,
             Currency = request.Currency,
             Status = Domain.Enums.OrderStatusEnum.Pending,
         };
