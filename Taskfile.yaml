@@ -1,0 +1,13 @@
+version: '3'
+
+tasks:
+  watch:
+    dir: src/API
+    cmd: dotnet watch
+
+  migrate:
+    dir: src/Infrastructure
+    cmds:
+      - dotnet ef database drop -f --startup-project ../API
+      - dotnet ef migrations add {{.CLI_ARGS}} -o ./Data/Migrations --startup-project ../API
+      - dotnet ef database update --startup-project ../API {{.CLI_ARGS}}
