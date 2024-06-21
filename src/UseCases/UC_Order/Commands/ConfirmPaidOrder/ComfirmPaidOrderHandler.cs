@@ -1,13 +1,14 @@
 using Ardalis.Result;
 using Domain.Interfaces.Data;
 using Domain.Models;
+using Domain.Responses.Responses_Ticket;
 using MediatR;
 using UseCases.UC_Ticket.Commands.CreateTicket;
 
 namespace UseCases.UC_Order.Commands.ConfirmPaidOrder;
-public class ComfirmPaidOrderHandler(IUnitOfWork unitOfWork, ISender sender) : IRequestHandler<ConfirmPaidOrderCommand, Result<Ticket>>
+public class ComfirmPaidOrderHandler(IUnitOfWork unitOfWork, ISender sender) : IRequestHandler<ConfirmPaidOrderCommand, Result<GetTicketDetailResponse>>
 {
-    public async Task<Result<Ticket>> Handle(ConfirmPaidOrderCommand request, CancellationToken cancellationToken)
+    public async Task<Result<GetTicketDetailResponse>> Handle(ConfirmPaidOrderCommand request, CancellationToken cancellationToken)
     {
         // Check if the order is existed
         Order? order = await unitOfWork.OrderRepository.FindAsync(o => o.Id.Equals(request.OrderId), cancellationToken: cancellationToken, trackChanges: true);
@@ -25,7 +26,7 @@ public class ComfirmPaidOrderHandler(IUnitOfWork unitOfWork, ISender sender) : I
         if (attendee is null) return Result.Error("Attendee is not found");
         order.AcceptOrder();
         // Create ticket
-        Result<Ticket> ticketResult = await sender.Send(new CreateTicketCommand(order.TicketTypeId, attendee.Id), cancellationToken);
+        Result<GetTicketDetailResponse> ticketResult = await sender.Send(new CreateTicketCommand(order.TicketTypeId, attendee.Id), cancellationToken);
         if (ticketResult.Status != ResultStatus.Ok) return Result.Error("Failed to create ticket");
         return Result.Success(ticketResult, "Order is confirmed and ticket is created successfully");
     }

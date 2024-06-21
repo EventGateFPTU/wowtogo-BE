@@ -9,5 +9,10 @@ public interface IOrderRepository : IRepositoryBase<Order>
                                                     int pageSize = 10,
                                                     bool trackChanges = false,
                                                     CancellationToken cancellationToken = default);
+    Task<IEnumerable<OrderResponse>> GetPaidOrdersAsync(Guid userId,
+                                                    int pageNumber = 1,
+                                                    int pageSize = 10,
+                                                    bool trackChanges = false,
+                                                    CancellationToken cancellationToken = default);
 
 }
