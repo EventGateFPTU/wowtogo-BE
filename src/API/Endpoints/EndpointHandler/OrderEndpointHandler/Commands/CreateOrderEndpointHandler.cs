@@ -12,7 +12,6 @@ public static class CreateOrderEndpointHandler
             new CreateOrderQuery(request.TicketTypeId,
                                 request.UserId,
                                 request.Currency,
-                                request.TotalPrice,
                                 request.PhoneNumber,
                                 request.DateOfBirth)
             );
@@ -28,6 +27,5 @@ public record CreateOrderRequest
     (Guid TicketTypeId,
     Guid UserId,
     string Currency,
-    decimal TotalPrice,
     string PhoneNumber,
     DateTime DateOfBirth);

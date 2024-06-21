@@ -1,4 +1,5 @@
 using Ardalis.Result;
+using Domain.Enums;
 using Domain.Interfaces.Data;
 using Domain.Models;
 using Domain.Responses.Responses_Ticket;
@@ -16,6 +17,10 @@ public class ComfirmPaidOrderHandler(IUnitOfWork unitOfWork, ISender sender) : I
         // Check if the user is valid
         User? user = await unitOfWork.UserRepository.FindAsync(u => u.Id.Equals(order.UserId), cancellationToken: cancellationToken);
         if (user is null) return Result.Error("User not found");
+        // TODO: Check if user is the ticket owner
+        
+        if(order.Status != OrderStatusEnum.Pending) 
+            return Result.Error("Order should be pending");
         // Check if the event is valid
         Event? checkingEvent = await unitOfWork.TicketTypeRepository.GetEventFromTicketTypeIdAsync(order.TicketTypeId, cancellationToken);
         if (checkingEvent is null) return Result.Error("Event not found");
