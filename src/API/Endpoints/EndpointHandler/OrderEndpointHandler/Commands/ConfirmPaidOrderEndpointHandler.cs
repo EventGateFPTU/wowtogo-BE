@@ -4,17 +4,16 @@ using MediatR;
 using UseCases.UC_Order.Commands.ConfirmPaidOrder;
 
 namespace API.Endpoints.EndpointHandler.OrderEndpointHandler.Commands;
-public class ConfirmPaidOrderHandler
+public class ConfirmPaidOrderEndpointHandler
 {
-    public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender, ConfirmPaidOrderRequest request)
+    public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender, Guid orderId)
     {
-        Result<Ticket> result = await sender.Send(new ConfirmPaidOrderCommand(request.OrderId, request.UserId));
+        Result<Ticket> result = await sender.Send(new ConfirmPaidOrderCommand(orderId));
         if (!result.IsSuccess)
         {
             if (result.Errors.Any(e => e.Contains("not found", StringComparison.OrdinalIgnoreCase))) return Results.NotFound(result);
             return Results.BadRequest(result);
         }
-        return Results.Created("", result);
+        return Results.Created(result.SuccessMessage, result);
     }
-    public record ConfirmPaidOrderRequest(Guid OrderId, Guid UserId);
 }

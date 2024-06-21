@@ -18,4 +18,5 @@ public class TicketType : BaseEntity
     [ForeignKey(nameof(ShowId))]
     public Show Show { get; set; } = null!;
     public ICollection<Order> Orders { get; set; } = [];
+    public ICollection<Ticket> Tickets { get; set; } = [];
 }
