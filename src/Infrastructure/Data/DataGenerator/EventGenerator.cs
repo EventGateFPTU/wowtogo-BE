@@ -18,6 +18,8 @@ public static class EventGenerator
         .RuleFor(e => e.MaxTickets, f => f.Random.Number(100, 1000))
         .RuleFor(e => e.StartsAt, f => f.Date.Past())
         .RuleFor(e => e.EndsAt, f => f.Date.Future())
+        .RuleFor(e => e.CreatedAt, f => f.Date.Past())
+        .RuleFor(e => e.UpdatedAt, f => f.Date.Past())
         .Generate(200)
         .ToArray();
 }

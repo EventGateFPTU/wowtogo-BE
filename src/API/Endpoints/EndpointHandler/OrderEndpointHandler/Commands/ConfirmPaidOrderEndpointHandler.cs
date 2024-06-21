@@ -8,7 +8,7 @@ public class ConfirmPaidOrderEndpointHandler
 {
     public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender, Guid orderId)
     {
-        Result<Ticket> result = await sender.Send(new ConfirmPaidOrderCommand(orderId));
+        Result<Ticket> result = await sender.Send(new ConfirmPaidOrderCommand(OrderId: orderId));
         if (!result.IsSuccess)
         {
             if (result.Errors.Any(e => e.Contains("not found", StringComparison.OrdinalIgnoreCase))) return Results.NotFound(result);

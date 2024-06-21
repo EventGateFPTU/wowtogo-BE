@@ -15,6 +15,8 @@ public static class OrderGenerator
             .RuleFor(o => o.Status, f => f.Random.Enum<OrderStatusEnum>())
             .RuleFor(o => o.TotalPrice, (f, o) => ticketTypes.First(t => t.Id == o.TicketTypeId).Price)
             .RuleFor(o => o.Currency, f => f.Finance.Currency().Code)
+            .RuleFor(o => o.CreatedAt, f => f.Date.Past())
+            .RuleFor(o => o.UpdatedAt, f => f.Date.Past())
             .Generate(200)
             .ToArray();
 }

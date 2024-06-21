@@ -11,6 +11,8 @@ public static class EventCategoryGenerator
             .RuleFor(ec => ec.Id, f => f.Random.Guid())
             .RuleFor(ec => ec.EventId, f => f.PickRandom(events).Id)
             .RuleFor(ec => ec.CategoryId, f => f.PickRandom(categories).Id)
+            .RuleFor(ec => ec.CreatedAt, f => f.Date.Past())
+            .RuleFor(ec => ec.UpdatedAt, f => f.Date.Past())
             .Generate(200)
             .ToArray();
 }
