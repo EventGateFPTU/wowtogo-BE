@@ -6,7 +6,7 @@ public static class MinimalAPIConfig
 {
     public static IApplicationBuilder MapWowToGoEndpoints(this WebApplication app)
     {
-        app.MapGroup("/articles").MapArticleEndpoints().WithTags("Articles").WithOpenApi();
+        app.MapGroup("/articles").MapArticleEndpoints().WithTags("Articles");
         app.MapGroup("/events").MapEventEndpoints().WithTags("Events");
         app.MapGroup("/orders").MapOrderEndpoints().WithTags("Orders");
         app.MapGroup("/tickets").MapTicketEndpoints().WithTags("Tickets");
