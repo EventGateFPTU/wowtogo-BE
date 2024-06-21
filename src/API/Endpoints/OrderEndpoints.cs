@@ -13,7 +13,8 @@ public static class OrderEndpoints
         group.MapGet("paid/{userId}", GetPaidOrderEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Get paid orders of a users"));
         // Post Methods
         group.MapPost("", CreateOrderEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Create an order"));
-        group.MapPost("confirm-paid/{orderId}", ConfirmPaidOrderEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Confirm an order as paid"));
+        group.MapPut("confirm-paid/{orderId}", ConfirmPaidOrderEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Confirm an order as paid"));
+        group.MapPut("cancel/{orderId}", CancelOrderEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Cancel an order"));
         return group;
     }
 }

@@ -21,4 +21,8 @@ public class Order : BaseEntity
     {
         Status = OrderStatusEnum.Paid;
     }
+    public void CancelOrder()
+    {
+        Status = OrderStatusEnum.Canceled;
+    }
 }
