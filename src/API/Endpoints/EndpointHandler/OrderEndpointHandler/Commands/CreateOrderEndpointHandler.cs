@@ -21,7 +21,7 @@ public static class CreateOrderEndpointHandler
                 return Results.NotFound(result);
             return Results.BadRequest(result);
         }
-        return Results.Created("", result);
+        return Results.Created(result.SuccessMessage, result);
     }
 }
 public record CreateOrderRequest
