@@ -10,7 +10,7 @@ public class TicketRepository(WowToGoDBContext context) : RepositoryBase<Ticket>
     public async Task<GetTicketDetailsResponse?> GetTicketDetail(Guid ticketId, bool trackChanges = false, CancellationToken cancellationToken = default)
     {
         IQueryable<Ticket> query = _dbSet;
-        if (trackChanges) query = query.AsNoTracking();
+        if (!trackChanges) query = query.AsNoTracking();
         return await query
             .Include(t => t.TicketType)
             .ThenInclude(tt => tt.Show)
@@ -22,13 +22,24 @@ public class TicketRepository(WowToGoDBContext context) : RepositoryBase<Ticket>
     public async Task<CreateTicketResponse?> GetCreatedTicketDetail(Guid ticketId, bool trackChanges = false, CancellationToken cancellationToken = default)
     {
         IQueryable<Ticket> query = _dbSet;
-        if (trackChanges) query = query.AsNoTracking();
+        if (!trackChanges) query = query.AsNoTracking();
         return await query
             .Include(t => t.TicketType)
             .ThenInclude(tt => tt.Show)
             .ThenInclude(s => s.Event)
             .Where(t => t.Id == ticketId)
             .Select(t => t.MapToCreateTicketResponse())
+            .SingleOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<Ticket?> GetTicketDetailByCode(string code, Guid showId, bool trackChanges = false, CancellationToken cancellationToken = default)
+    {
+        IQueryable<Ticket> query = _dbSet;
+        if (!trackChanges) query = query.AsNoTracking();
+        return await query
+            .Include(t => t.TicketType)
+            .ThenInclude(tt => tt.Show)
+            .Where(t => t.Code == code && t.TicketType.ShowId == showId)
             .SingleOrDefaultAsync(cancellationToken);
     }
 }
