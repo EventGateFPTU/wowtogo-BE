@@ -9,7 +9,7 @@ public class GetTicketDetailEndpointHandler
     public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender,
                                             Guid ticketId)
     {
-        Result<GetTicketDetailResponse> result = await sender.Send(new GetTicketDetailQuery(ticketId));
+        Result<GetTicketDetailsResponse> result = await sender.Send(new GetTicketDetailQuery(ticketId));
         if (!result.IsSuccess) return Results.NotFound(result);
         return Results.Ok(result);
     }
