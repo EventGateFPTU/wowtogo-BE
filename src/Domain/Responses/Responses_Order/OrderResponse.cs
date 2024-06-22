@@ -3,4 +3,4 @@ public record OrderResponse(Guid Id,
                             decimal TotalPrice,
                             string Status,
                             string Currency,
-                            DateTime CreatedAt);
+                            DateTimeOffset CreatedAt);

@@ -29,4 +29,4 @@ public record CreateOrderRequest
     Guid UserId,
     string Currency,
     string PhoneNumber,
-    DateTime DateOfBirth);
+    DateTimeOffset DateOfBirth);

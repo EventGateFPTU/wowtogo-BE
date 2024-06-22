@@ -29,6 +29,7 @@ public class UpdateTicketTypeHandler(IUnitOfWork unitOfWork) : IRequestHandler<U
             checkingTicketType.Amount = request.Amount;
             checkingTicketType.LeastAmountBuy = request.LeastAmountBuy;
             checkingTicketType.MostAmountBuy = request.MostAmountBuy;
+            checkingTicketType.UpdatedAt = DateTimeOffset.UtcNow;
         }
         if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to update ticket type");
         return Result.Success();

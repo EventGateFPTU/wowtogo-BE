@@ -12,11 +12,8 @@ public class GetEventStaffHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetE
     {
         var targetEvent = await unitOfWork.EventRepository.FindAsync(e => e.Id.Equals(request.EventId), cancellationToken: cancellationToken);
         if (targetEvent is null) return Result.NotFound("eventId not found");
-        
         // TODO: check if current user can see event's staffs
         // note: can't add self
-        
-        
         var staffs = await unitOfWork.StaffRepository.GetEventStaffsAsync(
             eventId: request.EventId,
             pageNumber: request.PageNumber,
