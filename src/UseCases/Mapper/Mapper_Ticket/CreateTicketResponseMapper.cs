@@ -10,7 +10,7 @@ public static class CreateTicketResponseMapper
                         Id: ticket.Id,
                         AttendeeId: ticket.AttendeeId,
                         TicketType: ticket.TicketType.Name,
-                        EventName: ticket.TicketType.Show.Event.Title,
+                        EventName: ticket.TicketType?.Show?.Event?.Title ?? string.Empty,
                         Code: ticket.Code,
                         CreatedAt: ticket.CreatedAt);
     }
