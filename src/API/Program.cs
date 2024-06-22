@@ -7,7 +7,7 @@ using API.Middlewares;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(x => x.EnableAnnotations());
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
@@ -18,6 +18,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Host.AddHostConfigurations(builder.Configuration);
 
 var app = builder.Build();
+// var provider = app.Services.GetRequiredService<iapiversion>();
 
 var requiredVars = new[]
 {
@@ -41,8 +42,12 @@ foreach (var key in requiredVars)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.DisplayRequestDuration();
+    });
 }
+
 
 // app.UseHttpsRedirection();
 app.UseExceptionHandler();
