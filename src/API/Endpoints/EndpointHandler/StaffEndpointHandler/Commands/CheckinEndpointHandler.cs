@@ -7,7 +7,7 @@ public class CheckinEndpointHandler
 {
     public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender, CheckinRequest request, CancellationToken cancellationToken = default)
     {
-        Result result = await sender.Send(new CheckinQuery(request.Code, request.ShowId, request.usedInFormat), cancellationToken);
+        Result result = await sender.Send(new CheckinCommand(request.Code, request.ShowId, request.usedInFormat), cancellationToken);
         if (!result.IsSuccess)
         {
             if (result.Status == ResultStatus.NotFound)

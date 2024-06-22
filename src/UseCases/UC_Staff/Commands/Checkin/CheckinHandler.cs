@@ -5,9 +5,9 @@ using Domain.Models;
 using MediatR;
 
 namespace UseCases.UC_Staff.Commands.Checkin;
-public class CheckinHandler(IUnitOfWork unitOfWork) : IRequestHandler<CheckinQuery, Result>
+public class CheckinHandler(IUnitOfWork unitOfWork) : IRequestHandler<CheckinCommand, Result>
 {
-    public async Task<Result> Handle(CheckinQuery request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CheckinCommand request, CancellationToken cancellationToken)
     {
         Ticket? ticket = await unitOfWork.TicketRepository.GetTicketDetailByCode(request.Code, request.ShowId, trackChanges: true, cancellationToken: cancellationToken);
         if (ticket is null) return Result.NotFound("Ticket is not found");
