@@ -29,7 +29,8 @@ public class CreateTicketTypeHandler(IUnitOfWork unitOfWork) : IRequestHandler<C
             ToDate = request.ToDate,
             Amount = request.Amount,
             LeastAmountBuy = request.LeastAmountBuy,
-            MostAmountBuy = request.MostAmountBuy
+            MostAmountBuy = request.MostAmountBuy,
+            UpdatedAt = DateTime.UtcNow,
         };
         unitOfWork.TicketTypeRepository.Add(ticketType);
         if (!await unitOfWork.SaveChangesAsync()) return Result.Error("Failed to create ticket type");

@@ -15,7 +15,7 @@ public static class DependencyInjection
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins(configuration.GetValue<string>("CLIENT_ORIGIN_URL"))
+                policy.WithOrigins(configuration.GetValue<string>("CLIENT_ORIGIN_URL") ?? string.Empty)
                     .WithHeaders([
                         HeaderNames.ContentType,
                         HeaderNames.Authorization
@@ -44,7 +44,7 @@ public static class DependencyInjection
 
         return services;
     }
-    
+
     public static IHostBuilder AddHostConfigurations(this IHostBuilder host, IConfiguration configuration)
     {
         host.ConfigureAppConfiguration(configBuilder =>
