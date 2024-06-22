@@ -12,9 +12,11 @@ public class AddStaffHandler(IUnitOfWork unitOfWork) : IRequestHandler<AddStaffC
         if (checkingUser is null) return Result.NotFound("User is not found");
         Event? checkingEvent = await unitOfWork.EventRepository.FindAsync(e => e.Id.Equals(request.EventId), cancellationToken: cancellationToken);
         if (checkingEvent is null) return Result.NotFound("Event is not found");
+        Staff? checkingStaff = await unitOfWork.StaffRepository.FindAsync(s => s.UserId.Equals(request.UserId) && s.EventId.Equals(request.EventId), cancellationToken: cancellationToken);
+        if (checkingStaff is not null) return Result.Error("Staff is already added");
         Staff newStaff = new Staff
         {
-            Id = checkingUser.Id,
+            UserId = checkingUser.Id,
             EventId = checkingEvent.Id,
         };
         unitOfWork.StaffRepository.Add(newStaff);
