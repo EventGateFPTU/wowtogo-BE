@@ -5,9 +5,10 @@ using Domain.Models.Shared;
 namespace Domain.Models;
 public class Staff : BaseEntity
 {
-    public Guid EventId { get; set; }
+    public required Guid UserId { get; set; }
+    public required Guid EventId { get; set; }
     //-----------------------------------------
-    [ForeignKey(nameof(Id))]
+    [ForeignKey(nameof(UserId))]
     public User User { get; set; } = null!;
     [ForeignKey(nameof(EventId))]
     public Event Event { get; set; } = null!;

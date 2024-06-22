@@ -2,7 +2,7 @@ using Ardalis.Result;
 using MediatR;
 using UseCases.UC_Staff.Commands.AddStaff;
 
-namespace API.Endpoints.EndpointHandler.StaffEndpointHandler.Commands;
+namespace API.Endpoints.EndpointHandler.EventEndpointHandler.Commands;
 public class AddStaffEndpointHandler
 {
     public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender, Guid userId, Guid eventId, CancellationToken cancellationToken = default)

@@ -7,9 +7,9 @@ public static class StaffEndpoints
     public static RouteGroupBuilder MapStaffEndpoints(this RouteGroupBuilder group)
     {
         // Post methods
-        group.MapPost("", AddStaffEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Add a staff"));
-        // Get methods
+        // Put methods
         group.MapPut("checkin", CheckinEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Checkin a ticket"));
+        
         return group;
     }
 }
