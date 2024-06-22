@@ -6,6 +6,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.yml = docker-compose.yml
 		Dockerfile = Dockerfile
 		.dockerignore = .dockerignore
+		.gitignore = .gitignore
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C7C6DD88-98CD-4053-905E-8490FAF5074B}"
