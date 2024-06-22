@@ -12,6 +12,14 @@ tasks:
       - dotnet ef migrations add {{.CLI_ARGS}} -o ./Data/Migrations --startup-project ../API
       - dotnet ef database update --startup-project ../API {{.CLI_ARGS}}
         
+  resetmigrate:
+    dir: src/Infrastructure
+    cmds:
+      - dotnet ef database drop -f --startup-project ../API
+      - dotnet ef migrations remove --startup-project ../API
+      - dotnet ef migrations add {{.CLI_ARGS}} -o ./Data/Migrations --startup-project ../API
+      - dotnet ef database update --startup-project ../API {{.CLI_ARGS}}
+
   dbupdate:
     dir: src/Infrastructure
     cmd: dotnet ef database update --startup-project ../API
