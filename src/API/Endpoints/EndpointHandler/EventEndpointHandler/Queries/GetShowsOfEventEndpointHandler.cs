@@ -3,7 +3,7 @@ using Domain.Responses.Responses_Show;
 using MediatR;
 using UseCases.UC_Show.Queries.GetShowsOfEvent;
 
-namespace API.Endpoints.EndpointHandler.ShowEndpointHandler.Queries;
+namespace API.Endpoints.EndpointHandler.EventEndpointHandler.Queries;
 public class GetShowsOfEventEndpointHandler
 {
     public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender,

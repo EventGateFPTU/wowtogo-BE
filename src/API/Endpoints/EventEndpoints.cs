@@ -1,6 +1,5 @@
 using API.Endpoints.EndpointHandler.EventEndpointHandler.Commands;
 using API.Endpoints.EndpointHandler.EventEndpointHandler.Queries;
-using API.Endpoints.EndpointHandler.ShowEndpointHandler.Queries;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace API.Endpoints;
