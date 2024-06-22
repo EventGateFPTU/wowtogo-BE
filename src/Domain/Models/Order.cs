@@ -11,8 +11,6 @@ public class Order : BaseEntity
     public required Guid TicketTypeId { get; set; }
     public required Guid UserId { get; set; }
     //----------------------------------------- 
-    // [ForeignKey(nameof(TicketId))]
-    // public Ticket Ticket { get; set; } = null!;
     [ForeignKey(nameof(TicketTypeId))]
     public TicketType TicketType { get; set; } = null!;
     [ForeignKey(nameof(UserId))]

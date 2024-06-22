@@ -24,8 +24,6 @@ public class ComfirmPaidOrderHandler(IUnitOfWork unitOfWork, ISender sender) : I
         // Check if the event is valid
         Event? checkingEvent = await unitOfWork.TicketTypeRepository.GetEventFromTicketTypeIdAsync(order.TicketTypeId, cancellationToken);
         if (checkingEvent is null) return Result.NotFound("Event not found");
-        // if (checkingEvent.StartsAt < DateTime.Now) return Result.Error("Event has already started");
-        // Check if the user is an attendee of the event
         Attendee? attendee = await unitOfWork.AttendeeRepository
             .FindAsync(a => a.UserId.Equals(order.UserId) && a.EventId.Equals(checkingEvent.Id), cancellationToken: cancellationToken);
         if (attendee is null) return Result.NotFound("Attendee is not found");
