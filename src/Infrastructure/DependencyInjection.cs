@@ -11,10 +11,9 @@ public static class DependencyInjection
     {
         services.AddDbContext<WowToGoDBContext>(options =>
         {
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+            options.UseNpgsql("User ID=postgres;Password=25102003;Host=localhost;Port=5432;Database=WowToGoDB;Pooling=true;Connection Lifetime=0;");
         });
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-
         return services;
     }
 }
