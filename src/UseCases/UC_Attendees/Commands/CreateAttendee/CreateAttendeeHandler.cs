@@ -10,7 +10,7 @@ public class CreateAttendeeHandler(IUnitOfWork unitOfWork) : IRequestHandler<Cre
     {
         // Check if the user is not found
         User? user = await unitOfWork.UserRepository.FindAsync(u => u.Id.Equals(request.UserId), cancellationToken: cancellationToken);
-        if (user is null) return Result.Error("User not found");
+        if (user is null) return Result.NotFound("User not found");
         Attendee attendee = new()
         {
             UserId = request.UserId,
