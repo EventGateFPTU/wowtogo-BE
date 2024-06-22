@@ -4,8 +4,8 @@ using Domain.Responses.Responses_Ticket;
 namespace UseCases.Mapper.Mapper_Ticket;
 public static class GetTicketDetailResponseMapper
 {
-    public static GetTicketDetailResponse MapToGetTicketDetailResponse(this Ticket ticket)
-        => new GetTicketDetailResponse(
+    public static GetTicketDetailsResponse MapToGetTicketDetailsResponse(this Ticket ticket)
+        => new GetTicketDetailsResponse(
             Id: ticket.Id,
             AttendeeId: ticket.AttendeeId,
             TicketType: ticket.TicketType.Name,

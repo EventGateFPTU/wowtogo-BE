@@ -12,15 +12,15 @@ public class CreateOrderHandler(IUnitOfWork unitOfWork, ISender sender) : IReque
     {
         // Check if the ticket type is not found
         TicketType? ticketType = await unitOfWork.TicketTypeRepository.FindAsync(tt => tt.Id.Equals(request.TicketTypeId), cancellationToken: cancellationToken);
-        if (ticketType is null) return Result.Error("Ticket Type is not found");
+        if (ticketType is null) return Result.NotFound("Ticket Type is not found");
         Event? checkingEvent = await unitOfWork.TicketTypeRepository.GetEventFromTicketTypeIdAsync(request.TicketTypeId, cancellationToken);
-        if (checkingEvent is null) return Result.Error("Event is not found");
+        if (checkingEvent is null) return Result.NotFound("Event is not found");
         // Check if the ticket type is out of stock
         IEnumerable<Order> orders = await unitOfWork.OrderRepository.FindManyAsync(o => o.TicketTypeId.Equals(request.TicketTypeId) && o.Status.Equals(Domain.Enums.OrderStatusEnum.Paid), cancellationToken: cancellationToken);
         if (orders.Count() >= ticketType.Amount) return Result.Error("TicketType is out of stock");
         // Check if the user is not found
         User? user = await unitOfWork.UserRepository.FindAsync(u => u.Id.Equals(request.UserId), cancellationToken: cancellationToken);
-        if (user is null) return Result.Error("User not found");
+        if (user is null) return Result.NotFound("User not found");
         Order order = new()
         {
             TicketTypeId = request.TicketTypeId,
