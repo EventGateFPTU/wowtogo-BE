@@ -17,7 +17,8 @@ public static class CreateOrderEndpointHandler
             );
         if (!result.IsSuccess)
         {
-            if (result.Errors.Any(e => e.Contains("not found", StringComparison.OrdinalIgnoreCase))) return Results.NotFound(result);
+            if (result.Status == ResultStatus.NotFound)
+                return Results.NotFound(result);
             return Results.BadRequest(result);
         }
         return Results.Created("", result);
