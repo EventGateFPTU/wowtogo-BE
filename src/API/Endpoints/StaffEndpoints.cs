@@ -8,8 +8,7 @@ public static class StaffEndpoints
     {
         // Post methods
         // Put methods
-        group.MapPut("checkin", CheckinEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Checkin a ticket"));
-        
+        group.MapPut("checkin", CheckinEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Checkin a ticket"));        
         return group;
     }
 }

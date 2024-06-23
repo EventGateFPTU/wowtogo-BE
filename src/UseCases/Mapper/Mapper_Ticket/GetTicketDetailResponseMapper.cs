@@ -8,8 +8,8 @@ public static class GetTicketDetailResponseMapper
         => new GetTicketDetailsResponse(
             Id: ticket.Id,
             AttendeeId: ticket.AttendeeId,
-            TicketType: ticket.TicketType.Name,
-            EventName: ticket.TicketType.Show.Event.Title,
+            TicketType: ticket.TicketType?.Name ?? string.Empty,
+            EventName: ticket.TicketType?.Show?.Event?.Title ?? string.Empty,
             Code: ticket.Code,
             UsedInFormat: ticket.UsedInFormat.ToString(),
             CreatedAt: ticket.CreatedAt,

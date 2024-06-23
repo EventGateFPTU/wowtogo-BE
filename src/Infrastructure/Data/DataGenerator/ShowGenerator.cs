@@ -9,6 +9,7 @@ public static class ShowGenerator
             .UseSeed(1)
             .UseDateTimeReference(DateTime.UtcNow)
             .RuleFor(s => s.Id, f => f.Random.Guid())
+            .RuleFor(s => s.Title, f => f.Lorem.Word())
             .RuleFor(s => s.EventId, f => f.PickRandom(events).Id)
             .RuleFor(s => s.StartsAt, f => f.Date.Past())
             .RuleFor(s => s.EndsAt, f => f.Date.Future())

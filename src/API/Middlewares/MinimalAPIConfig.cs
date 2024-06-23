@@ -14,6 +14,7 @@ public static class MinimalAPIConfig
         app.MapGroup("/categories").MapCategoryEndpoints().WithTags("Categories");
         app.MapGroup("/staff").MapStaffEndpoints().WithTags("Staff");
         app.MapGroup("/ticket-types").MapTicketTypeEndpoints().WithTags("Ticket Types");
+        app.MapGroup("/shows").MapShowEndpoints().WithTags("Shows");
         return app;
     }
 }
