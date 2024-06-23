@@ -26,6 +26,7 @@ var requiredVars = new[]
     "CLIENT_ORIGIN_URL",
     "AUTH0_DOMAIN",
     "AUTH0_AUDIENCE",
+    "POSTGRES_CONSTR"
 };
 
 foreach (var key in requiredVars)

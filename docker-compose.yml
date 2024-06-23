@@ -13,8 +13,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - PORT=8080
       - CLIENT_ORIGIN_URL=${CLIENT_ORIGIN_URL} # frontend
-      - AUTH0_AUDIENCE={AUTH0_AUDIENCE}
-      - AUTH0_DOMAIN={AUTH0_DOMAIN}
+      - AUTH0_AUDIENCE=${AUTH0_AUDIENCE}
+      - AUTH0_DOMAIN=${AUTH0_DOMAIN}
+      - POSTGRES_CONSTR=${POSTGRES_CONSTR}
   
   postgresdb:
     image: postgres:14-alpine
