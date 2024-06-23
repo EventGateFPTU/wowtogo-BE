@@ -6,7 +6,7 @@ using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace API.Endpoints.EndpointHandler.EventEndpointHandler.Queries;
 
-public class GetStaffEndpointHandler
+public class GetEventStaffsEndpointHandler
 {
     public static async Task<IResult> Handle(ISender sender,
         Guid eventId,
