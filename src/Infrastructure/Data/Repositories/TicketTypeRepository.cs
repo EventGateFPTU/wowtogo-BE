@@ -14,6 +14,13 @@ public class TicketTypeRepository(WowToGoDBContext dbContext) : RepositoryBase<T
             .Select(s => s.Event)
             .FirstOrDefaultAsync(cancellationToken);
 
+    public async Task<TicketType?> GetTicketIncludingEventAsync(Guid ticketId, CancellationToken cancellationToken = default)
+        => await _dbSet.AsNoTracking()
+            .Include(tt => tt.Show)
+            .ThenInclude(s => s.Event)
+            .Where(tt => tt.Id.Equals(ticketId))
+            .FirstOrDefaultAsync(cancellationToken);
+
     public async Task<IEnumerable<GetTicketTypeDetailsResponse>> GetTicketTypesOfShowAsync(Guid showId, int pageSize, int pageNumber, bool trackChanges = false, CancellationToken cancellationToken = default)
     {
         IQueryable<TicketType> query = _dbSet;
