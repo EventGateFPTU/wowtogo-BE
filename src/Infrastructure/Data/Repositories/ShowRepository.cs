@@ -20,12 +20,21 @@ public class ShowRepository(WowToGoDBContext dbContext) : RepositoryBase<Show>(d
             .SingleOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<Show?> GetShowIncludingEventAsync(Guid showId, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet
+            .AsNoTracking()
+            .Include(s => s.Event)
+            .SingleOrDefaultAsync(s => s.Id == showId, cancellationToken);
+    }
+
     public async Task<IEnumerable<GetShowDetailResponse>> GetShowsOfEventAsync(Guid eventId, int pageNumber = 1, int pageSize = 10, bool trackChanges = false, CancellationToken cancellationToken = default)
     {
         IQueryable<Show> query = _dbSet;
         if (!trackChanges) query = query.AsNoTracking();
         return await query
             .Include(s => s.Event)
+            .Include(s => s.TicketTypes)
             .Where(s => s.Event.Id == eventId)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
