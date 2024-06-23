@@ -15,6 +15,8 @@ public static class ShowEndpoints
         group.MapPost("", CreateShowEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Create a show"));
         // PUT
         group.MapPut("/{showId}", UpdateShowEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Update a show"));
+        // DELETE
+        group.MapDelete("/{showId}", DeleteShowEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Delete a show"));
         return group;
     }
 }
