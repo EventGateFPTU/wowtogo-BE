@@ -17,4 +17,13 @@ public class CategoryRepository(WowToGoDBContext dbContext) : RepositoryBase<Cat
             .Select(c => c.MapCategoryDB())
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<IEnumerable<Category>> GetCategoriesAsync(Guid[] ids, CancellationToken cancellationToken = default)
+    {
+        if (ids.Length == 0) return [];
+        return await _dbSet
+            .AsNoTracking()
+            .Where(c => ids.Contains(c.Id))
+            .ToListAsync(cancellationToken);
+    }
 }
