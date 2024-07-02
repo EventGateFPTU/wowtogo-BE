@@ -25,6 +25,9 @@ public static class DependencyInjection
             });
         });
 
+        services.AddScoped<AuthMiddleware.AuthMiddleware>();
+        services.AddScoped<CurrentUser>();
+
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
