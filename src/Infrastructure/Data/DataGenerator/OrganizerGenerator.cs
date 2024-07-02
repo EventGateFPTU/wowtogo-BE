@@ -12,6 +12,7 @@ public static class OrganizerGenerator
             .RuleFor(o => o.Id, f => f.PickRandom(users).Id)
             .RuleFor(o => o.OrganizationName, f => f.Company.CompanyName())
             .RuleFor(o => o.CreatedAt, f => f.Date.Past())
+            .RuleFor(o => o.ImageUrl, f => f.Image.PicsumUrl())
             .RuleFor(o => o.UpdatedAt, f => f.Date.Past())
             .Generate(50)
             .ToArray();

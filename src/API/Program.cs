@@ -6,6 +6,8 @@ using API.ExceptionMiddlewares;
 using API.Middlewares;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using dotenv.net;
+using CloudinaryDotNet;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +19,12 @@ builder.Services.AddProblemDetails();
 builder.Services.AddServices(builder.Configuration);
 builder.Services.AddUseCases();
 builder.Services.AddInfrastructure(builder.Configuration);
+// builder.Services.AddAntiforgery();
 
 builder.Host.AddHostConfigurations(builder.Configuration);
+
+DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
+builder.Services.AddScoped(x => new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL")));
 
 var app = builder.Build();
 using var scope = app.Services.CreateScope();
@@ -61,6 +67,8 @@ app.UseExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<AuthMiddleware>();
+// app.UseAntiforgery();
+
 app.MapWowToGoEndpoints();
 
 app.Run();

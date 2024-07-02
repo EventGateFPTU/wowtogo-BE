@@ -1,6 +1,9 @@
 using API.Endpoints.EndpointHandler.EventEndpointHandler.Commands;
 using API.Endpoints.EndpointHandler.EventEndpointHandler.Queries;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Drawing;
 
 namespace API.Endpoints;
 public static class EventEndpoints
