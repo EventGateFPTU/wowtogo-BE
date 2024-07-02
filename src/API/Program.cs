@@ -1,8 +1,11 @@
 using API;
+using API.AuthMiddleware;
 using UseCases;
 using Infrastructure;
 using API.ExceptionMiddlewares;
 using API.Middlewares;
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using dotenv.net;
 using CloudinaryDotNet;
 
@@ -24,6 +27,9 @@ DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
 builder.Services.AddScoped(x => new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL")));
 
 var app = builder.Build();
+using var scope = app.Services.CreateScope();
+var dbContext = scope.ServiceProvider.GetRequiredService<WowToGoDBContext>();
+dbContext.Database.Migrate();
 // var provider = app.Services.GetRequiredService<iapiversion>();
 
 var requiredVars = new[]
@@ -58,6 +64,9 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 app.UseExceptionHandler();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseMiddleware<AuthMiddleware>();
 // app.UseAntiforgery();
 
 app.MapWowToGoEndpoints();

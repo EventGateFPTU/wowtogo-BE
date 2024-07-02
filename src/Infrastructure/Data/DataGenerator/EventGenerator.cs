@@ -14,6 +14,8 @@ public static class EventGenerator
         .RuleFor(e => e.Description, f => f.Lorem.Paragraph())
         .RuleFor(e => e.Location, f => f.Address.City())
         .RuleFor(e => e.Status, f => f.Random.Enum<EventStatusEnum>())
+        .RuleFor(e => e.BackgroundImageUrl, f => f.Image.PicsumUrl())
+        .RuleFor(e => e.BannerImageUrl, f => f.Image.PicsumUrl())
         .RuleFor(e => e.OrganizerId, f => f.PickRandom(organizers).Id)
         .RuleFor(e => e.MaxTickets, f => f.Random.Number(100, 1000))
         .RuleFor(e => e.CreatedAt, f => f.Date.Past())
