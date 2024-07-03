@@ -22,6 +22,15 @@ builder.Services.AddInfrastructure(builder.Configuration);
 // builder.Services.AddAntiforgery();
 
 builder.Host.AddHostConfigurations(builder.Configuration);
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(option =>
+    {
+        option.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
 builder.Services.AddScoped(x => new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL")));
@@ -67,6 +76,7 @@ app.UseExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<AuthMiddleware>();
+app.UseCors();
 // app.UseAntiforgery();
 
 app.MapWowToGoEndpoints();
