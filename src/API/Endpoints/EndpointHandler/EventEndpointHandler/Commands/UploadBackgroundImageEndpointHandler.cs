@@ -16,6 +16,7 @@ public class UploadBackgroundImageEndpointHandler
         ImageUploadParams uploadParams = new()
         {
             File = new FileDescription($"background-{eventId}", file.OpenReadStream()),
+            Folder = "event-background",
             Overwrite = true,
         };
         ImageUploadResult? uploadingResult = cloudinary.Upload(uploadParams);
