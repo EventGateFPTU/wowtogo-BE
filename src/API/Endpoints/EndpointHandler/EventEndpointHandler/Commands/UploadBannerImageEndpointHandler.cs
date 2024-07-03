@@ -17,6 +17,7 @@ public class UploadBannerImageEndpointHandler
         ImageUploadParams uploadParams = new()
         {
             File = new FileDescription($"banner-{eventId}", file.OpenReadStream()),
+            Folder = "event-banner",
             Overwrite = true,
         };
         ImageUploadResult? uploadingResult = cloudinary.Upload(uploadParams);
