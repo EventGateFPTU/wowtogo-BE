@@ -15,6 +15,6 @@ public static class ShowGenerator
             .RuleFor(s => s.EndsAt, f => f.Date.Future())
             .RuleFor(s => s.CreatedAt, f => f.Date.Past())
             .RuleFor(s => s.UpdatedAt, f => f.Date.Past())
-            .Generate(200)
+            .Generate(20)
             .ToArray();
 }

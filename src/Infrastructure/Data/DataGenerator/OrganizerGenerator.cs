@@ -14,7 +14,7 @@ public static class OrganizerGenerator
             .RuleFor(o => o.CreatedAt, f => f.Date.Past())
             .RuleFor(o => o.ImageUrl, f => f.Image.PicsumUrl())
             .RuleFor(o => o.UpdatedAt, f => f.Date.Past())
-            .Generate(50)
+            .Generate(2)
             .ToArray();
         return organizers.DistinctBy(o => o.Id).ToArray();
     }

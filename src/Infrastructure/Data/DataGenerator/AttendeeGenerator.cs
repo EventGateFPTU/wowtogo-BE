@@ -17,7 +17,7 @@ public static class AttendeeGenerator
             .RuleFor(a => a.EventId, f => f.PickRandom(events).Id)
             .RuleFor(a => a.CreatedAt, f => f.Date.Past())
             .RuleFor(a => a.UpdatedAt, f => f.Date.Past())
-            .Generate(200)
+            .Generate(4)
             .ToArray();
 
 }

@@ -14,7 +14,7 @@ public static class EventCategoryGenerator
         .RuleFor(ec => ec.CategoryId, f => f.PickRandom(categories).Id)
         .RuleFor(ec => ec.CreatedAt, f => f.Date.Past())
         .RuleFor(ec => ec.UpdatedAt, f => f.Date.Past())
-        .Generate(200)
+        .Generate(5)
         .ToArray();
         return eventCategories.DistinctBy(ec => new { ec.EventId, ec.CategoryId }).ToArray();
     }

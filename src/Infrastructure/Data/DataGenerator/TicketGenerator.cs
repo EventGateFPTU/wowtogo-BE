@@ -17,6 +17,6 @@ public static class TicketGenerator
             .RuleFor(t => t.UsedAt, f => f.Date.Future())
             .RuleFor(t => t.CreatedAt, f => f.Date.Past())
             .RuleFor(t => t.UpdatedAt, f => f.Date.Past())
-            .Generate(200)
+            .Generate(20)
             .ToArray();
 }

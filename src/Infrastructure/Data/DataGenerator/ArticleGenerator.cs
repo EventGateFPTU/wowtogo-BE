@@ -18,6 +18,6 @@ public static class ArticleGenerator
         .RuleFor(x => x.Status, f => f.Random.Enum<ArticleStatusEnum>())
         .RuleFor(x => x.CreatedAt, f => f.Date.Past())
         .RuleFor(x => x.UpdatedAt, f => f.Date.Past())
-        .Generate(200)
+        .Generate(20)
         .ToArray();
 }

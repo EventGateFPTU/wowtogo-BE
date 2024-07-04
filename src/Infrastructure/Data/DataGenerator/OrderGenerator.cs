@@ -17,6 +17,6 @@ public static class OrderGenerator
             .RuleFor(o => o.Currency, f => f.Finance.Currency().Code)
             .RuleFor(o => o.CreatedAt, f => f.Date.Past())
             .RuleFor(o => o.UpdatedAt, f => f.Date.Past())
-            .Generate(200)
+            .Generate(5)
             .ToArray();
 }

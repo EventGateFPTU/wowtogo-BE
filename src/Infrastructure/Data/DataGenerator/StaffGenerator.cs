@@ -15,7 +15,7 @@ public static class StaffGenerator
         .RuleFor(s => s.EventId, f => f.PickRandom(events).Id)
         .RuleFor(s => s.CreatedAt, f => f.Date.Past())
         .RuleFor(s => s.UpdatedAt, f => f.Date.Past())
-        .Generate(50)
+        .Generate(2)
         .DistinctBy(s => new { s.Id, s.EventId })
         .ToArray();
         // return staffs.DistinctBy(s => new { s.Id, s.EventId }).ToArray();
