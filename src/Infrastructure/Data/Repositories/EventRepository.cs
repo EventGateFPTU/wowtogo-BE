@@ -30,8 +30,4 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<Event?> GetEventDeleteAsync(Guid eventId, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
 }

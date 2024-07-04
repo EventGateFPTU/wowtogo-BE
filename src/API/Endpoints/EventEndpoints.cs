@@ -20,6 +20,7 @@ public static class EventEndpoints
         group.MapPut("/{eventId}", UpdateEventEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Update an event"));
         // DELETE
         group.MapDelete("/staff/{staffId}", RemoveStaffEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Delete a staff"));
+        group.MapDelete("/{eventId}", DeleteEventEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Delete an Event"));
         return group;
     }
 }
