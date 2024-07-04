@@ -1,5 +1,6 @@
 using API.Endpoints.EndpointHandler.EventEndpointHandler.Commands;
 using API.Endpoints.EndpointHandler.EventEndpointHandler.Queries;
+using API.Endpoints.EndpointHandler.ShowEndpointHandler.Commands;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace API.Endpoints;
@@ -16,6 +17,7 @@ public static class EventEndpoints
         // POST
         group.MapPost("/{eventId}/staff/{userId}", AddStaffEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Add a staff"));
         // PUT
+        group.MapPut("/{eventId}", UpdateEventEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Update an event"));
         // DELETE
         group.MapDelete("/staff/{staffId}", RemoveStaffEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Delete a staff"));
         return group;
