@@ -1,7 +1,8 @@
+using Domain.Responses.Responses_Show;
+
 namespace Domain.Responses.Responses_TicketType;
 public record GetTicketTypeDetailsResponse(
     Guid Id,
-    string ShowTitle,
     string Name,
     string Description,
     string ImageUrl,
@@ -11,5 +12,6 @@ public record GetTicketTypeDetailsResponse(
     int Amount,
     int LeastAmountBuy,
     int MostAmountBuy,
-    DateTimeOffset CreatedAt
+    DateTimeOffset CreatedAt,
+    GetShowDetailResponse[] Shows
 );

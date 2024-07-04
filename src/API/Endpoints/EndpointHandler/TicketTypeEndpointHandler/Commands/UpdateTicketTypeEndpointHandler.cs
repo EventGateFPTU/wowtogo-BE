@@ -26,7 +26,7 @@ public class UpdateTicketTypeEndpointHandler
         }
         return Results.NoContent();
     }
-    public record UpdateTicketTypeRequest(Guid ShowId,
+    public record UpdateTicketTypeRequest(Guid[] ShowId,
                                            string Name,
                                            string Description,
                                            string ImageUrl,

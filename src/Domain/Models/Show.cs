@@ -11,5 +11,5 @@ public class Show : BaseEntity
     //----------------------------------------- 
     [ForeignKey(nameof(EventId))]
     public Event Event { get; set; } = null!;
-    public ICollection<TicketType> TicketTypes { get; set; } = [];
+    public ICollection<TicketTypeShow> TicketTypeShow { get; set; } = [];
 }

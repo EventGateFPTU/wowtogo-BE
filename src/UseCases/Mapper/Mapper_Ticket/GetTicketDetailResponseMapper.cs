@@ -9,7 +9,7 @@ public static class GetTicketDetailResponseMapper
             Id: ticket.Id,
             AttendeeId: ticket.AttendeeId,
             TicketType: ticket.TicketType?.Name ?? string.Empty,
-            EventName: ticket.TicketType?.Show?.Event?.Title ?? string.Empty,
+            EventName: ticket.TicketType?.TicketTypeShows.FirstOrDefault()?.Show.Title ?? string.Empty,
             Code: ticket.Code,
             UsedInFormat: ticket.UsedInFormat.ToString(),
             CreatedAt: ticket.CreatedAt,

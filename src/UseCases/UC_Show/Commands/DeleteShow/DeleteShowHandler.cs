@@ -14,7 +14,7 @@ public class DeleteShowHandler(IUnitOfWork unitOfWork) : IRequestHandler<DeleteS
         if (checkingShow.Event?.Status == EventStatusEnum.Canceled) return Result.Error("Cannot delete show of a canceled event");
         if (checkingShow.Event?.Status == EventStatusEnum.Completed) return Result.Error("Cannot delete show of a completed event");
         if (checkingShow.Event?.Status == EventStatusEnum.Published) return Result.Error("Cannot delete show of a published event");
-        if (checkingShow.TicketTypes.Any()) unitOfWork.TicketTypeRepository.RemoveRange(checkingShow.TicketTypes);
+        if (checkingShow.TicketTypeShow.Any()) unitOfWork.TicketTypeShowRepository.RemoveRange(checkingShow.TicketTypeShow);
         unitOfWork.ShowRepository.Remove(checkingShow);
         if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to delete show");
         return Result.SuccessWithMessage("Show is deleted successfully");
