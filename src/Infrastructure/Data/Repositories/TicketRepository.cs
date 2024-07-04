@@ -13,7 +13,8 @@ public class TicketRepository(WowToGoDBContext context) : RepositoryBase<Ticket>
         if (!trackChanges) query = query.AsNoTracking();
         return await query
             .Include(t => t.TicketType)
-            .ThenInclude(tt => tt.Show)
+            .ThenInclude(tt => tt.TicketTypeShows)
+            .ThenInclude(tts => tts.Show)
             .ThenInclude(s => s.Event)
             .Where(t => t.Id == ticketId)
             .Select(t => t.MapToGetTicketDetailsResponse())
@@ -25,7 +26,8 @@ public class TicketRepository(WowToGoDBContext context) : RepositoryBase<Ticket>
         if (!trackChanges) query = query.AsNoTracking();
         return await query
             .Include(t => t.TicketType)
-            .ThenInclude(tt => tt.Show)
+            .ThenInclude(tt => tt.TicketTypeShows)
+            .ThenInclude(tts => tts.Show)
             .ThenInclude(s => s.Event)
             .Where(t => t.Id == ticketId)
             .Select(t => t.MapToCreateTicketResponse())
@@ -38,8 +40,9 @@ public class TicketRepository(WowToGoDBContext context) : RepositoryBase<Ticket>
         if (!trackChanges) query = query.AsNoTracking();
         return await query
             .Include(t => t.TicketType)
-            .ThenInclude(tt => tt.Show)
-            .Where(t => t.Code == code && t.TicketType.ShowId == showId)
+            .ThenInclude(tt => tt.TicketTypeShows)
+            .ThenInclude(tts => tts.Show)
+            .Where(t => t.Code == code && t.TicketType.TicketTypeShows.Any(tts => tts.ShowId == showId))
             .SingleOrDefaultAsync(cancellationToken);
     }
 }

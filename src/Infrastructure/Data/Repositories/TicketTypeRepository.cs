@@ -9,14 +9,19 @@ public class TicketTypeRepository(WowToGoDBContext dbContext) : RepositoryBase<T
 {
     public async Task<Event?> GetEventFromTicketTypeIdAsync(Guid ticketTypeId, CancellationToken cancellationToken = default)
         => await _dbSet.AsNoTracking()
+            .Include(tt => tt.TicketTypeShows)
+            .ThenInclude(tts => tts.Show)
+            .ThenInclude(s => s.Event)
             .Where(tt => tt.Id.Equals(ticketTypeId))
-            .Select(tt => tt.Show)
+            .SelectMany(tt => tt.TicketTypeShows)
+            .Select(tts => tts.Show)
             .Select(s => s.Event)
             .FirstOrDefaultAsync(cancellationToken);
 
     public async Task<TicketType?> GetTicketIncludingEventAsync(Guid ticketId, CancellationToken cancellationToken = default)
         => await _dbSet.AsNoTracking()
-            .Include(tt => tt.Show)
+            .Include(tt => tt.TicketTypeShows)
+            .ThenInclude(tts => tts.Show)
             .ThenInclude(s => s.Event)
             .Where(tt => tt.Id.Equals(ticketId))
             .FirstOrDefaultAsync(cancellationToken);
@@ -26,8 +31,9 @@ public class TicketTypeRepository(WowToGoDBContext dbContext) : RepositoryBase<T
         IQueryable<TicketType> query = _dbSet;
         if (!trackChanges) query = query.AsNoTracking();
         return await query
-            .Include(tt => tt.Show)
-            .Where(tt => tt.ShowId.Equals(showId))
+            .Include(tt => tt.TicketTypeShows)
+            .ThenInclude(tts => tts.Show)
+            .Where(tt => tt.TicketTypeShows.Any(tts => tts.ShowId.Equals(showId)))
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .Select(tt => tt.MapToGetTicketTypeDetailsResponse())

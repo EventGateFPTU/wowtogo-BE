@@ -27,7 +27,7 @@ public class CreateTicketTypeEndpointHandler
         }
         return Results.Created("", result);
     }
-    public record CreateTicketTypeRequest(Guid ShowId,
+    public record CreateTicketTypeRequest(Guid[] ShowId,
                                            string Name,
                                            string Description,
                                            string ImageUrl,
