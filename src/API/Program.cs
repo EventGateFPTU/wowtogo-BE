@@ -8,12 +8,13 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using dotenv.net;
 using CloudinaryDotNet;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.AddHostConfigurations(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(x => x.EnableAnnotations());
+
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
@@ -30,6 +31,34 @@ builder.Services.AddCors(options =>
         option.AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod();
+    });
+});
+builder.Services.AddSwaggerGen(x =>
+{
+    x.EnableAnnotations();
+    x.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+
+    x.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+      {
+        new OpenApiSecurityScheme
+        {
+          Reference = new OpenApiReference
+          {
+            Type = ReferenceType.SecurityScheme,
+            Id = "Bearer"
+          },
+        },
+        new string[] {}
+      }
     });
 });
 
