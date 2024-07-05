@@ -23,6 +23,9 @@ public class WowToGoDBContext(DbContextOptions<WowToGoDBContext> options) : DbCo
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.HasDefaultSchema("wowtogo");
+        
+        modelBuilder.Entity<User>().HasIndex(b => b.Subject).IsUnique();
+        
         // Seed data
         Article[] articles = ArticleGenerator.GenerateArticles();
         User[] users = UserGenerator.GenerateUsers();

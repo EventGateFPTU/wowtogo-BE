@@ -20,6 +20,6 @@ public static class TicketTypeGenerator
             .RuleFor(tt => tt.MostAmountBuy, f => f.Random.Number(100, 10000))
             .RuleFor(tt => tt.CreatedAt, f => f.Date.Past())
             .RuleFor(tt => tt.UpdatedAt, f => f.Date.Past())
-            .Generate(200)
+            .Generate(20)
             .ToArray();
 }

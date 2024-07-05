@@ -13,6 +13,6 @@ public class TicketTypeShowGenerator
             .RuleFor(tts => tts.UpdatedAt, f => f.Date.Recent())
             .RuleFor(tts => tts.ShowId, f => f.PickRandom(shows).Id)
             .RuleFor(tts => tts.TicketTypeId, f => f.PickRandom(ticketTypes).Id)
-            .Generate(1000)
+            .Generate(10)
             .DistinctBy(tts => new { tts.ShowId, tts.TicketTypeId }).ToArray();
 }
