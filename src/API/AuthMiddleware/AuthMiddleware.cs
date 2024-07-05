@@ -1,14 +1,12 @@
 ﻿using API.Authorization;
 using Domain.Interfaces.Data;
-using Domain.Interfaces.Data.IRepositories;
 using Domain.Interfaces.Services;
-using Infrastructure.Data;
-using MediatR;
 using Microsoft.IdentityModel.Tokens;
+using UseCases.Common.Shared;
 
 namespace API.AuthMiddleware;
 
-public class AuthMiddleware(IUnitOfWork unitOfWork, IAuth0Service auth0Service) : IMiddleware
+public class AuthMiddleware(IUnitOfWork unitOfWork, IAuth0Service auth0Service, PipelineContext pipelineContext) : IMiddleware
 {
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
@@ -21,6 +19,8 @@ public class AuthMiddleware(IUnitOfWork unitOfWork, IAuth0Service auth0Service) 
         }
         authHeader = authHeader.Replace("Bearer ", "");
         
+        pipelineContext.Items.Add("JWT", authHeader);
+  
         var nameIdentifier = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
         if (!context.User.HasClaim(x => x.Type.Equals(nameIdentifier)))
         {

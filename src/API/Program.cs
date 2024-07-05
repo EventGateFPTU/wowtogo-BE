@@ -11,6 +11,7 @@ using CloudinaryDotNet;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.AddHostConfigurations(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(x => x.EnableAnnotations());
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -22,7 +23,6 @@ builder.Services.AddHttpClient();
 builder.Services.AddInfrastructure(builder.Configuration);
 // builder.Services.AddAntiforgery();
 
-builder.Host.AddHostConfigurations(builder.Configuration);
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(option =>
@@ -48,7 +48,7 @@ var requiredVars = new[]
     "CLIENT_ORIGIN_URL",
     "AUTH0_DOMAIN",
     "AUTH0_AUDIENCE",
-    "POSTGRES_CONSTR"
+    "POSTGRES_CONSTR",
 };
 
 foreach (var key in requiredVars)
@@ -75,8 +75,8 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 app.UseExceptionHandler();
 app.UseAuthentication();
-app.UseAuthorization();
 app.UseMiddleware<AuthMiddleware>();
+app.UseAuthorization();
 app.UseCors();
 // app.UseAntiforgery();
 
