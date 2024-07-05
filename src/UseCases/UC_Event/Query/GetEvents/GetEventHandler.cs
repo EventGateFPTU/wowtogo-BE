@@ -17,7 +17,7 @@ namespace UseCases.UC_Event.Query.GetEvents
     {
         public async Task<Result<GetEventResponse>> Handle(GetEventQuery request, CancellationToken cancellationToken)
         {
-            Event? checkingEvent = await unitOfWork.EventRepository.FindAsync(u => u.Id.Equals(request.EventID), cancellationToken: cancellationToken);
+            Event? checkingEvent = await unitOfWork.EventRepository.FindAsync(e => e.Id.Equals(request.EventID), cancellationToken: cancellationToken);
             if (checkingEvent is null) return Result.NotFound("Event is not found");
             GetEventResponse? gettingEvent = await unitOfWork.EventRepository.GetEventAsync(eventId: request.EventID, cancellationToken: cancellationToken);
             if(gettingEvent is null) return Result.NotFound("No events are found");

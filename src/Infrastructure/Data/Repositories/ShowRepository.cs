@@ -34,7 +34,8 @@ public class ShowRepository(WowToGoDBContext dbContext) : RepositoryBase<Show>(d
         if (!trackChanges) query = query.AsNoTracking();
         return await query
             .Include(s => s.Event)
-            .Include(s => s.TicketTypes)
+            .Include(s => s.TicketTypeShow)
+            .ThenInclude(tts => tts.TicketType)
             .Where(s => s.Event.Id == eventId)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)

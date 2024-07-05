@@ -9,7 +9,6 @@ public static class TicketTypeGenerator
             .UseSeed(1)
             .UseDateTimeReference(DateTime.UtcNow)
             .RuleFor(tt => tt.Id, f => f.Random.Guid())
-            .RuleFor(tt => tt.ShowId, f => f.PickRandom(shows).Id)
             .RuleFor(tt => tt.Name, f => f.Commerce.ProductName())
             .RuleFor(tt => tt.Description, f => f.Commerce.ProductDescription())
             .RuleFor(tt => tt.ImageUrl, f => f.Image.PicsumUrl())

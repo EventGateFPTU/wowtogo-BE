@@ -19,7 +19,6 @@ public class UpdateTicketTypeHandler(IUnitOfWork unitOfWork) : IRequestHandler<U
         if (request.Amount < request.LeastAmountBuy) return Result.Error("Amount should be greater than least amount buy");
         if (request.Amount < request.MostAmountBuy) return Result.Error("Amount should be greater than most amount buy");
         {
-            checkingTicketType.ShowId = request.showId;
             checkingTicketType.Name = request.Name;
             checkingTicketType.Description = request.Description;
             checkingTicketType.ImageUrl = request.ImageUrl;
@@ -31,7 +30,20 @@ public class UpdateTicketTypeHandler(IUnitOfWork unitOfWork) : IRequestHandler<U
             checkingTicketType.MostAmountBuy = request.MostAmountBuy;
             checkingTicketType.UpdatedAt = DateTimeOffset.UtcNow;
         }
+        if (request.showId.Any())
+        {
+            IEnumerable<TicketTypeShow> checkingTicketTypeShow = await unitOfWork.TicketTypeShowRepository.FindManyAsync(tts => checkingTicketType.Id.Equals(tts.TicketTypeId), cancellationToken: cancellationToken);
+            if (checkingTicketTypeShow.Any())
+            {
+                unitOfWork.TicketTypeShowRepository.RemoveRange(checkingTicketTypeShow);
+            }
+            unitOfWork.TicketTypeShowRepository.AddRange(request.showId.Select(showId => new TicketTypeShow
+            {
+                ShowId = showId,
+                TicketTypeId = checkingTicketType.Id
+            }));
+        }
         if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to update ticket type");
-        return Result.Success();
+        return Result.SuccessWithMessage("Ticket type is updated successfully");
     }
 }

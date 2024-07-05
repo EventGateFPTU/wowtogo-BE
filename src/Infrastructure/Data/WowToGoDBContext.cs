@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Data;
 public class WowToGoDBContext(DbContextOptions<WowToGoDBContext> options) : DbContext(options)
 {
+    public DbSet<TicketTypeShow> TicketTypeShows => Set<TicketTypeShow>();
     public DbSet<Article> Articles => Set<Article>();
     public DbSet<Attendee> Attendees => Set<Attendee>();
     public DbSet<Category> Categories => Set<Category>();
@@ -35,6 +36,7 @@ public class WowToGoDBContext(DbContextOptions<WowToGoDBContext> options) : DbCo
         Attendee[] attendees = AttendeeGenerator.GenerateAttendees(users, events);
         Order[] orders = OrderGenerator.GenerateOrders(ticketTypes, users);
         Ticket[] tickets = TicketGenerator.GenerateTickets(attendees, ticketTypes);
+        TicketTypeShow[] ticketTypeShows = TicketTypeShowGenerator.GenerateTicketTypeShows(ticketTypes, shows);
         // Seed data
         modelBuilder.Entity<Article>().HasData(articles);
         modelBuilder.Entity<User>().HasData(users);
@@ -48,5 +50,6 @@ public class WowToGoDBContext(DbContextOptions<WowToGoDBContext> options) : DbCo
         modelBuilder.Entity<Attendee>().HasData(attendees);
         modelBuilder.Entity<Order>().HasData(orders);
         modelBuilder.Entity<Ticket>().HasData(tickets);
+        modelBuilder.Entity<TicketTypeShow>().HasData(ticketTypeShows);
     }
 }
