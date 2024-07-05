@@ -13,6 +13,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
         IQueryable<Event> eventQuery = _dbSet;
         eventQuery = trackChanges ? eventQuery : eventQuery.AsNoTracking();
         return await eventQuery
+            .Include(e => e.Organizer)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .Select(c => c.MapEventDB())
