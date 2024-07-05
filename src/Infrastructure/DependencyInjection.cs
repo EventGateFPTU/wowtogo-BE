@@ -1,5 +1,7 @@
 using Domain.Interfaces.Data;
+using Domain.Interfaces.Services;
 using Infrastructure.Data;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +16,7 @@ public static class DependencyInjection
             var connectionString = configuration.GetValue<string>("POSTGRES_CONSTR") ?? string.Empty;
             options.UseNpgsql(connectionString);
         });
+        services.AddScoped<IAuth0Service, Auth0Service>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         return services;
     }

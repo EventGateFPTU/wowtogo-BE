@@ -1,19 +1,47 @@
 ﻿using API.Authorization;
+using Domain.Interfaces.Data;
+using Domain.Interfaces.Data.IRepositories;
+using Domain.Interfaces.Services;
+using Infrastructure.Data;
+using MediatR;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.AuthMiddleware;
 
-public class AuthMiddleware : IMiddleware
+public class AuthMiddleware(IUnitOfWork unitOfWork, IAuth0Service auth0Service) : IMiddleware
 {
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
+        var authHeader = context.Request.Headers.Authorization.ToString();
+        if (authHeader.IsNullOrEmpty() 
+            || !authHeader.Contains("Bearer "))
+        {
+            await next.Invoke(context);
+            return;
+        }
+        authHeader = authHeader.Replace("Bearer ", "");
         
         var nameIdentifier = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
-        if (context.User.HasClaim(x => x.Type.Equals(nameIdentifier)))
+        if (!context.User.HasClaim(x => x.Type.Equals(nameIdentifier)))
         {
-            var id = context.User.Claims.First(x => x.Type.Equals(nameIdentifier)).Value;
-            var currentUser = context.RequestServices.GetRequiredService<CurrentUser>();
-            currentUser.Id = id;
+            await next.Invoke(context);
+            return;
         }
+        
+        var subject = context.User.Claims.First(x => x.Type.Equals(nameIdentifier)).Value;
+        
+        // TODO: can improve
+        // Check in db then from Auth0
+        var user = await unitOfWork.UserRepository.GetUserBySubject(subject) ?? 
+                   await auth0Service.SyncUserProfileAsync(authHeader);
+        if (user is null)
+        {
+            await next.Invoke(context);
+            return;
+        }
+        
+        var currentUser = context.RequestServices.GetRequiredService<CurrentUser>();
+        currentUser.user = user;
         
         await next.Invoke(context);
     }

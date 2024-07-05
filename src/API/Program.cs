@@ -18,6 +18,7 @@ builder.Services.AddProblemDetails();
 
 builder.Services.AddServices(builder.Configuration);
 builder.Services.AddUseCases();
+builder.Services.AddHttpClient();
 builder.Services.AddInfrastructure(builder.Configuration);
 // builder.Services.AddAntiforgery();
 

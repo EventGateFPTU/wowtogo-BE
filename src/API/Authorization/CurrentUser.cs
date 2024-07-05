@@ -1,6 +1,9 @@
-﻿namespace API.Authorization;
+﻿using Domain.Models;
+
+namespace API.Authorization;
 
 public class CurrentUser
 {
-    public string? Id { get; set; } = null;
+    public required User user { get; set; }
+    
 }

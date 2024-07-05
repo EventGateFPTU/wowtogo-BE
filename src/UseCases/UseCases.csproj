@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Folder Include="UC_Event\Commands\" />
+    <Folder Include="UC_User\Commands\" />
   </ItemGroup>
 
   <PropertyGroup>
