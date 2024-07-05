@@ -4,7 +4,7 @@ public static class ArticleEndpoints
 {
     public static RouteGroupBuilder MapArticleEndpoints(this RouteGroupBuilder group)
     {
-        group.MapGet("", () => "hello articles").RequireAuthorization();
+        group.MapGet("", () => "hello articles");
         return group;
     }
 }
