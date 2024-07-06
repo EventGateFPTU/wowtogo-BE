@@ -9,10 +9,12 @@ namespace API.Endpoints.EndpointHandler.EventEndpointHandler.Queries
     {
         public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender,
                                                                         int pageNumber = 1,
-                                                                        int pageSize = 10)
+                                                                        int pageSize = 10,
+                                                                        string? searchTerm = null)
         {
             Result<GetAllEventsResponse> result = await sender.Send(new GetAllEventsQuery(PageNumber: pageNumber,
-                                                                                         PageSize: pageSize));
+                                                                                         PageSize: pageSize,
+                                                                                         SearchTerm: searchTerm));
             if (!result.IsSuccess)
             {
                 if (result.Status == ResultStatus.NotFound)
