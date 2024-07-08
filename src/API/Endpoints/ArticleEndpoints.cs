@@ -1,5 +1,3 @@
-using Ardalis.Result;
-using Microsoft.AspNetCore.Routing;
 using UseCases.Common.Contracts;
 
 namespace API.Endpoints;
