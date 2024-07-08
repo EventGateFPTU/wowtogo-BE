@@ -1,9 +1,9 @@
-using API.Authorization;
-using API.Extensions;
 using dotenv.net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
+using UseCases.Common.Models;
 
 namespace API;
 
@@ -43,7 +43,7 @@ public static class DependencyInjection
                 };
             });
 
-        services.RegisterPolicies();
+        services.AddAuthorization();
 
         return services;
     }

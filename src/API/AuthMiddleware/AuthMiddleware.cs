@@ -1,7 +1,7 @@
-﻿using API.Authorization;
-using Domain.Interfaces.Data;
+﻿using Domain.Interfaces.Data;
 using Domain.Interfaces.Services;
 using Microsoft.IdentityModel.Tokens;
+using UseCases.Common.Models;
 using UseCases.Common.Shared;
 
 namespace API.AuthMiddleware;
@@ -41,7 +41,7 @@ public class AuthMiddleware(IUnitOfWork unitOfWork, IAuth0Service auth0Service, 
         }
         
         var currentUser = context.RequestServices.GetRequiredService<CurrentUser>();
-        currentUser.user = user;
+        currentUser.User = user;
         
         await next.Invoke(context);
     }

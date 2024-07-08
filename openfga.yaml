@@ -1,0 +1,30 @@
+name: cuongngu
+description: 'Store ID: 01J21WGQNRYR7VDQZX9MD3ZWVJ'
+model: |
+  model
+    schema 1.1
+
+  type user
+
+  type event
+    relations
+      define organizer: [user]
+      define staff: [user]
+
+  type show
+    relations
+      define event: [event]
+      define allowed_ticket_type: [ticket_type]
+      define can_checkin: ticket from allowed_ticket_type
+
+  type ticket_type
+    relations
+      define event: [event]
+      define assignee: [user]
+      define ticket: [ticket]
+      define can_assign_staff: organizer from event
+
+  type ticket
+    relations
+      define type: [ticket_type]
+      define can_checkin_ticket: assignee from type

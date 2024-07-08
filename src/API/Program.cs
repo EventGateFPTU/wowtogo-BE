@@ -49,6 +49,9 @@ var requiredVars = new[]
     "AUTH0_DOMAIN",
     "AUTH0_AUDIENCE",
     "POSTGRES_CONSTR",
+    "FGA_API_URL",
+    "FGA_STORE_ID",
+    "FGA_MODEL_ID",
 };
 
 foreach (var key in requiredVars)

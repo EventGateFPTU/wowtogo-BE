@@ -1,28 +1,26 @@
 using Ardalis.Result;
 using Domain.Interfaces.Data;
 using Domain.Models;
+using Domain.Models.Events;
 using MediatR;
+using UseCases.Common.Models;
 
 namespace UseCases.UC_Event.Commands;
-public class CreateEventHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateEventCommand, Result>
+public class CreateEventHandler(IUnitOfWork unitOfWork, CurrentUser currentUser) : IRequestHandler<CreateEventCommand, Result>
 {
     public async Task<Result> Handle(CreateEventCommand request, CancellationToken cancellationToken)
     {
-        // TODO: check if user exists
-        User? user = await unitOfWork.UserRepository.FindAsync(u => u.Id.Equals(request.UserId), cancellationToken: cancellationToken);
-        if (user is null) return Result.NotFound("User is not found");
         // TODO: check if categories exist
         IEnumerable<Category> categories = await unitOfWork.CategoryRepository.FindManyAsync(c => request.CategoryIds.Contains(c.Id), cancellationToken: cancellationToken);
         if (!categories.Any()) return Result.NotFound("Categories are not found");
         // TODO: check if user is already a organizer
-        Guid organizerId = request.UserId;
-        Organizer? organizer = await unitOfWork.OrganizerRepository.FindAsync(o => o.Id.Equals(organizerId), cancellationToken: cancellationToken);
+        Organizer? organizer = await unitOfWork.OrganizerRepository.FindAsync(o => o.Id == currentUser.User.Id, cancellationToken: cancellationToken);
         if (organizer is null)
         {
             organizer = new()
             {
-                Id = request.UserId,
-                OrganizationName = user.FirstName,
+                Id = currentUser.User.Id,
+                OrganizationName = currentUser.User.FirstName,
             };
             unitOfWork.OrganizerRepository.Add(organizer);
         }
@@ -35,7 +33,7 @@ public class CreateEventHandler(IUnitOfWork unitOfWork) : IRequestHandler<Create
             Description = request.Description,
             Location = request.Location,
             MaxTickets = request.MaxTickets,
-            OrganizerId = organizerId,
+            OrganizerId = currentUser.User.Id,
             EventCategories = categories.Select(c => new EventCategory
             {
                 EventId = newEventId,
@@ -43,6 +41,7 @@ public class CreateEventHandler(IUnitOfWork unitOfWork) : IRequestHandler<Create
             }).ToList(),
         };
         unitOfWork.EventRepository.Add(newEvent);
+        newEvent.AddDomainEvent(new EventCreatedEvent(newEvent.Id));
         if(!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to create event");
         return Result.SuccessWithMessage("Event created successfully");
     }

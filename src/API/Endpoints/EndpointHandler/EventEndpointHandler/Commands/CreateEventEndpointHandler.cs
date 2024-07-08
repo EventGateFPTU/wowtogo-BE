@@ -11,7 +11,6 @@ public class CreateEventEndpointHandler
             request.Title,
             request.Description,
             request.Location,
-            request.UserId,
             request.MaxTickets,
             request.CategoryIds
         ), cancellationToken);
@@ -25,7 +24,6 @@ public class CreateEventEndpointHandler
     string Title,
     string Description,
     string Location,
-    Guid UserId,
     int MaxTickets,
     Guid[] CategoryIds);
 }

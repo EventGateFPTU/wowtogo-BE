@@ -1,9 +1,11 @@
 using Domain.Models;
 using Infrastructure.Data.DataGenerator;
+using Infrastructure.Extensions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
-public class WowToGoDBContext(DbContextOptions<WowToGoDBContext> options) : DbContext(options)
+public class WowToGoDBContext(DbContextOptions<WowToGoDBContext> options, IMediator mediator) : DbContext(options)
 {
     public DbSet<TicketTypeShow> TicketTypeShows => Set<TicketTypeShow>();
     public DbSet<Article> Articles => Set<Article>();
@@ -54,5 +56,11 @@ public class WowToGoDBContext(DbContextOptions<WowToGoDBContext> options) : DbCo
         modelBuilder.Entity<Order>().HasData(orders);
         modelBuilder.Entity<Ticket>().HasData(tickets);
         modelBuilder.Entity<TicketTypeShow>().HasData(ticketTypeShows);
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        await mediator.DispatchDomainEvents(this);
+        return await base.SaveChangesAsync(cancellationToken);
     }
 }
