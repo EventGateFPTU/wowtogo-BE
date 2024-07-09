@@ -16,8 +16,7 @@ namespace API.Endpoints.EndpointHandler.EventEndpointHandler.Commands
                                                                     Description: command.Description,
                                                                     Location: command.Location,
                                                                     Status: command.Status,
-                                                                    OrganizerID: command.OrganizerID,
-                                                                    MaxTickets : command.MaxTickets), cancellationToken);
+                                                                    CategoryIds: command.CategoryIds), cancellationToken);
             if (!result.IsSuccess)
             {
                 if (result.Status == ResultStatus.NotFound) return Results.NotFound(result);
@@ -30,7 +29,6 @@ namespace API.Endpoints.EndpointHandler.EventEndpointHandler.Commands
         string Description,
         string Location,
         EventStatusEnum Status,
-        Guid OrganizerID,
-        int MaxTickets
+        Guid[] CategoryIds
     );
 }

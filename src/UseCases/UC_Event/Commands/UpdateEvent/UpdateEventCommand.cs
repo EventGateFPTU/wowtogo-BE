@@ -14,6 +14,5 @@ namespace UseCases.UC_Event.Commands.UpdateEvent
         string Description,
         string Location,
         EventStatusEnum Status,
-        Guid OrganizerID,
-        int MaxTickets) : IRequest<Result>;
+        Guid[] CategoryIds) : IRequest<Result>;
 }
