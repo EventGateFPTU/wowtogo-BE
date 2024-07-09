@@ -13,8 +13,8 @@ public class CreateEventHandler(IUnitOfWork unitOfWork, CurrentUser currentUser)
     public async Task<Result<GetEventResponse>> Handle(CreateEventCommand request, CancellationToken cancellationToken)
     {
         // TODO: check if categories exist
-        IEnumerable<Category> categories = await unitOfWork.CategoryRepository.FindManyAsync(c => request.CategoryIds.Contains(c.Id), cancellationToken: cancellationToken);
-        if (!categories.Any()) return Result.NotFound("Categories are not found");
+        var categories = await unitOfWork.CategoryRepository.FindManyAsync(c => request.CategoryIds.Contains(c.Id), cancellationToken: cancellationToken);
+        
         // TODO: check if user is already a organizer
         Organizer? organizer = await unitOfWork.OrganizerRepository.FindAsync(o => o.Id == currentUser.User.Id, cancellationToken: cancellationToken);
         if (organizer is null)

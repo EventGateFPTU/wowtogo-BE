@@ -16,12 +16,7 @@ public class GetCategoriesEndpointHandler
             PageSize: pageSize,
             SearchTerm: searchTerm
             ));
-        if (!result.IsSuccess)
-        {
-            if(result.Status == ResultStatus.NotFound)
-                return Results.NotFound(result);
-            return Results.BadRequest(result);
-        }
-        return Results.Ok(result);
+        if (result.IsSuccess)return Results.Ok(result);
+        return Results.BadRequest(result);
     }
 }
