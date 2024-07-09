@@ -25,37 +25,11 @@ public class WowToGoDBContext(DbContextOptions<WowToGoDBContext> options, IMedia
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.HasDefaultSchema("wowtogo");
-        
+
         modelBuilder.Entity<User>().HasIndex(b => b.Subject).IsUnique();
+
+        // // Seed data
         
-        // Seed data
-        Article[] articles = ArticleGenerator.GenerateArticles();
-        User[] users = UserGenerator.GenerateUsers();
-        Organizer[] organizers = OrganizerGenerator.GenerateOrganizers(users);
-        Event[] events = EventGenerator.GenerateEvents(organizers);
-        Category[] categories = CategoryGenerator.GenerateCategories();
-        EventCategory[] eventCategories = EventCategoryGenerator.GenerateEventCategories(events, categories);
-        Staff[] staffs = StaffGenerator.GenerateStaff(users, events);
-        Show[] shows = ShowGenerator.GenerateShows(events);
-        TicketType[] ticketTypes = TicketTypeGenerator.GenerateTicketTypes(shows);
-        Attendee[] attendees = AttendeeGenerator.GenerateAttendees(users, events);
-        Order[] orders = OrderGenerator.GenerateOrders(ticketTypes, users);
-        Ticket[] tickets = TicketGenerator.GenerateTickets(attendees, ticketTypes);
-        TicketTypeShow[] ticketTypeShows = TicketTypeShowGenerator.GenerateTicketTypeShows(ticketTypes, shows);
-        // Seed data
-        modelBuilder.Entity<Article>().HasData(articles);
-        modelBuilder.Entity<User>().HasData(users);
-        modelBuilder.Entity<Organizer>().HasData(organizers);
-        modelBuilder.Entity<Event>().HasData(events);
-        modelBuilder.Entity<Category>().HasData(categories);
-        modelBuilder.Entity<EventCategory>().HasData(eventCategories);
-        modelBuilder.Entity<Staff>().HasData(staffs);
-        modelBuilder.Entity<Show>().HasData(shows);
-        modelBuilder.Entity<TicketType>().HasData(ticketTypes);
-        modelBuilder.Entity<Attendee>().HasData(attendees);
-        modelBuilder.Entity<Order>().HasData(orders);
-        modelBuilder.Entity<Ticket>().HasData(tickets);
-        modelBuilder.Entity<TicketTypeShow>().HasData(ticketTypeShows);
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

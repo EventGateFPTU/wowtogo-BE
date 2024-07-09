@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using dotenv.net;
 using CloudinaryDotNet;
 using Microsoft.OpenApi.Models;
+using API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,11 +67,6 @@ DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
 builder.Services.AddScoped(x => new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL")));
 
 var app = builder.Build();
-using var scope = app.Services.CreateScope();
-var dbContext = scope.ServiceProvider.GetRequiredService<WowToGoDBContext>();
-dbContext.Database.Migrate();
-// var provider = app.Services.GetRequiredService<iapiversion>();
-
 var requiredVars = new[]
 {
     "PORT",
@@ -100,6 +96,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.DisplayRequestDuration();
+    });
+    app.MigrateDatabase<WowToGoDBContext>((dbContext, _) =>
+    {
+        return dbContext.Seed();
     });
 }
 

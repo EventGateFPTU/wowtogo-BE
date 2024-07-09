@@ -49,7 +49,7 @@ public class UnitOfWork(WowToGoDBContext context) : IUnitOfWork
     public async Task<bool> Dispose(bool disposing)
     {
         if (!disposing) return false;
-        await _context.DisposeAsync();
+        await Task.Delay(0);
         GC.SuppressFinalize(this);
         return true;
     }
