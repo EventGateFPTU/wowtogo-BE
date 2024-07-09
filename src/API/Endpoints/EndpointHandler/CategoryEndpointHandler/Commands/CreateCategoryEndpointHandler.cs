@@ -8,13 +8,14 @@ namespace API.Endpoints.EndpointHandler.CategoryEndpointHandler.Commands
 	{
 		public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender, CreateCategoryRequest request, CancellationToken cancellationToken = default)
 		{
-			Result result = await sender.Send(new CreateCategoryCommand(request.name), cancellationToken);
+			var result = await sender.Send(new CreateCategoryCommand(request.name), cancellationToken);
 			if (!result.IsSuccess)
 			{
 				if (result.Status == ResultStatus.NotFound) return Results.NotFound(result);
 				return Results.BadRequest(result);
 			}
-			return Results.Created();
+
+			return Results.Ok(result);
 		}
 	}
 	public record CreateCategoryRequest(string name);
