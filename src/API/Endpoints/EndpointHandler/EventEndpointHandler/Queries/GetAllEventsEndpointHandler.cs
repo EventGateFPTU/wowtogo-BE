@@ -16,10 +16,10 @@ namespace API.Endpoints.EndpointHandler.EventEndpointHandler.Queries
                                                                                          PageSize: pageSize,
                                                                                          SearchTerm: searchTerm));
             if (result.IsSuccess)
-                return Results.Ok(result.Value);
+                return Results.Ok(result);
             if (result.Status == ResultStatus.NotFound)
-                return Results.NotFound(result.Value);
-            return Results.BadRequest(result.Value);
+                return Results.NotFound(result);
+            return Results.BadRequest(result);
             
         }
     }
