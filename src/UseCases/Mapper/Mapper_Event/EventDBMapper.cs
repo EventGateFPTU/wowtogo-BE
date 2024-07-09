@@ -16,10 +16,9 @@ namespace UseCases.Mapper.Mapper_Event
                 Description: _event.Description,
                 Location: _event.Location,
                 Status: _event.Status.ToString(),
-                OrganizerName: _event.Organizer?.OrganizationName ?? string.Empty,
+                OrganizerName: _event.Organizer.OrganizationName,
                 MaxTickets: _event.MaxTickets,
                 CreatedAt: _event.CreatedAt
-
                 );
     }
 }
