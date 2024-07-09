@@ -1,6 +1,7 @@
 using Domain.Interfaces.Data;
 using Domain.Interfaces.Services;
 using Infrastructure.Data;
+using Infrastructure.Extensions;
 using Infrastructure.Services;
 using Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
@@ -56,7 +57,7 @@ public static class DependencyInjection
             model.ModelId = modelId!;
         });
 
-        services.AddScoped<OpenFgaClient>(_ =>
+        services.AddSingleton<OpenFgaClient>(_ =>
         {
             var config = new ClientConfiguration
             {
@@ -64,7 +65,7 @@ public static class DependencyInjection
                 StoreId = storeId,
                 AuthorizationModelId = modelId,
             };
-            return new OpenFgaClient(config);
+            return new OpenFgaClient(config).ConfigureAuthModel();
         });
 
         services.AddScoped<IPermissionManager, PermissionManager>();
