@@ -20,6 +20,7 @@ public static class DependencyInjection
         {
             var connectionString = configuration.GetValue<string>("POSTGRES_CONSTR") ?? string.Empty;
             options.UseNpgsql(connectionString);
+            options.EnableSensitiveDataLogging();
         });
         services.AddScoped<IAuth0Service, Auth0Service>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -43,7 +44,7 @@ public static class DependencyInjection
 
         return services;
     }
-    
+
     public static IServiceCollection AddOpenFGA(this IServiceCollection services, IConfiguration configuration)
     {
         var apiUrl = configuration.GetValue<string>("FGA_API_URL");
