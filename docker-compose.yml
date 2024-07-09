@@ -28,6 +28,58 @@ services:
       - '5432:5432'
     volumes:
       - pg_data:/var/lib/postgresql/data
+  
 
+  open_fga_postgres:
+    image: postgres:14-alpine
+    networks:
+      - open_fga
+    environment:
+      - POSTGRES_USER=wotogo
+      - POSTGRES_PASSWORD=passw0rd
+    volumes:
+      - fga_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U wotogo" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  open_fga_migrate:
+    depends_on:
+      open_fga_postgres:
+        condition: service_healthy
+    image: openfga/openfga:latest
+    command: migrate
+    environment:
+      - OPENFGA_DATASTORE_ENGINE=postgres
+      - OPENFGA_DATASTORE_URI=postgres://wotogo:passw0rd@open_fga_postgres:5432/postgres?sslmode=disable
+    networks:
+      - open_fga
+
+  open_fga:
+    depends_on:
+      open_fga_migrate:
+        condition: service_completed_successfully
+    image: openfga/openfga:latest
+    environment:
+      - OPENFGA_DATASTORE_ENGINE=postgres
+      - OPENFGA_DATASTORE_URI=postgres://wotogo:passw0rd@open_fga_postgres:5432/postgres?sslmode=disable
+      - OPENFGA_LOG_FORMAT=json
+    command: run
+    networks:
+      - open_fga
+    ports:
+      # Needed for the http server
+      - "8080:8080"
+      # Needed for the grpc server (if used)
+      - "8081:8081"
+      # Needed for the playground (Do not enable in prod!)
+      - "3000:3000"
+        
 volumes:
   pg_data:
+  fga_pg_data:
+
+networks:
+  open_fga:
