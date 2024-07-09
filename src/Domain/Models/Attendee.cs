@@ -7,7 +7,7 @@ public class Attendee : UserProfile
     public required string PhoneNumber { get; set; }
     public required DateTimeOffset DateOfBirth { get; set; }
     public required Guid EventId { get; set; }
-    public Guid? UserId { get; set; } = null!;
+    public Guid UserId { get; set; }
     //----------------------------------------- 
     [ForeignKey(nameof(EventId))]
     public Event Event { get; set; } = null!;

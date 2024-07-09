@@ -42,7 +42,7 @@ public class CreateEventHandler(IUnitOfWork unitOfWork, CurrentUser currentUser)
         };
         unitOfWork.EventRepository.Add(newEvent);
         newEvent.AddDomainEvent(new EventCreatedEvent(newEvent.Id));
-        if(!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to create event");
+        if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to create event");
         return Result.SuccessWithMessage("Event created successfully");
     }
 }

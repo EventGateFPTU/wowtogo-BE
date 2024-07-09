@@ -6,6 +6,7 @@ namespace Domain.Models;
 public class Organizer : BaseEntity
 {
     public required string OrganizationName { get; set; }
+    public string Description { get; set; } = string.Empty;
     public string? ImageUrl { get; set; } = null!;
     //----------------------------------------- 
     [ForeignKey(nameof(Id))]

@@ -7,7 +7,7 @@ public class TicketTypeShowGenerator
     public static TicketTypeShow[] GenerateTicketTypeShows(TicketType[] ticketTypes, Show[] shows)
         => new Faker<TicketTypeShow>()
             .UseSeed(1)
-            .UseDateTimeReference(DateTime.Now)
+            .UseDateTimeReference(DateTime.UtcNow)
             .RuleFor(tts => tts.Id, f => f.Random.Guid())
             .RuleFor(tts => tts.CreatedAt, f => f.Date.Past())
             .RuleFor(tts => tts.UpdatedAt, f => f.Date.Recent())
