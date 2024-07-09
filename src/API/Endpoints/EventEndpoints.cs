@@ -16,7 +16,9 @@ public static class EventEndpoints
 
         // POST
         group.MapPost("/{eventId}/staff/{userId}", AddStaffEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Add a staff"));
-        group.MapPost("", CreateEventEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Create an event"));
+        group.MapPost("", CreateEventEndpointHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Create an event"))
+            .RequireAuthorization();
         // PUT
         group.MapPut("/{eventId}", UpdateEventEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Update an event"));
         group.MapPut("/{eventId}/background", UploadBackgroundImageEndpointHandler.Handle).DisableAntiforgery().WithMetadata(new SwaggerOperationAttribute("Upload background image of an event"));

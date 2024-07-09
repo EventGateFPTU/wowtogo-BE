@@ -9,16 +9,16 @@ using Domain.Models;
 namespace Domain.Responses.Responses_Event
 {
     public record GetEventResponse(
-        Guid EventID,
+        Guid Id,
         string Title,
         string Description,
         string Location,
+        CategoryDB[] Categories,
         string Status,
         string OrganizerName,
         string OrganizerImageUrl,
         string BackgroundImageUrl,
         string BannerImageUrl,
-        int MaxTickets,
         DateTimeOffset CreatedAt);
     public record EventDB(Guid EventID, string Title, 
         string Description,
