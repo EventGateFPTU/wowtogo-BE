@@ -12,6 +12,9 @@ public class RepositoryBase<T>(WowToGoDBContext dbContext) : IRepositoryBase<T> 
     public void AddRange(IEnumerable<T> entities)
         => _dbSet.AddRange(entities);
 
+    public IQueryable<T> DBSet()
+        => _dbSet;
+
     public async Task<T?> FindAsync(Expression<Func<T, bool>> predicate, bool trackChanges = false, CancellationToken cancellationToken = default)
         => trackChanges
             ? await _dbSet.FirstOrDefaultAsync(predicate, cancellationToken)
