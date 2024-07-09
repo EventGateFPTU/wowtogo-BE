@@ -1,4 +1,4 @@
-using Domain.Models.Events;
+using Domain.Events;
 using MediatR;
 using UseCases.Common.Constants;
 using UseCases.Common.Contracts;

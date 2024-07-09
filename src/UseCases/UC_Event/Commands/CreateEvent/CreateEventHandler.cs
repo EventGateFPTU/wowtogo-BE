@@ -1,7 +1,7 @@
 using Ardalis.Result;
+using Domain.Events;
 using Domain.Interfaces.Data;
 using Domain.Models;
-using Domain.Models.Events;
 using MediatR;
 using UseCases.Common.Models;
 
