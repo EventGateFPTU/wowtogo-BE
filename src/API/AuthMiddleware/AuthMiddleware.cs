@@ -34,11 +34,6 @@ public class AuthMiddleware(IUnitOfWork unitOfWork, IAuth0Service auth0Service, 
         // Check in db then from Auth0
         var user = await unitOfWork.UserRepository.GetUserBySubject(subject) ?? 
                    await auth0Service.SyncUserProfileAsync(authHeader);
-        if (user is null)
-        {
-            await next.Invoke(context);
-            return;
-        }
         
         var currentUser = context.RequestServices.GetRequiredService<CurrentUser>();
         currentUser.User = user;

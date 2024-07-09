@@ -9,14 +9,23 @@ public static class ShowEndpoints
     public static RouteGroupBuilder MapShowEndpoints(this RouteGroupBuilder group)
     {
         // GET
-        group.MapGet("/{showId}/tickets", GetTicketTypesOfShowEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Get all ticket types of a show"));
-        group.MapGet("/{showId}", GetShowDetailsEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Get details of a show"));
+        group.MapGet("/{showId}/tickets", GetTicketTypesOfShowEndpointHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Get all ticket types of a show"))
+            .RequireAuthorization();
+        group.MapGet("/{showId}", GetShowDetailsEndpointHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Get details of a show"));
         // POST
-        group.MapPost("", CreateShowEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Create a show"));
+        group.MapPost("", CreateShowEndpointHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Create a show"))
+            .RequireAuthorization();
         // PUT
-        group.MapPut("/{showId}", UpdateShowEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Update a show"));
+        group.MapPut("/{showId}", UpdateShowEndpointHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Update a show"))
+            .RequireAuthorization();
         // DELETE
-        group.MapDelete("/{showId}", DeleteShowEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Delete a show"));
+        group.MapDelete("/{showId}", DeleteShowEndpointHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Delete a show"))
+            .RequireAuthorization();
         return group;
     }
 }

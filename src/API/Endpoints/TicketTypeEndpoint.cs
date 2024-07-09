@@ -8,11 +8,17 @@ public static class TicketTypeEndpoint
     {
         // GET
         // POST
-        group.MapPost("", CreateTicketTypeEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Create a ticket type"));
+        group.MapPost("", CreateTicketTypeEndpointHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Create a ticket type"))
+            .RequireAuthorization();
         // PUT
-        group.MapPut("{ticketTypeId}", UpdateTicketTypeEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Update a ticket type"));
+        group.MapPut("{ticketTypeId}", UpdateTicketTypeEndpointHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Update a ticket type"))
+            .RequireAuthorization();
         // DELETE
-        group.MapDelete("", RemoveTicketTypeEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Delete a ticket type"));
+        group.MapDelete("{ticketTypeId}", RemoveTicketTypeEndpointHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Delete a ticket type"))
+            .RequireAuthorization();
         return group;
     }
 }
