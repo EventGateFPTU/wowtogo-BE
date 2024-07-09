@@ -25,7 +25,6 @@ namespace UseCases.UC_Event.Commands.UpdateEvent
             IEnumerable<EventCategory> eventCategories = await unitOfWork.EventCategoryRepository.FindManyAsync(ec => ec.EventId.Equals(request.Id));
             if (eventCategories.Any())
             {
-                if (eventCategories.Count() != request.CategoryIds.Length) return Result.Error("Some categories is not found in database");
                 unitOfWork.EventCategoryRepository.RemoveRange(eventCategories);
                 unitOfWork.EventCategoryRepository.AddRange(request.CategoryIds.Select(ecId => new EventCategory()
                 {
