@@ -1,4 +1,6 @@
-namespace Domain.Models.Events;
+using Domain.Events.Shared;
+
+namespace Domain.Events;
 
 public class EventCreatedEvent(Guid eventId) : BaseEvent
 {

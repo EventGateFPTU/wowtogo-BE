@@ -1,9 +1,11 @@
 using dotenv.net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using UseCases.Common.Models;
+using CorsPolicy = API.Common.CorsPolicy;
 
 namespace API;
 
@@ -13,14 +15,22 @@ public static class DependencyInjection
     {
         services.AddCors(options =>
         {
-            options.AddDefaultPolicy(policy =>
+            options.AddPolicy( CorsPolicy.Development, builder =>
+            {
+                builder
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+            
+            options.AddPolicy(CorsPolicy.Production, policy =>
             {
                 policy.WithOrigins(configuration.GetValue<string>("CLIENT_ORIGIN_URL") ?? string.Empty)
                     .WithHeaders([
                         HeaderNames.ContentType,
                         HeaderNames.Authorization
                     ])
-                    .WithMethods("GET")
+                    .WithMethods("GET", "POST")
                     .SetPreflightMaxAge(TimeSpan.FromSeconds(86400));
             });
         });

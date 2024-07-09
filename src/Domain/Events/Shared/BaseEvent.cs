@@ -1,5 +1,5 @@
 using MediatR;
 
-namespace Domain.Models.Events;
+namespace Domain.Events.Shared;
 
 public abstract class BaseEvent : INotification;

@@ -1,4 +1,5 @@
 using Ardalis.Result;
+using Domain.Responses.Responses_Event;
 using MediatR;
 
 namespace UseCases.UC_Event.Commands;
@@ -8,4 +9,4 @@ public record CreateEventCommand(
     string Location,
     int MaxTickets,
     Guid[] CategoryIds
-) : IRequest<Result>;
+) : IRequest<Result<GetEventResponse>>;

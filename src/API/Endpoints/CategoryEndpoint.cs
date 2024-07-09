@@ -8,7 +8,9 @@ public static class CategoryEndpoint
 	{
 		group.MapGet("/", GetCategoriesEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Get all categories"));
 		//POST
-		group.MapPost("", CreateCategoryEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Create a category"));
+		group.MapPost("", CreateCategoryEndpointHandler.Handle)
+			.WithMetadata(new SwaggerOperationAttribute("Create a category"))
+			.RequireAuthorization();
 		//DELETE
 		group.MapDelete("/{id}", DeleteCategoryEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Delete a category"));
 		//PUT

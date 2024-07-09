@@ -8,16 +8,15 @@ public class GetCategoriesEndpointHandler
 {
     public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender,
                                                                         int pageNumber = 1,
-                                                                        int pageSize = 10)
+                                                                        int pageSize = 10,
+                                                                        string? searchTerm = null)
     {
-        Result<GetCategoriesResponse> result = await sender.Send(new GetCategoriesQuery(PageNumber: pageNumber,
-                                                                                         PageSize: pageSize));
-        if (!result.IsSuccess)
-        {
-            if(result.Status == ResultStatus.NotFound)
-                return Results.NotFound(result);
-                return Results.BadRequest(result);
-        }
-        return Results.Ok(result);
+        Result<GetCategoriesResponse> result = await sender.Send(new GetCategoriesQuery(
+            PageNumber: pageNumber, 
+            PageSize: pageSize,
+            SearchTerm: searchTerm
+            ));
+        if (result.IsSuccess)return Results.Ok(result);
+        return Results.BadRequest(result);
     }
 }

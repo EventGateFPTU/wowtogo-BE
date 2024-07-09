@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Models.Events;
+using Domain.Events.Shared;
 
 namespace Domain.Models.Shared;
 public class BaseEntity

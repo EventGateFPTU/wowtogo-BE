@@ -1,4 +1,4 @@
-using Domain.Models.Events;
+using Domain.Events;
 using MediatR;
 using UseCases.Common.Constants;
 using UseCases.Common.Contracts;
@@ -12,7 +12,7 @@ public class EventCreatedEventHandler(CurrentUser currentUser, IPermissionManage
     {
         var user = $"user:{currentUser.User.Id.ToString()}";
 
-        var obj = $"event:{notification.EventId}";
+        var obj = $"event:{notification.EventId.ToString()}";
 
         await permissionManager.PutPermission((user, Relations.Organizer, obj));
     }

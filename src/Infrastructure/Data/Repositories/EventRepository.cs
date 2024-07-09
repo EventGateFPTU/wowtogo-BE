@@ -31,6 +31,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
         if (!trackChanges) query = query.AsNoTracking();
         return await query
             .Include(e => e.Organizer)
+            .Include(e => e.EventCategories).ThenInclude(ec => ec.Category)
             .Where(e => e.Id.Equals(eventId))
             .Select(e=> e.MapToGetEventResponse())
             .FirstOrDefaultAsync(cancellationToken);

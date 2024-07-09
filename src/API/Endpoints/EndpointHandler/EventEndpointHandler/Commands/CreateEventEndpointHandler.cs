@@ -1,4 +1,5 @@
 using Ardalis.Result;
+using Domain.Responses.Responses_Event;
 using MediatR;
 using UseCases.UC_Event.Commands;
 
@@ -7,18 +8,17 @@ public class CreateEventEndpointHandler
 {
     public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender, CreateEventRequest request, CancellationToken cancellationToken = default)
     {
-        Result result = await sender.Send(new CreateEventCommand(
+        var result = await sender.Send(new CreateEventCommand(
             request.Title,
             request.Description,
             request.Location,
             request.MaxTickets,
             request.CategoryIds
         ), cancellationToken);
-        if(!result.IsSuccess){
-            if(result.Status == ResultStatus.NotFound) return Results.NotFound(result);
-            return Results.BadRequest(result);
-        }
-        return Results.Created();
+        if (result.IsSuccess) return Results.Ok(result);
+        if(result.Status == ResultStatus.NotFound) return Results.NotFound(result);
+        return Results.BadRequest(result);
+
     }
     public record CreateEventRequest(
     string Title,
