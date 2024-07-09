@@ -20,7 +20,7 @@ namespace Domain.Responses.Responses_Event
         string BackgroundImageUrl,
         string BannerImageUrl,
         DateTimeOffset CreatedAt);
-    public record EventDB(Guid EventID, string Title, 
+    public record EventDB(Guid Id, string Title, 
         string Description,
         string Location,
         string Status,
