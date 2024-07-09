@@ -41,6 +41,7 @@ public class UnitOfWork(WowToGoDBContext context) : IUnitOfWork
     public IUserRepository UserRepository => _userRepository ??= new UserRepository(_context);
     public ITicketTypeShowRepository TicketTypeShowRepository => _ticketTypeShowRepository ??= new TicketTypeShowRepository(_context);
 
+
     public void Dispose()
     {
         if (_disposed) _disposed = !Dispose(true).Result;
