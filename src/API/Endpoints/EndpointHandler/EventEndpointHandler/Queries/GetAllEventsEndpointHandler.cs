@@ -15,13 +15,12 @@ namespace API.Endpoints.EndpointHandler.EventEndpointHandler.Queries
             Result<GetAllEventsResponse> result = await sender.Send(new GetAllEventsQuery(PageNumber: pageNumber,
                                                                                          PageSize: pageSize,
                                                                                          SearchTerm: searchTerm));
-            if (!result.IsSuccess)
-            {
-                if (result.Status == ResultStatus.NotFound)
-                    return Results.NotFound(result);
-                return Results.BadRequest(result);
-            }
-            return Results.Ok(result);
+            if (result.IsSuccess)
+                return Results.Ok(result.Value);
+            if (result.Status == ResultStatus.NotFound)
+                return Results.NotFound(result.Value);
+            return Results.BadRequest(result.Value);
+            
         }
     }
 }

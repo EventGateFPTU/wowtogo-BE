@@ -1,5 +1,6 @@
 using API;
 using API.AuthMiddleware;
+using API.Common;
 using UseCases;
 using Infrastructure;
 using API.ExceptionMiddlewares;
@@ -25,15 +26,6 @@ builder.Services.AddHttpClient();
 builder.Services.AddInfrastructure(builder.Configuration);
 // builder.Services.AddAntiforgery();
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(option =>
-    {
-        option.AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
-});
 builder.Services.AddSwaggerGen(x =>
 {
     x.EnableAnnotations();
@@ -101,6 +93,11 @@ if (app.Environment.IsDevelopment())
     {
         return dbContext.Seed();
     });
+    app.UseCors(CorsPolicy.Development);    
+}
+else
+{
+    app.UseCors(CorsPolicy.Production);
 }
 
 
@@ -109,8 +106,6 @@ app.UseExceptionHandler();
 app.UseAuthentication();
 app.UseMiddleware<AuthMiddleware>();
 app.UseAuthorization();
-app.UseCors();
-// app.UseAntiforgery();
 
 app.MapWowToGoEndpoints();
 
