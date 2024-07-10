@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(WowToGoDBContext))]
-    [Migration("20240709074115_FixUserNullable")]
+    [Migration("20240710085505_FixUserNullable")]
     partial class FixUserNullable
     {
         /// <inheritdoc />

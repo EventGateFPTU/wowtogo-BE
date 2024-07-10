@@ -22,9 +22,12 @@ namespace UseCases.UC_Event.Commands.UpdateEvent
             checkingEvent.Location = request.Location;
             checkingEvent.Status = request.Status;
             checkingEvent.UpdatedAt = DateTimeOffset.UtcNow;
-            IEnumerable<EventCategory> eventCategories = await unitOfWork.EventCategoryRepository.FindManyAsync(ec => ec.EventId.Equals(request.Id));
-            if (eventCategories.Any())
+            if (request.CategoryIds.Any())
             {
+                IEnumerable<EventCategory> eventCategories = await unitOfWork.EventCategoryRepository.FindManyAsync(ec => ec.EventId.Equals(request.Id));
+                IEnumerable<Category> checkingEventCategories = await unitOfWork.CategoryRepository
+                    .FindManyAsync(c => request.CategoryIds.Contains(c.Id), cancellationToken: cancellationToken);
+                if (checkingEventCategories.Count() != request.CategoryIds.Length) return Result.Error("Some categories is invalid !");
                 unitOfWork.EventCategoryRepository.RemoveRange(eventCategories);
                 unitOfWork.EventCategoryRepository.AddRange(request.CategoryIds.Select(ecId => new EventCategory()
                 {
