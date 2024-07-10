@@ -23,7 +23,7 @@ public static class WowToGoDbContextSeed
 
     private static async Task TrySeedAsync(WowToGoDBContext context)
     {
-        if ((await context.Set<Category>().FirstOrDefaultAsync()) is not null) return;
+        if ((await context.Set<Category>().Select(c => c.Name).FirstOrDefaultAsync()) is not null) return;
         Article[] articles = ArticleGenerator.GenerateArticles();
         User[] users = UserGenerator.GenerateUsers();
         Organizer[] organizers = OrganizerGenerator.GenerateOrganizers(users);
