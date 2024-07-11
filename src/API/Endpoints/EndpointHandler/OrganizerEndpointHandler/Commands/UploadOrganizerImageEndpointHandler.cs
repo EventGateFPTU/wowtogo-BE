@@ -5,7 +5,7 @@ using CloudinaryDotNet.Actions;
 using MediatR;
 using UseCases.UC_Organizer.Commands.UploadOrganizerImage;
 
-namespace API.Endpoints.EndpointHandler.OrganizerEndpointHandler;
+namespace API.Endpoints.EndpointHandler.OrganizerEndpointHandler.Commands;
 public class UploadOrganizerImageEndpointHandler
 {
     public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender, Cloudinary cloudinary, Guid organizerId, IFormFile file)
