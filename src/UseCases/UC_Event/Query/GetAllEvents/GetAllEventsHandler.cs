@@ -14,9 +14,8 @@ namespace UseCases.UC_Event.Query.GetAllEvents
     {
         public async Task<Result<GetAllEventsResponse>> Handle(GetAllEventsQuery request, CancellationToken cancellationToken)
         {
-            // TODO: can see event public
             IEnumerable<EventDB> eventDBs = await unitOfWork.EventRepository.GetAllEventAsync(request.PageNumber, request.PageSize, request.SearchTerm, false, cancellationToken);
-            if (!eventDBs.Any())  return Result.NotFound("Events are not found");
+            // if (!eventDBs.Any())  return Result.NotFound("Events are not found");
             GetAllEventsResponse result = new(request.PageNumber, request.PageSize, eventDBs);
             return Result.Success(result, "Events are found successfully");
         }
