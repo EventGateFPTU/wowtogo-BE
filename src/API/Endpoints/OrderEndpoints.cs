@@ -19,8 +19,7 @@ public static class OrderEndpoints
             .WithMetadata(new SwaggerOperationAttribute("Create an order"))
             .RequireAuthorization();
         group.MapPut("confirm-paid/{orderId}", ConfirmPaidOrderEndpointHandler.Handle)
-            .WithMetadata(new SwaggerOperationAttribute("Confirm an order as paid"))
-            .RequireAuthorization();
+            .WithMetadata(new SwaggerOperationAttribute("Confirm an order as paid"));
         group.MapPut("cancel/{orderId}", CancelOrderEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Cancel an order"))
             .RequireAuthorization();
