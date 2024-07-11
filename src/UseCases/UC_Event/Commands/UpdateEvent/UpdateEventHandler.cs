@@ -16,16 +16,24 @@ namespace UseCases.UC_Event.Commands.UpdateEvent
         {
             Event? checkingEvent = await unitOfWork.EventRepository.FindAsync(e => e.Id.Equals(request.Id), trackChanges: true, cancellationToken: cancellationToken);
             if (checkingEvent is null) return Result.NotFound("Event is not found");
-            Organizer? checkingOrganizerId = await unitOfWork.OrganizerRepository.FindAsync(o => o.Id.Equals(request.OrganizerID));
-            if (checkingOrganizerId is null) return Result.NotFound("OrganizerId is not found");
+            // NOTE : update event information
+            checkingEvent.Title = request.Title;
+            checkingEvent.Description = request.Description;
+            checkingEvent.Location = request.Location;
+            checkingEvent.Status = request.Status;
+            checkingEvent.UpdatedAt = DateTimeOffset.UtcNow;
+            if (request.CategoryIds.Any())
             {
-                checkingEvent.Title = request.Title;
-                checkingEvent.Description = request.Description;
-                checkingEvent.Location = request.Location;
-                checkingEvent.Status = request.Status;
-                checkingEvent.OrganizerId = request.OrganizerID;
-                checkingEvent.MaxTickets = request.MaxTickets;
-                checkingEvent.UpdatedAt = DateTimeOffset.UtcNow;
+                IEnumerable<EventCategory> eventCategories = await unitOfWork.EventCategoryRepository.FindManyAsync(ec => ec.EventId.Equals(request.Id));
+                IEnumerable<Category> checkingEventCategories = await unitOfWork.CategoryRepository
+                    .FindManyAsync(c => request.CategoryIds.Contains(c.Id), cancellationToken: cancellationToken);
+                if (checkingEventCategories.Count() != request.CategoryIds.Length) return Result.Error("Some categories is invalid !");
+                unitOfWork.EventCategoryRepository.RemoveRange(eventCategories);
+                unitOfWork.EventCategoryRepository.AddRange(request.CategoryIds.Select(ecId => new EventCategory()
+                {
+                    EventId = request.Id,
+                    CategoryId = ecId,
+                }));
             }
             if (!await unitOfWork.SaveChangesAsync()) return Result.Error("Failed to update event");
             return Result.Success();

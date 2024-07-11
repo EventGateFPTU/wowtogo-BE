@@ -1,4 +1,5 @@
 using Domain.Interfaces.Data;
+using Domain.Interfaces.Email;
 using Domain.Interfaces.Services;
 using Infrastructure.Data;
 using Infrastructure.Extensions;
@@ -25,11 +26,12 @@ public static class DependencyInjection
         });
         services.AddScoped<IAuth0Service, Auth0Service>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IMailService, MailService>();
         services.AddAuth0(configuration);
         services.AddScoped<PipelineContext>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddOpenFGA(configuration);
-
+        services.AddMailService(configuration);
         return services;
     }
 
@@ -43,6 +45,28 @@ public static class DependencyInjection
             model.Audience = auth0Audience!;
         });
 
+        return services;
+    }
+
+    public static IServiceCollection AddMailService(this IServiceCollection services, IConfiguration configuration)
+    {
+        string host = configuration.GetValue<string>("HOST") ?? string.Empty;
+        int port = configuration.GetValue<int>("PORT");
+        string username = configuration.GetValue<string>("USERNAME") ?? string.Empty;
+        string password = configuration.GetValue<string>("PASSWORD") ?? string.Empty;
+        string senderName = configuration.GetValue<string>("SENDER_NAME") ?? string.Empty;
+        string senderEmail = configuration.GetValue<string>("SENDER_EMAIL") ?? string.Empty;
+        string token = configuration.GetValue<string>("TOKEN") ?? string.Empty;
+        services.Configure<MailSettings>(model =>
+        {
+            model.Host = host;
+            model.Port = port;
+            model.Username = username;
+            model.Password = password;
+            model.SenderName = senderName;
+            model.SenderEmail = senderEmail;
+            model.Token = token;
+        });
         return services;
     }
 

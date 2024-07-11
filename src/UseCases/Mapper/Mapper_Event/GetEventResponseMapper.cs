@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using UseCases.Mapper.Mapper_Category;
 
 namespace UseCases.Mapper.Mapper_Event
 {
@@ -14,16 +15,17 @@ namespace UseCases.Mapper.Mapper_Event
         public static GetEventResponse MapToGetEventResponse(this Event mappingEvent)
         {
             return new GetEventResponse(
-                EventID: mappingEvent.Id,
+                Id: mappingEvent.Id,
                 Title: mappingEvent.Title,
                 Description: mappingEvent.Description,
                 Location: mappingEvent.Location,
                 Status: mappingEvent.Status.ToString(),
                 OrganizerName: mappingEvent.Organizer?.OrganizationName ?? string.Empty,
-                 OrganizerImageUrl: mappingEvent.Organizer?.ImageUrl ?? string.Empty,
+                OrganizerImageUrl: mappingEvent.Organizer?.ImageUrl ?? string.Empty,
                 BackgroundImageUrl: mappingEvent.BackgroundImageUrl,
                 BannerImageUrl: mappingEvent.BannerImageUrl,
-                MaxTickets: mappingEvent.MaxTickets,
+                Categories: mappingEvent.EventCategories.Select( ec => ec.Category.MapCategoryDB()).ToArray(),
+                // MaxTickets: mappingEvent.MaxTickets,
                 CreatedAt: mappingEvent.CreatedAt
                 );
         }

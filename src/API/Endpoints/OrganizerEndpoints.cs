@@ -5,6 +5,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace API.Endpoints;
 public static class OrganizerEndpoints
 {
+
 	public static RouteGroupBuilder MapOrganizerEndpoints(this RouteGroupBuilder group)
 	{
 		// GET
@@ -23,3 +24,4 @@ public static class OrganizerEndpoints
 
 	}
 }
+

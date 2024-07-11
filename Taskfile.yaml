@@ -22,3 +22,5 @@ tasks:
   dbupdate:
     dir: src/Infrastructure
     cmd: dotnet ef database update --startup-project ../API
+  openfga:
+    cmd: docker compose up -d open_fga_postgres open_fga_migrate open_fga

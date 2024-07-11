@@ -56,5 +56,8 @@ public class UnitOfWork(WowToGoDBContext context) : IUnitOfWork
     }
 
     public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)
-        => await _context.SaveChangesAsync(cancellationToken) > 0;
+    {
+        await _context.SaveChangesAsync(cancellationToken);
+        return true;
+    }
 }

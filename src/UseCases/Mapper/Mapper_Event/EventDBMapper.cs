@@ -11,7 +11,7 @@ namespace UseCases.Mapper.Mapper_Event
     public static class EventDBMapper
     {
         public static EventDB MapEventDB(this Event _event)
-            => new EventDB(EventID: _event.Id,
+            => new EventDB(Id: _event.Id,
                 Title: _event.Title,
                 Description: _event.Description,
                 Location: _event.Location,
