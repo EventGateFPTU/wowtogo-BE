@@ -8,4 +8,7 @@ public interface IEventRepository : IRepositoryBase<Event>
                                                     bool trackChanges = false,
                                                     CancellationToken cancellationToken = default);
     Task<IEnumerable<EventDB>> GetAllEventAsync(int pageNumber = 1, int pageSize = 10, string? searchTerm = null, bool trackChanges = false, CancellationToken cancellationToken = default);
+
+    Task<IEnumerable<EventDB>> GetFeaturedEventsAsync(int pageNumber = 1, int pageSize = 10, string? searchTerm = null,
+        bool trackChanges = false, CancellationToken cancellationToken = default);
 }
