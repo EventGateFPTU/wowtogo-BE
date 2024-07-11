@@ -13,9 +13,12 @@ public static class OrganizerEndpoints
 		group.MapPost("", CreateOrganizerEndpointHandler.Handle).DisableAntiforgery().WithMetadata(new SwaggerOperationAttribute("Create organizer")).RequireAuthorization();
 		// PUT
 		group.MapPut("/{organizerId}", UpdateOrganizerEndpointHandler.Handle).DisableAntiforgery().WithMetadata(new SwaggerOperationAttribute("Update organizer"));
-		group.MapPut("/{organizerId}/image", UploadOrganizerImageEndpointHandler.Handle).DisableAntiforgery().WithMetadata(new SwaggerOperationAttribute("Upload organizer image"));
-		// DELETE
 		group.MapDelete("/{organizerId}", DeleteOrganizerEndpointHandler.Handle).DisableAntiforgery().WithMetadata(new SwaggerOperationAttribute("Delete organizer"));
+		// PUT
+		group.MapPut("/{organizerId}/image", UploadOrganizerImageEndpointHandler.Handle)
+			.DisableAntiforgery()
+			.WithMetadata(new SwaggerOperationAttribute("Upload organizer image"))
+			.RequireAuthorization();
 		return group;
 
 	}
