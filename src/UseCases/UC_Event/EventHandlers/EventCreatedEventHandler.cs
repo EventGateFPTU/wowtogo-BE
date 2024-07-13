@@ -11,7 +11,7 @@ public class EventCreatedEventHandler(CurrentUser currentUser, IPermissionManage
 {
     public async Task Handle(EventCreatedEvent notification, CancellationToken cancellationToken)
     {
-        var userObj = RelationObjects.User(currentUser.User!.Id.ToString());
+        var userObj = RelationObjects.User(notification.UserId.ToString());
         var eventObj = RelationObjects.Event(notification.EventId.ToString());
 
         await permissionManager.PutPermission((userObj, Relations.EventOrganizer, eventObj));
