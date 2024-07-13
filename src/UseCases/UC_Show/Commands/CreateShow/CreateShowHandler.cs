@@ -13,12 +13,20 @@ public class CreateShowHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateS
         Event? checkingEvent = await unitOfWork.EventRepository.FindAsync(e => e.Id.Equals(request.EventId));
         if (checkingEvent is null) return Result.NotFound("Event is not found");
         if (request.StartsAt >= request.EndsAt) return Result.Error("Starts at should be less than ends at");
+        IEnumerable<TicketType> checkingTicketTypes = await unitOfWork.TicketTypeRepository.FindManyAsync(tt => request.TicketTypeIds.Contains(tt.Id));
+        if (checkingTicketTypes.Count() != request.TicketTypeIds.Length) return Result.Error("Some ticket type is not found");
+        Guid newShowId = Guid.NewGuid();
         Show show = new()
         {
             EventId = request.EventId,
             Title = request.Title,
             StartsAt = request.StartsAt,
-            EndsAt = request.EndsAt
+            EndsAt = request.EndsAt,
+            TicketTypeShow = request.TicketTypeIds.Select(tt => new TicketTypeShow()
+            {
+                TicketTypeId = tt,
+                ShowId = newShowId
+            }).ToList()
         };
         unitOfWork.ShowRepository.Add(show);
         if (!await unitOfWork.SaveChangesAsync()) return Result.Error("Failed to create show");
