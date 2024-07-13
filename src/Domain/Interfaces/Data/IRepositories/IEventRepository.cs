@@ -10,6 +10,6 @@ public interface IEventRepository : IRepositoryBase<Event>
                                                     CancellationToken cancellationToken = default);
     Task<PaginatedResponse<EventDB>> GetAllEventAsync(int pageNumber = 1, int pageSize = 10, string? searchTerm = null, bool trackChanges = false, CancellationToken cancellationToken = default);
 
-    Task<IEnumerable<EventDB>> GetFeaturedEventsAsync(int pageNumber = 1, int pageSize = 10, string? searchTerm = null,
+    Task<PaginatedResponse<EventDB>> GetFeaturedEventsAsync(int pageNumber = 1, int pageSize = 10, string? searchTerm = null,
         bool trackChanges = false, CancellationToken cancellationToken = default);
 }

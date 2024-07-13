@@ -36,7 +36,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
         );
     }
 
-    public async Task<IEnumerable<EventDB>> GetFeaturedEventsAsync(int pageNumber = 1, int pageSize = 10,
+    public async Task<PaginatedResponse<EventDB>> GetFeaturedEventsAsync(int pageNumber = 1, int pageSize = 10,
         string? searchTerm = null, bool trackChanges = false,
         CancellationToken cancellationToken = default)
     {
@@ -46,10 +46,12 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
         {
             eventQuery = eventQuery.Where(e => e.Title.Contains(searchTerm));
         }
-        return await eventQuery
+        eventQuery = eventQuery
             .Include(e => e.Organizer)
             .Include(e => e.Shows).ThenInclude(s => s.TicketTypeShow).ThenInclude(tts => tts.TicketType).ThenInclude(tt => tt.Orders)
-            .Where(e => e.Status == EventStatusEnum.Published)
+            .Where(e => e.Status == EventStatusEnum.Published);
+        int count = eventQuery.Count();
+        IEnumerable<EventDB> result = await eventQuery
             .Select(e => new
             {
                 Event = e.MapEventDB(),
@@ -60,6 +62,12 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             .Take(pageSize)
             .Select(c => c.Event)
             .ToListAsync(cancellationToken);
+        return new PaginatedResponse<EventDB>(
+            Data: result,
+            PageSize: pageSize,
+            PageNumber: pageNumber,
+            Count: count
+        );
     }
 
     public async Task<GetEventResponse?> GetEventAsync(Guid eventId, bool trackChanges = false, CancellationToken cancellationToken = default)
