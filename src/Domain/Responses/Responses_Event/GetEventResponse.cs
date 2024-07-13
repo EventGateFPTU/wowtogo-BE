@@ -17,6 +17,7 @@ namespace Domain.Responses.Responses_Event
         string Status,
         string OrganizerName,
         string OrganizerImageUrl,
+        string OrganizerDescription,
         string BackgroundImageUrl,
         string BannerImageUrl,
         DateTimeOffset CreatedAt);

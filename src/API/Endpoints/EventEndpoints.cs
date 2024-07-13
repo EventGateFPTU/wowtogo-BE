@@ -22,6 +22,8 @@ public static class EventEndpoints
             .WithMetadata(new SwaggerOperationAttribute("Get all events"));
         group.MapGet("/featured", GetAllFeaturedEventsEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Get featured events"));
+        group.MapPost("/search", SearchEventsEndpointHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Search events"));
 
         // POST
         group.MapPost("/{eventId}/staff/{userId}", AddStaffEndpointHandler.Handle)
