@@ -1,6 +1,7 @@
 using Domain.Interfaces.Data;
 using Domain.Interfaces.Email;
 using Domain.Interfaces.Images;
+using Domain.Interfaces.QRCoder;
 using Domain.Interfaces.Services;
 using Infrastructure.Data;
 using Infrastructure.Extensions;
@@ -32,6 +33,7 @@ public static class DependencyInjection
         services.AddScoped<PipelineContext>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IImageServices, ImageServices>();
+        services.AddScoped<IQRCoderServices, QRCoderServices>();
         services.AddOpenFGA(configuration);
         services.AddMailService(configuration);
         return services;
