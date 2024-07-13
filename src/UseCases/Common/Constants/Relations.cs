@@ -7,7 +7,7 @@ public static class Relations
     public const string EventStaff = "staff";
     
     // Show
-    public const string AllowedTicketType = "public const string";
+    public const string AllowedTicketType = "allowed_ticket_type";
     public const string ShowEvent = "event";
     public const string CanCheckInShow = "can_checkin";
 
