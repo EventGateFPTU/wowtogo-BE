@@ -9,8 +9,10 @@ public class TicketCreatedEventHandler(IPermissionManager permissionManager) : I
 {
     public async Task Handle(TicketCreatedEvent notification, CancellationToken cancellationToken)
     {
-        var user = $"ticket_type:{notification.TicketTypeId.ToString()}";
-        var obj = $"ticket:{notification.TicketId.ToString()}";
-        await permissionManager.PutPermission((user, Relations.TicketType, obj));
+        var ticketObj = $"ticket:{notification.TicketId.ToString()}";
+        var ticketTypeObj = $"ticket_type:{notification.TicketTypeId.ToString()}";
+        var ticketType = (ticketTypeObj, Relations.TicketType, ticketObj);
+        var ticketTypeTicket = (ticketObj, Relations.TicketTypeTicket, ticketTypeObj);
+        await permissionManager.PutPermission(ticketType,ticketTypeTicket);
     }
 }
