@@ -11,10 +11,10 @@ public class CreateShowHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateS
 {
     public async Task<Result<CreateShowResponse>> Handle(CreateShowCommand request, CancellationToken cancellationToken)
     {
-        Event? checkingEvent = await unitOfWork.EventRepository.FindAsync(e => e.Id.Equals(request.EventId));
+        Event? checkingEvent = await unitOfWork.EventRepository.FindAsync(e => e.Id.Equals(request.EventId), cancellationToken: cancellationToken);
         if (checkingEvent is null) return Result.NotFound("Event is not found");
         if (request.StartsAt >= request.EndsAt) return Result.Error("Starts at should be less than ends at");
-        IEnumerable<TicketType> checkingTicketTypes = await unitOfWork.TicketTypeRepository.FindManyAsync(tt => request.TicketTypeIds.Contains(tt.Id));
+        IEnumerable<TicketType> checkingTicketTypes = await unitOfWork.TicketTypeRepository.FindManyAsync(tt => request.TicketTypeIds.Contains(tt.Id), cancellationToken: cancellationToken);
         if (checkingTicketTypes.Count() != request.TicketTypeIds.Length) return Result.Error("Some ticket type is not found");
         Guid newShowId = Guid.NewGuid();
         Show show = new()
@@ -32,7 +32,8 @@ public class CreateShowHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateS
         unitOfWork.ShowRepository.Add(show);
         var showEvent = new ShowCreatedEvent(
             EventId: request.EventId,
-            ShowId: show.Id
+            ShowId: show.Id,
+            TicketTypeIds: request.TicketTypeIds
         );
         show.AddDomainEvent(showEvent);
         if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to create show");
