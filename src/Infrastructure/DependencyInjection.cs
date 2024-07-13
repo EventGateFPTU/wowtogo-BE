@@ -1,5 +1,6 @@
 using Domain.Interfaces.Data;
 using Domain.Interfaces.Email;
+using Domain.Interfaces.Images;
 using Domain.Interfaces.Services;
 using Infrastructure.Data;
 using Infrastructure.Extensions;
@@ -30,6 +31,7 @@ public static class DependencyInjection
         services.AddAuth0(configuration);
         services.AddScoped<PipelineContext>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<IImageServices, ImageServices>();
         services.AddOpenFGA(configuration);
         services.AddMailService(configuration);
         return services;
