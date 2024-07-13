@@ -2,6 +2,7 @@ using Domain.Interfaces.Data.IRepositories;
 using Domain.Models;
 using Domain.Responses.Responses_Show;
 using Domain.Responses.Responses_TicketType;
+using Domain.Responses.Shared;
 using Microsoft.EntityFrameworkCore;
 using UseCases.Mapper.Mapper_Show;
 using UseCases.Mapper.Mapper_TicketType;
@@ -28,18 +29,26 @@ public class ShowRepository(WowToGoDBContext dbContext) : RepositoryBase<Show>(d
             .SingleOrDefaultAsync(s => s.Id == showId, cancellationToken);
     }
 
-    public async Task<IEnumerable<GetShowDetailResponse>> GetShowsOfEventAsync(Guid eventId, int pageNumber = 1, int pageSize = 10, bool trackChanges = false, CancellationToken cancellationToken = default)
+    public async Task<PaginatedResponse<GetShowDetailResponse>> GetShowsOfEventAsync(Guid eventId, int pageNumber = 1, int pageSize = 10, bool trackChanges = false, CancellationToken cancellationToken = default)
     {
         IQueryable<Show> query = _dbSet;
         if (!trackChanges) query = query.AsNoTracking();
-        return await query
+        query = query
             .Include(s => s.Event)
             .Include(s => s.TicketTypeShow)
             .ThenInclude(tts => tts.TicketType)
-            .Where(s => s.Event.Id == eventId)
+            .Where(s => s.Event.Id == eventId);
+        int count = query.Count();
+        IEnumerable<GetShowDetailResponse> result = await query
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .Select(s => s.MapToGetShowDetailResponse())
             .ToListAsync(cancellationToken);
+        return new PaginatedResponse<GetShowDetailResponse>(
+            Data: result,
+            PageSize: pageSize,
+            PageNumber: pageNumber,
+            Count: count
+        );
     }
 }
