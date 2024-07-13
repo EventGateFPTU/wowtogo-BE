@@ -12,6 +12,9 @@ public class RepositoryBase<T>(WowToGoDBContext dbContext) : IRepositoryBase<T> 
     public void AddRange(IEnumerable<T> entities)
         => _dbSet.AddRange(entities);
 
+    public async Task<int> Count()
+        => await _dbSet.CountAsync();
+
     public IQueryable<T> DBSet()
         => _dbSet;
 
