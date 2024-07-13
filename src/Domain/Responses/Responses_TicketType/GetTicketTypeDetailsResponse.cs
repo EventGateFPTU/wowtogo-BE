@@ -1,4 +1,6 @@
+using Domain.Models;
 using Domain.Responses.Responses_Show;
+using Domain.Responses.Shared;
 
 namespace Domain.Responses.Responses_TicketType;
 public record GetTicketTypeDetailsResponse(
