@@ -1,4 +1,5 @@
 using Ardalis.Result;
+using Domain.Events.Shows;
 using Domain.Interfaces.Data;
 using Domain.Models;
 using Domain.Responses.Responses_Show;
@@ -29,7 +30,12 @@ public class CreateShowHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateS
             }).ToList()
         };
         unitOfWork.ShowRepository.Add(show);
-        if (!await unitOfWork.SaveChangesAsync()) return Result.Error("Failed to create show");
+        var showEvent = new ShowCreatedEvent(
+            EventId: request.EventId,
+            ShowId: show.Id
+        );
+        show.AddDomainEvent(showEvent);
+        if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to create show");
         return Result.Success(show.MapToCreateShowResponse(), "Show is created successfully");
     }
 }

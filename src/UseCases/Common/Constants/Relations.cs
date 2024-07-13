@@ -20,3 +20,12 @@ public static class Relations
     public const string TicketType = "type";
     public const string CanCheckInTicket = "can_checkin_ticket";
 }
+
+public static class RelationObjects
+{
+    public static string User(string id) => $"user:{id}";
+    public static string Event(string id) => $"event:{id}";
+    public static string Show(string id) => $"show:{id}";
+    public static string TicketType(string id) => $"ticket_type:{id}";
+    public static string Ticket(string id) => $"ticket:{id}";
+}

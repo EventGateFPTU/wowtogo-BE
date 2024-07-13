@@ -9,8 +9,9 @@ public class TicketCreatedEventHandler(IPermissionManager permissionManager) : I
 {
     public async Task Handle(TicketCreatedEvent notification, CancellationToken cancellationToken)
     {
-        var ticketObj = $"ticket:{notification.TicketId.ToString()}";
-        var ticketTypeObj = $"ticket_type:{notification.TicketTypeId.ToString()}";
+        var ticketObj = RelationObjects.Ticket(notification.TicketId.ToString()); 
+        var ticketTypeObj = RelationObjects.TicketType(notification.TicketTypeId.ToString());
+        // tuples
         var ticketType = (ticketTypeObj, Relations.TicketType, ticketObj);
         var ticketTypeTicket = (ticketObj, Relations.TicketTypeTicket, ticketTypeObj);
         await permissionManager.PutPermission(ticketType,ticketTypeTicket);
