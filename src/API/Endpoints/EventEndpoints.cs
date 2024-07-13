@@ -14,6 +14,8 @@ public static class EventEndpoints
             .RequireAuthorization();
         group.MapGet("/{eventId}/shows", GetShowsOfEventEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Get shows in an event"));
+        group.MapGet("/{eventId}/ticket-types", GetAllTicketTypesAndShowsHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Get all ticket types and shows in an event"));
         group.MapGet("/{eventId}", GetEventEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Get event"));
         group.MapGet("/", GetAllEventsEndpointHandler.Handle)
