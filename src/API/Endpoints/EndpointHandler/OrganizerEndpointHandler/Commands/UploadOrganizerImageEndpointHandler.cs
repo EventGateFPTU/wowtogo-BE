@@ -1,16 +1,16 @@
-using System.Reflection.Metadata;
 using Ardalis.Result;
-using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
+using Domain.Interfaces.Images;
 using MediatR;
 using UseCases.UC_Organizer.Commands.UploadOrganizerImage;
 
 namespace API.Endpoints.EndpointHandler.OrganizerEndpointHandler.Commands;
 public class UploadOrganizerImageEndpointHandler
 {
-    public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender, IFormFile file)
+    public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender, IImageServices imageServices, IFormFile file)
     {
-        Result result = await sender.Send(new UploadOrganizerImageCommand(file.OpenReadStream()));
+        Stream fileStream = file.OpenReadStream();
+        if (imageServices.IsTooLarge(fileStream)) return Results.BadRequest(Result.Error("Your image should be under 10MB"));
+        Result result = await sender.Send(new UploadOrganizerImageCommand(fileStream));
         if (!result.IsSuccess)
         {
             if (result.Status == ResultStatus.NotFound) return Results.NotFound(result);
