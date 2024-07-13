@@ -2,7 +2,6 @@ using Ardalis.Result;
 using Domain.Responses.Responses_TicketType;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using UseCases.UC_Ticket.Commands.CreateTicket;
 using UseCases.UC_TicketType.Commands.CreateTicketType;
 
 namespace API.Endpoints.EndpointHandler.TicketTypeEndpointHandler.Commands;

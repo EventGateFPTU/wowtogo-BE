@@ -7,6 +7,7 @@ public static class CreateShowResponseMapper
     public static CreateShowResponse MapToCreateShowResponse(this Show show)
         => new CreateShowResponse(
             Id: show.Id,
+            TicketTypeIds: show.TicketTypeShow.Select(tts => tts.TicketTypeId).ToArray(),
             EventId: show.EventId,
             Title: show.Title,
             StartsAt: show.StartsAt,
