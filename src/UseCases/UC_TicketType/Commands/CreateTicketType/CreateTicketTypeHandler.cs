@@ -1,12 +1,14 @@
 using Ardalis.Result;
 using Domain.Interfaces.Data;
 using Domain.Models;
+using Domain.Responses.Responses_TicketType;
 using MediatR;
+using UseCases.Mapper.Mapper_TicketType;
 
 namespace UseCases.UC_TicketType.Commands.CreateTicketType;
-public class CreateTicketTypeHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateTicketTypeCommand, Result>
+public class CreateTicketTypeHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateTicketTypeCommand, Result<CreateTicketTypeResponse>>
 {
-    public async Task<Result> Handle(CreateTicketTypeCommand request, CancellationToken cancellationToken)
+    public async Task<Result<CreateTicketTypeResponse>> Handle(CreateTicketTypeCommand request, CancellationToken cancellationToken)
     {
         if (request.showId.Count() > 0)
         {
@@ -43,6 +45,6 @@ public class CreateTicketTypeHandler(IUnitOfWork unitOfWork) : IRequestHandler<C
         };
         unitOfWork.TicketTypeRepository.Add(ticketType);
         if (!await unitOfWork.SaveChangesAsync()) return Result.Error("Failed to create ticket type");
-        return Result.SuccessWithMessage("Ticket type is created successfully");
+        return Result.Success(ticketType.MapToTicketTypeResponse(), "Ticket type is created successfully");
     }
 }
