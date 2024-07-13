@@ -10,10 +10,10 @@ public class EventCreatedEventHandler(CurrentUser currentUser, IPermissionManage
 {
     public async Task Handle(EventCreatedEvent notification, CancellationToken cancellationToken)
     {
-        var user = $"user:{currentUser.User.Id.ToString()}";
+        var user = $"user:{currentUser.User!.Id.ToString()}";
 
         var obj = $"event:{notification.EventId.ToString()}";
 
-        await permissionManager.PutPermission((user, Relations.Organizer, obj));
+        await permissionManager.PutPermission((user, Relations.EventOrganizer, obj));
     }
 }

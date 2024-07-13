@@ -30,8 +30,8 @@ public static class EventEndpoints
             .RequireAuthorization();
         // PUT
         group.MapPut("/{eventId}", UpdateEventEndpointHandler.Handle)
-            .WithMetadata(new SwaggerOperationAttribute("Update an event"));
-        // .RequireAuthorization();
+            .WithMetadata(new SwaggerOperationAttribute("Update an event"))
+            .RequireAuthorization();
         group.MapPut("/{eventId}/background", UploadBackgroundImageEndpointHandler.Handle)
             .DisableAntiforgery()
             .WithMetadata(new SwaggerOperationAttribute("Upload background image of an event"))
