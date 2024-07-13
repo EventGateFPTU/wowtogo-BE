@@ -1,4 +1,5 @@
 using Ardalis.Result;
+using Domain.Responses.Responses_Order;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using UseCases.UC_Order.Commands.CreateOrder;
@@ -8,9 +9,8 @@ public static class CreateOrderEndpointHandler
 {
     public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender, [FromBody] CreateOrderRequest request)
     {
-        Result result = await sender.Send(
+        Result<CreateOrderResponse> result = await sender.Send(
             new CreateOrderQuery(request.TicketTypeId,
-                                request.UserId,
                                 request.Currency,
                                 request.PhoneNumber,
                                 request.DateOfBirth)
@@ -24,9 +24,9 @@ public static class CreateOrderEndpointHandler
         return Results.Created(result.SuccessMessage, result);
     }
 }
+
 public record CreateOrderRequest
     (Guid TicketTypeId,
-    Guid UserId,
     string Currency,
     string PhoneNumber,
     DateTimeOffset DateOfBirth);
