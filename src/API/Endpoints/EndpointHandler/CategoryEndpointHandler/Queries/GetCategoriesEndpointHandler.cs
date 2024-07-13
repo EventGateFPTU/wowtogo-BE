@@ -1,5 +1,6 @@
 using Ardalis.Result;
 using Domain.Responses.Responses_Category;
+using Domain.Responses.Shared;
 using MediatR;
 using UseCases.UC_Category.Queries.GetCategories;
 
@@ -11,12 +12,12 @@ public class GetCategoriesEndpointHandler
                                                                         int pageSize = 10,
                                                                         string? searchTerm = null)
     {
-        Result<GetCategoriesResponse> result = await sender.Send(new GetCategoriesQuery(
-            PageNumber: pageNumber, 
+        Result<PaginatedResponse<CategoryDB>> result = await sender.Send(new GetCategoriesQuery(
+            PageNumber: pageNumber,
             PageSize: pageSize,
             SearchTerm: searchTerm
             ));
-        if (result.IsSuccess)return Results.Ok(result);
+        if (result.IsSuccess) return Results.Ok(result);
         return Results.BadRequest(result);
     }
 }

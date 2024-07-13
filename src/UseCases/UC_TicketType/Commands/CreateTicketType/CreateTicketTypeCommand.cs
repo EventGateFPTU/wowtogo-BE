@@ -1,4 +1,5 @@
 using Ardalis.Result;
+using Domain.Responses.Responses_TicketType;
 using MediatR;
 
 namespace UseCases.UC_TicketType.Commands.CreateTicketType;
@@ -12,4 +13,4 @@ public record CreateTicketTypeCommand(Guid[] showId,
                                         int Amount,
                                         int LeastAmountBuy,
                                         int MostAmountBuy
-                                        ) : IRequest<Result>;
+                                        ) : IRequest<Result<CreateTicketTypeResponse>>;

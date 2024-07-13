@@ -1,7 +1,7 @@
 using Ardalis.Result;
+using Domain.Responses.Responses_TicketType;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using UseCases.UC_Ticket.Commands.CreateTicket;
 using UseCases.UC_TicketType.Commands.CreateTicketType;
 
 namespace API.Endpoints.EndpointHandler.TicketTypeEndpointHandler.Commands;
@@ -9,7 +9,7 @@ public class CreateTicketTypeEndpointHandler
 {
     public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender, [FromBody] CreateTicketTypeRequest request, CancellationToken cancellationToken = default)
     {
-        Result result = await sender.Send(new CreateTicketTypeCommand(request.ShowId,
+        Result<CreateTicketTypeResponse> result = await sender.Send(new CreateTicketTypeCommand(request.ShowId,
                                                                         request.Name,
                                                                         request.Description,
                                                                         request.ImageUrl,

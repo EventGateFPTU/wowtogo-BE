@@ -1,4 +1,5 @@
 using Ardalis.Result;
+using Domain.Responses.Responses_Show;
 using MediatR;
 using UseCases.UC_Show.Commands.CreateShow;
 
@@ -7,7 +8,8 @@ public class CreateShowEndpointHandler
 {
     public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender, CreateShowRequest command, CancellationToken cancellationToken = default)
     {
-        Result result = await sender.Send(new CreateShowCommand(EventId: command.EventId,
+        Result<CreateShowResponse> result = await sender.Send(new CreateShowCommand(EventId: command.EventId,
+                                                                TicketTypeIds: command.TicketTypeIds,
                                                                 Title: command.Title,
                                                                 StartsAt: command.StartsAt,
                                                                 EndsAt: command.EndsAt), cancellationToken);
@@ -19,6 +21,7 @@ public class CreateShowEndpointHandler
         return Results.Created(result.SuccessMessage, result);
     }
     public record CreateShowRequest(Guid EventId,
+                                    Guid[] TicketTypeIds,
                                     string Title,
                                     DateTimeOffset StartsAt,
                                     DateTimeOffset EndsAt);

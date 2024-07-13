@@ -18,8 +18,8 @@ public static class OrganizerEndpoints
 		// PUT
 		group.MapPut("/{organizerId}/image", UploadOrganizerImageEndpointHandler.Handle)
 			.DisableAntiforgery()
-			.WithMetadata(new SwaggerOperationAttribute("Upload organizer image"))
-			.RequireAuthorization();
+			.WithMetadata(new SwaggerOperationAttribute("Upload organizer image"));
+		// .RequireAuthorization();
 		return group;
 
 	}
