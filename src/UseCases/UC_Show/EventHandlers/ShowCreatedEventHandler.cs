@@ -18,7 +18,7 @@ public class ShowCreatedEventHandler(IPermissionManager permissionManager) : INo
             .Select(tt => (
                 RelationObjects.TicketType(tt.ToString()),
                 Relations.AllowedTicketType,
-                showObj
+                showObj.ToString()
                 ))
             .Append(eventRelationTuple)
             .ToArray();

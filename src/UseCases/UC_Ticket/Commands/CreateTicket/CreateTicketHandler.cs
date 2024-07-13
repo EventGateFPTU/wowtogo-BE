@@ -28,7 +28,7 @@ public class CreateTicketHandler(IUnitOfWork unitOfWork, IMailService mailServic
         };
         unitOfWork.TicketRepository.Add(ticket);
         // OpenFga
-        ticket.AddDomainEvent(new TicketCreatedEvent(TicketId: ticket.Id, TicketTypeId: request.TicketTypeId));
+        ticket.AddDomainEvent(new TicketCreatedEvent(ticketId: ticket.Id, ticketTypeId: request.TicketTypeId));
         if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to create ticket");
         CreateTicketResponse? ticketDetail = await unitOfWork.TicketRepository.GetCreatedTicketDetail(ticket.Id, cancellationToken: cancellationToken);
         if (ticketDetail == null) return Result.Error("Successfully created the ticket but failed to get its detail");

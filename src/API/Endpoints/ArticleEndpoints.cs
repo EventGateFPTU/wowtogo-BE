@@ -9,7 +9,7 @@ public static class ArticleEndpoints
         group.MapGet("", async (IPermissionManager permissionManager) =>
         {
             var tuple = ("user:cuong", "assignee", "ticket_type:1");
-            var tuple1 = ("user:cuong", "assignee", "ticket_type:1");
+            var tuple1 = ("user:cuong", "assignee", "ticket_type:2");
             var addRes = await permissionManager.PutPermission(tuple, tuple1);
             Console.WriteLine(addRes);
 

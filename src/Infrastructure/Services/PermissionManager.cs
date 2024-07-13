@@ -39,7 +39,7 @@ public class PermissionManager(OpenFgaClient client) : IPermissionManager
         catch (FgaApiValidationError ex)
         {
             Console.WriteLine(ex.Message);
-            return true;
+            return false;
         }
     }
 

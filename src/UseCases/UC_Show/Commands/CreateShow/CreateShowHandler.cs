@@ -31,9 +31,9 @@ public class CreateShowHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateS
         };
         unitOfWork.ShowRepository.Add(show);
         var showEvent = new ShowCreatedEvent(
-            EventId: request.EventId,
-            ShowId: show.Id,
-            TicketTypeIds: request.TicketTypeIds
+            eventId: request.EventId,
+            showId: newShowId,
+            ticketTypeIds: request.TicketTypeIds
         );
         show.AddDomainEvent(showEvent);
         if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to create show");
