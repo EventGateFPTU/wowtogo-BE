@@ -1,6 +1,6 @@
 using Domain.Events.Shared;
 
-namespace Domain.Events;
+namespace Domain.Events.Events;
 
 public class EventCreatedEvent(Guid eventId) : BaseEvent
 {

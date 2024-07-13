@@ -1,4 +1,5 @@
 using Domain.Events;
+using Domain.Events.Events;
 using MediatR;
 using UseCases.Common.Constants;
 using UseCases.Common.Contracts;

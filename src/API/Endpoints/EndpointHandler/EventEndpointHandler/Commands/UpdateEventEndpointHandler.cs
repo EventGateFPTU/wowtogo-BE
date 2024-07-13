@@ -17,12 +17,14 @@ namespace API.Endpoints.EndpointHandler.EventEndpointHandler.Commands
                                                                     Location: command.Location,
                                                                     Status: command.Status,
                                                                     CategoryIds: command.CategoryIds), cancellationToken);
-            if (!result.IsSuccess)
+            if (result.IsSuccess) return Results.NoContent();
+
+            return result.Status switch
             {
-                if (result.Status == ResultStatus.NotFound) return Results.NotFound(result);
-                return Results.BadRequest(result);
-            }
-            return Results.NoContent();
+                ResultStatus.NotFound => Results.NotFound(result),
+                ResultStatus.Forbidden => Results.Forbid(),
+                _ => Results.BadRequest(result)
+            };
         }
     }
     public record UpdateEventRequest(string Title,

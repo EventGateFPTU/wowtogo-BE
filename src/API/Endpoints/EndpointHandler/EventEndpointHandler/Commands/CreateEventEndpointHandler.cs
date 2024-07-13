@@ -2,6 +2,7 @@ using Ardalis.Result;
 using Domain.Responses.Responses_Event;
 using MediatR;
 using UseCases.UC_Event.Commands;
+using UseCases.UC_Event.Commands.CreateEvent;
 
 namespace API.Endpoints.EndpointHandler.EventEndpointHandler.Commands;
 public class CreateEventEndpointHandler
