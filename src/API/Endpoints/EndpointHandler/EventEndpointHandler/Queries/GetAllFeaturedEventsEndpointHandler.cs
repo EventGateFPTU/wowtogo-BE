@@ -1,5 +1,6 @@
 using Ardalis.Result;
 using Domain.Responses.Responses_Event;
+using Domain.Responses.Shared;
 using MediatR;
 using UseCases.UC_Event.Query.GetFeaturedEvent;
 using IResult = Microsoft.AspNetCore.Http.IResult;
@@ -13,7 +14,7 @@ public class GetAllFeaturedEventsEndpointHandler
         int pageSize = 10,
         string? searchTerm = null)
     {
-        Result<GetAllEventsResponse> result = await sender.Send(new GetFeaturedEventQuery(PageNumber: pageNumber,
+        Result<PaginatedResponse<EventDB>> result = await sender.Send(new GetFeaturedEventQuery(PageNumber: pageNumber,
             PageSize: pageSize,
             SearchTerm: searchTerm));
         if (result.IsSuccess)

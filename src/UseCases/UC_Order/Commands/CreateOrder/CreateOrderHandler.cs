@@ -8,10 +8,10 @@ using UseCases.Mapper.Mapper_Order;
 using UseCases.UC_Attendees.Commands.CreateAttendee;
 
 namespace UseCases.UC_Order.Commands.CreateOrder;
-public class CreateOrderHandler(IUnitOfWork unitOfWork, ISender sender,CurrentUser currentUser) : IRequestHandler<CreateOrderQuery, Result<CreateOrderResponse>>
+public class CreateOrderHandler(IUnitOfWork unitOfWork, ISender sender, CurrentUser currentUser) : IRequestHandler<CreateOrderCommand, Result<CreateOrderResponse>>
 {
 
-    public async Task<Result<CreateOrderResponse>> Handle(CreateOrderQuery request, CancellationToken cancellationToken)
+    public async Task<Result<CreateOrderResponse>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
         Guid currentUserId = currentUser.User!.Id;
         // Check if the ticket type is not found

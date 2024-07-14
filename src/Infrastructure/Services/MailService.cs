@@ -4,12 +4,13 @@ using System.Net.Http.Json;
 using System.Net.Mime;
 using System.Text;
 using Domain.Interfaces.Email;
+using Domain.Interfaces.QRCoder;
 using Infrastructure.Settings;
 using Microsoft.Extensions.Options;
 using QRCoder;
 
 namespace Infrastructure.Services;
-public class MailService(IOptionsMonitor<MailSettings> mailSettings) : IMailService
+public class MailService(IOptionsMonitor<MailSettings> mailSettings, IQRCoderServices qrCoderServices) : IMailService
 {
     private readonly MailSettings _mailSettings = mailSettings.CurrentValue;
     public bool SendCreateRequestHtmlMail(string userName, string requestType, string operation, string documentName, string reason, Guid documentId, string email)
@@ -44,11 +45,10 @@ public class MailService(IOptionsMonitor<MailSettings> mailSettings) : IMailServ
             template_variables = new
             {
                 ticket_code = code,
-                qr_code = Base64Encode(code)
             },
             attachments = new[]{
                 new{
-                    content=Base64Encode(code),
+                    content=qrCoderServices.EncodeToBase64(code),
                     type="image/png",
                     filename=$"qr-{code}.png",
                     disposition="inline",
@@ -61,14 +61,5 @@ public class MailService(IOptionsMonitor<MailSettings> mailSettings) : IMailServ
         HttpResponseMessage response = await httpClient.PostAsJsonAsync(_mailSettings.Host, request);
         if (response.StatusCode != HttpStatusCode.OK) return false;
         return true;
-    }
-    public static string Base64Encode(string plainText)
-    {
-        QRCodeGenerator qRCodeGenerator = new();
-        QRCodeData qr = qRCodeGenerator.CreateQrCode(plainText, QRCodeGenerator.ECCLevel.Q);
-        Base64QRCode qrCode = new Base64QRCode(qr);
-        string qrCodeImageAsBase64 = qrCode.GetGraphic(20, Color.Black, Color.White, true, Base64QRCode.ImageType.Png);
-        var htmlPictureTag = $"{qrCodeImageAsBase64}";
-        return htmlPictureTag;
     }
 }
