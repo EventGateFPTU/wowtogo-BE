@@ -1,7 +1,9 @@
 using Ardalis.Result;
+using Domain.Events.Staffs;
 using Domain.Interfaces.Data;
 using Domain.Models;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace UseCases.UC_Staff.Commands.AddStaff;
 public class AddStaffHandler(IUnitOfWork unitOfWork) : IRequestHandler<AddStaffCommand, Result>
@@ -20,6 +22,7 @@ public class AddStaffHandler(IUnitOfWork unitOfWork) : IRequestHandler<AddStaffC
             EventId = checkingEvent.Id,
         };
         unitOfWork.StaffRepository.Add(newStaff);
+        newStaff.AddDomainEvent(new StaffAddedEvent(staffUserId: checkingUser.Id, eventId: checkingEvent.Id));
         if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to add staff");
         return Result.SuccessWithMessage("Staff is added successfully");
     }

@@ -14,14 +14,23 @@ public class ShowCreatedEventHandler(IPermissionManager permissionManager) : INo
 
         var eventRelationTuple = (eventObj, Relations.ShowEvent, showObj);
         
-        var tuples = notification.TicketTypeIds
+        var allowedTicketTypeTuples = notification.TicketTypeIds
             .Select(tt => (
                 RelationObjects.TicketType(tt.ToString()),
                 Relations.AllowedTicketType,
-                showObj.ToString()
-                ))
+                showObj
+                ));
+        var ticketTypeShowTuples = notification.TicketTypeIds
+            .Select(tt => (
+                showObj,
+                Relations.TicketTypeShow,
+                RelationObjects.TicketType(tt.ToString())
+                ));
+        // throw new NotImplementedException();
+        var result = allowedTicketTypeTuples 
+            .Concat(ticketTypeShowTuples)
             .Append(eventRelationTuple)
             .ToArray();
-        await permissionManager.PutPermission(tuples);
+        await permissionManager.PutPermission(result);
     }
 }
