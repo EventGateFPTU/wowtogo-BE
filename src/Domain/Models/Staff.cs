@@ -12,4 +12,6 @@ public class Staff : BaseEntity
     public User User { get; set; } = null!;
     [ForeignKey(nameof(EventId))]
     public Event Event { get; set; } = null!;
+    
+    public ICollection<Show> AssignedShows = new List<Show>();
 }
