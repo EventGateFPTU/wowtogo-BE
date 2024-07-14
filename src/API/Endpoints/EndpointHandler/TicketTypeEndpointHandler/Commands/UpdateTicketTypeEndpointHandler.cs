@@ -8,7 +8,6 @@ public class UpdateTicketTypeEndpointHandler
     public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender, Guid ticketTypeId, UpdateTicketTypeRequest request, CancellationToken cancellationToken = default)
     {
         Result result = await sender.Send(new UpdateTicketTypeCommand(ticketTypeId,
-                                                                      request.ShowId,
                                                                       request.Name,
                                                                       request.Description,
                                                                       request.ImageUrl,
@@ -26,8 +25,7 @@ public class UpdateTicketTypeEndpointHandler
         }
         return Results.NoContent();
     }
-    public record UpdateTicketTypeRequest(Guid[] ShowId,
-                                           string Name,
+    public record UpdateTicketTypeRequest(string Name,
                                            string Description,
                                            string ImageUrl,
                                            decimal Price,

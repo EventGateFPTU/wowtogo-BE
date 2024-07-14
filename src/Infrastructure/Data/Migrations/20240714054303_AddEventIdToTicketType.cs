@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class FixUserNullable : Migration
+    public partial class AddEventIdToTicketType : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -50,29 +50,6 @@ namespace Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TicketTypes",
-                schema: "wowtogo",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    ImageUrl = table.Column<string>(type: "text", nullable: false),
-                    Price = table.Column<decimal>(type: "numeric", nullable: false),
-                    FromDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    ToDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    Amount = table.Column<int>(type: "integer", nullable: false),
-                    LeastAmountBuy = table.Column<int>(type: "integer", nullable: false),
-                    MostAmountBuy = table.Column<int>(type: "integer", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TicketTypes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 schema: "wowtogo",
                 columns: table => new
@@ -88,39 +65,6 @@ namespace Infrastructure.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Orders",
-                schema: "wowtogo",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "numeric", nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false),
-                    Currency = table.Column<string>(type: "text", nullable: false),
-                    TicketTypeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Orders_TicketTypes_TicketTypeId",
-                        column: x => x.TicketTypeId,
-                        principalSchema: "wowtogo",
-                        principalTable: "TicketTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Orders_Users_UserId",
-                        column: x => x.UserId,
-                        principalSchema: "wowtogo",
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -297,6 +241,70 @@ namespace Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TicketTypes",
+                schema: "wowtogo",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    ImageUrl = table.Column<string>(type: "text", nullable: false),
+                    Price = table.Column<decimal>(type: "numeric", nullable: false),
+                    FromDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ToDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    Amount = table.Column<int>(type: "integer", nullable: false),
+                    LeastAmountBuy = table.Column<int>(type: "integer", nullable: false),
+                    MostAmountBuy = table.Column<int>(type: "integer", nullable: false),
+                    EventId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TicketTypes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TicketTypes_Events_EventId",
+                        column: x => x.EventId,
+                        principalSchema: "wowtogo",
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                schema: "wowtogo",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "numeric", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    Currency = table.Column<string>(type: "text", nullable: false),
+                    TicketTypeId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_TicketTypes_TicketTypeId",
+                        column: x => x.TicketTypeId,
+                        principalSchema: "wowtogo",
+                        principalTable: "TicketTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Orders_Users_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "wowtogo",
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tickets",
                 schema: "wowtogo",
                 columns: table => new
@@ -430,6 +438,12 @@ namespace Infrastructure.Data.Migrations
                 schema: "wowtogo",
                 table: "Tickets",
                 column: "TicketTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TicketTypes_EventId",
+                schema: "wowtogo",
+                table: "TicketTypes",
+                column: "EventId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TicketTypeShows_ShowId",
