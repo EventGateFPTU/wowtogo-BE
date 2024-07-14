@@ -44,7 +44,7 @@ public class CreateEventHandler(IUnitOfWork unitOfWork, CurrentUser currentUser)
         };
         // Open FGA
         unitOfWork.EventRepository.Add(newEvent);
-        newEvent.AddDomainEvent(new EventCreatedEvent(newEvent.Id));
+        newEvent.AddDomainEvent(new EventCreatedEvent(eventId: newEvent.Id, currentUserId: currentUser.User.Id));
         
         if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to create event");
         var createdEvent = await unitOfWork.EventRepository.GetEventAsync(newEventId,cancellationToken: cancellationToken);

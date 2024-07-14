@@ -38,8 +38,18 @@
     {
       "type": "show",
       "relations": {
-        "event": {
+        "assignee": {
           "this": {}
+        },
+        "can_assign_staff": {
+          "tupleToUserset": {
+            "computedUserset": {
+              "relation": "organizer"
+            },
+            "tupleset": {
+              "relation": "event"
+            }
+          }
         },
         "allowed_ticket_type": {
           "this": {}
@@ -53,16 +63,22 @@
               "relation": "allowed_ticket_type"
             }
           }
+        },
+        "event": {
+          "this": {}
         }
       },
       "metadata": {
         "relations": {
-          "event": {
+          "assignee": {
             "directly_related_user_types": [
               {
-                "type": "event"
+                "type": "user"
               }
             ]
+          },
+          "can_assign_staff": {
+            "directly_related_user_types": []
           },
           "allowed_ticket_type": {
             "directly_related_user_types": [
@@ -73,6 +89,13 @@
           },
           "can_checkin": {
             "directly_related_user_types": []
+          },
+          "event": {
+            "directly_related_user_types": [
+              {
+                "type": "event"
+              }
+            ]
           }
         }
       }
@@ -80,14 +103,27 @@
     {
       "type": "ticket_type",
       "relations": {
-        "event": {
+        "show": {
           "this": {}
         },
         "assignee": {
-          "this": {}
-        },
-        "ticket": {
-          "this": {}
+          "union": {
+            "child": [
+              {
+                "this": {}
+              },
+              {
+                "tupleToUserset": {
+                  "computedUserset": {
+                    "relation": "assignee"
+                  },
+                  "tupleset": {
+                    "relation": "show"
+                  }
+                }
+              }
+            ]
+          }
         },
         "can_assign_staff": {
           "tupleToUserset": {
@@ -98,14 +134,20 @@
               "relation": "event"
             }
           }
+        },
+        "event": {
+          "this": {}
+        },
+        "ticket": {
+          "this": {}
         }
       },
       "metadata": {
         "relations": {
-          "event": {
+          "show": {
             "directly_related_user_types": [
               {
-                "type": "event"
+                "type": "show"
               }
             ]
           },
@@ -116,15 +158,22 @@
               }
             ]
           },
+          "can_assign_staff": {
+            "directly_related_user_types": []
+          },
+          "event": {
+            "directly_related_user_types": [
+              {
+                "type": "event"
+              }
+            ]
+          },
           "ticket": {
             "directly_related_user_types": [
               {
                 "type": "ticket"
               }
             ]
-          },
-          "can_assign_staff": {
-            "directly_related_user_types": []
           }
         }
       }
@@ -132,9 +181,6 @@
     {
       "type": "ticket",
       "relations": {
-        "type": {
-          "this": {}
-        },
         "can_checkin_ticket": {
           "tupleToUserset": {
             "computedUserset": {
@@ -144,19 +190,22 @@
               "relation": "type"
             }
           }
+        },
+        "type": {
+          "this": {}
         }
       },
       "metadata": {
         "relations": {
+          "can_checkin_ticket": {
+            "directly_related_user_types": []
+          },
           "type": {
             "directly_related_user_types": [
               {
                 "type": "ticket_type"
               }
             ]
-          },
-          "can_checkin_ticket": {
-            "directly_related_user_types": []
           }
         }
       }

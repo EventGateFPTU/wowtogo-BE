@@ -1,5 +1,5 @@
-name: cuongngu
-description: 'Store ID: 01J21WGQNRYR7VDQZX9MD3ZWVJ'
+name: FGA WowToGo Store
+description: 'Store ID: 01J2N3E7CQVEGYRNCMH479YWN2'
 model: |
   model
     schema 1.1
@@ -13,18 +13,21 @@ model: |
 
   type show
     relations
-      define event: [event]
+      define assignee: [user]
+      define can_assign_staff: organizer from event
       define allowed_ticket_type: [ticket_type]
       define can_checkin: ticket from allowed_ticket_type
+      define event: [event]
 
   type ticket_type
     relations
-      define event: [event]
-      define assignee: [user]
-      define ticket: [ticket]
+      define show: [show]
+      define assignee: [user] or assignee from show
       define can_assign_staff: organizer from event
+      define event: [event]
+      define ticket: [ticket]
 
   type ticket
     relations
-      define type: [ticket_type]
       define can_checkin_ticket: assignee from type
+      define type: [ticket_type]
