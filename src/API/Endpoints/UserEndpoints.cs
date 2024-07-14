@@ -1,4 +1,5 @@
 using API.Endpoints.EndpointHandler.UserEndpointHandler;
+using API.Endpoints.EndpointHandler.UserEndpointHandler.Queries;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Annotations;
 

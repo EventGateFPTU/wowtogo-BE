@@ -20,6 +20,8 @@ public class WowToGoDBContext(DbContextOptions<WowToGoDBContext> options, IMedia
     public DbSet<Ticket> Tickets => Set<Ticket>();
     public DbSet<TicketType> TicketTypes => Set<TicketType>();
     public DbSet<User> Users => Set<User>();
+    public DbSet<ShowStaff> ShowStaffs => Set<ShowStaff>();
+    public DbSet<Checkin> Checkins => Set<Checkin>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

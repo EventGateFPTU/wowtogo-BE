@@ -13,6 +13,8 @@ public static class GetTicketTypesAndShowsOfEventResponseMapper
             ShowId: ticketTypeShow.ShowId,
             ShowName: ticketTypeShow.Show.Title,
             StartsAt: ticketTypeShow.Show.StartsAt,
-            EndsAt: ticketTypeShow.Show.EndsAt
+            EndsAt: ticketTypeShow.Show.EndsAt,
+            Price: ticketTypeShow.TicketType.Price,
+            Amount: ticketTypeShow.TicketType.Amount
             );
 }
