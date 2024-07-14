@@ -52,7 +52,7 @@ public class TicketRepository(WowToGoDBContext context) : RepositoryBase<Ticket>
         IQueryable<Ticket> query = trackChanges ? _dbSet : _dbSet.AsNoTracking();
         query = query.Include(t => t.TicketType)
                     .ThenInclude(tt => tt.Event)
-                    .Where(tt=>tt.UsedAt != null)
+                    .Where(tt => tt.UsedAt != null)
                     .Where(t => t.TicketType.Event.Id.Equals(eventId));
         int count = query.Count();
         IEnumerable<GetTicketDetailsResponse> result = await query
@@ -60,6 +60,24 @@ public class TicketRepository(WowToGoDBContext context) : RepositoryBase<Ticket>
         .Take(pageSize)
         .Select(t => t.MapToGetTicketDetailsResponse())
         .ToListAsync(cancellationToken);
+        return new PaginatedResponse<GetTicketDetailsResponse>(
+            Data: result,
+            PageNumber: pageNumber,
+            PageSize: pageSize,
+            Count: count
+        );
+    }
+
+    public async Task<PaginatedResponse<GetTicketDetailsResponse>> GetTicketsOfUser(Guid userId, int pageNumber, int pageSize, bool trackChanges = false, CancellationToken cancellationToken = default)
+    {
+        IQueryable<Ticket> query = trackChanges ? _dbSet : _dbSet.AsNoTracking();
+        query = query.Include(t => t.Attendee)
+            .Where(t => t.Attendee.UserId.Equals(userId));
+        int count = query.Count();
+        IEnumerable<GetTicketDetailsResponse> result = await query.Skip(pageSize * (pageNumber - 1))
+                                                                    .Take(pageSize)
+                                                                    .Select(t => t.MapToGetTicketDetailsResponse())
+                                                                    .ToListAsync();
         return new PaginatedResponse<GetTicketDetailsResponse>(
             Data: result,
             PageNumber: pageNumber,
