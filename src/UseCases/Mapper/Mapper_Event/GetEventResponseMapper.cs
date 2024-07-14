@@ -22,6 +22,7 @@ namespace UseCases.Mapper.Mapper_Event
                 Status: mappingEvent.Status.ToString(),
                 OrganizerName: mappingEvent.Organizer?.OrganizationName ?? string.Empty,
                 OrganizerImageUrl: mappingEvent.Organizer?.ImageUrl ?? string.Empty,
+                OrganizerDescription: mappingEvent.Organizer?.Description ?? string.Empty,
                 BackgroundImageUrl: mappingEvent.BackgroundImageUrl,
                 BannerImageUrl: mappingEvent.BannerImageUrl,
                 Categories: mappingEvent.EventCategories.Select( ec => ec.Category.MapCategoryDB()).ToArray(),

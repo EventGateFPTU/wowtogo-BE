@@ -16,6 +16,7 @@ public class Event : BaseEntity
     //----------------------------------------- 
     [ForeignKey(nameof(OrganizerId))]
     public Organizer Organizer { get; set; } = null!;
+    public ICollection<TicketType> TicketTypes { get; set; } = [];
     public ICollection<Show> Shows { get; set; } = [];
     public ICollection<Staff> Staffs { get; set; } = [];
     public ICollection<EventCategory> EventCategories { get; set; } = [];

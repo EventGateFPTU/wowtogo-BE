@@ -70,6 +70,66 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
         );
     }
 
+    public async Task<PaginatedResponse<EventDB>> SearchEventsAsync(IEnumerable<Guid> categoryIds, int pageNumber = 1, int pageSize = 10, string? searchTerm = null,
+        string? location = null, DateTime? date = null, bool trackChanges = false,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<Event> eventQuery = _dbSet;
+        if (trackChanges)
+        {
+            eventQuery = eventQuery.AsNoTracking();
+        }
+        eventQuery = eventQuery
+            .Include(e => e.Organizer)
+            .Where(e => e.Status == EventStatusEnum.Published);
+
+        var ids = categoryIds as Guid[] ?? categoryIds.ToArray();
+        if (ids.Length != 0)
+        {
+            eventQuery = eventQuery.Where(x => x.EventCategories.Any(y => ids.Contains(y.CategoryId)));
+        }
+
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            var pattern = $"%{searchTerm.Trim()}%";
+            eventQuery = eventQuery.Where(x => EF.Functions.ILike(x.Title, pattern));
+        }
+        
+        if (!string.IsNullOrEmpty(location))
+        {
+            var pattern = $"%{location.Trim()}%";
+            eventQuery = eventQuery.Where(x => EF.Functions.ILike(x.Location, pattern));
+        }
+
+        if (date is not null)
+        {
+            var dateOnly = date.Value.Date;
+            eventQuery = eventQuery.Where(x => x.Shows.Any(y => y.StartsAt <= dateOnly && dateOnly <= y.EndsAt));
+        }
+        
+        int count = eventQuery.Count();
+        IEnumerable<EventDB> result = await eventQuery
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(c => c.MapEventDB())
+            .ToListAsync(cancellationToken);
+        return new PaginatedResponse<EventDB>(
+            Data: result,
+            PageNumber: pageNumber,
+            PageSize: pageSize,
+            Count: count
+        );
+    }
+
+    public Task<List<EventDB>> GetOrganizerEvents(Guid organizerId, CancellationToken cancellationToken = default)
+    {
+        return context.Events
+            .Include(e => e.Organizer)
+            .Where(x => x.Organizer.User.Id == organizerId)
+            .Select(x => x.MapEventDB())
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<GetEventResponse?> GetEventAsync(Guid eventId, bool trackChanges = false, CancellationToken cancellationToken = default)
     {
         IQueryable<Event> query = _dbSet;

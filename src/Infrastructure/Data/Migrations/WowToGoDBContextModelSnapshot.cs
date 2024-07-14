@@ -379,6 +379,9 @@ namespace Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTimeOffset>("FromDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -406,6 +409,8 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EventId");
 
                     b.ToTable("TicketTypes", "wowtogo");
                 });
@@ -601,6 +606,17 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("TicketType");
                 });
 
+            modelBuilder.Entity("Domain.Models.TicketType", b =>
+                {
+                    b.HasOne("Domain.Models.Event", "Event")
+                        .WithMany("TicketTypes")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+                });
+
             modelBuilder.Entity("Domain.Models.TicketTypeShow", b =>
                 {
                     b.HasOne("Domain.Models.Show", "Show")
@@ -629,6 +645,8 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("Shows");
 
                     b.Navigation("Staffs");
+
+                    b.Navigation("TicketTypes");
                 });
 
             modelBuilder.Entity("Domain.Models.Show", b =>

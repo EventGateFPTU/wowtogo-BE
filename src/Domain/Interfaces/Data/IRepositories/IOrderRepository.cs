@@ -1,5 +1,6 @@
 using Domain.Models;
 using Domain.Responses.Responses_Order;
+using Domain.Responses.Shared;
 
 namespace Domain.Interfaces.Data.IRepositories;
 public interface IOrderRepository : IRepositoryBase<Order>
@@ -14,5 +15,10 @@ public interface IOrderRepository : IRepositoryBase<Order>
                                                     int pageSize = 10,
                                                     bool trackChanges = false,
                                                     CancellationToken cancellationToken = default);
+    Task<PaginatedResponse<OrderResponse>> GetOrdersByEventAsync(Guid eventId,
+                                                                int pageNumber = 1,
+                                                                int pageSize = 10,
+                                                                bool trackChanges = false,
+                                                                CancellationToken cancellationToken = default);
 
 }

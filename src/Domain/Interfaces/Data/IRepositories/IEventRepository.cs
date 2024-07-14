@@ -12,4 +12,10 @@ public interface IEventRepository : IRepositoryBase<Event>
 
     Task<PaginatedResponse<EventDB>> GetFeaturedEventsAsync(int pageNumber = 1, int pageSize = 10, string? searchTerm = null,
         bool trackChanges = false, CancellationToken cancellationToken = default);
+    
+    Task<PaginatedResponse<EventDB>> SearchEventsAsync(IEnumerable<Guid> categoryIds, int pageNumber = 1,
+        int pageSize = 10, string? searchTerm = null, string? location = null, DateTime? date = null,
+        bool trackChanges = false, CancellationToken cancellationToken = default);
+
+    Task<List<EventDB>> GetOrganizerEvents(Guid organizerId, CancellationToken cancellationToken = default);
 }
