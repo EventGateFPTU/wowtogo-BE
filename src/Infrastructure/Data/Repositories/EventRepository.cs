@@ -120,7 +120,16 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             Count: count
         );
     }
-    
+
+    public Task<List<EventDB>> GetOrganizerEvents(Guid organizerId, CancellationToken cancellationToken = default)
+    {
+        return context.Events
+            .Include(e => e.Organizer)
+            .Where(x => x.Organizer.User.Id == organizerId)
+            .Select(x => x.MapEventDB())
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<GetEventResponse?> GetEventAsync(Guid eventId, bool trackChanges = false, CancellationToken cancellationToken = default)
     {
         IQueryable<Event> query = _dbSet;
