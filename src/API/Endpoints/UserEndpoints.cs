@@ -11,6 +11,9 @@ public static class UserEndpoints
         group.MapGet("/tickets", GetTicketsOfCurrentUserEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Get Tickets of Current User"))
             .RequireAuthorization();
+        group.MapGet("/search", GetUsersByEmailEndpointHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Search users by email"))
+            .RequireAuthorization();
         return group;
     }
 }
