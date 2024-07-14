@@ -16,9 +16,13 @@ public interface IOrderRepository : IRepositoryBase<Order>
                                                     bool trackChanges = false,
                                                     CancellationToken cancellationToken = default);
     Task<PaginatedResponse<OrderResponse>> GetOrdersByEventAsync(Guid eventId,
-                                                                int pageNumber = 1,
-                                                                int pageSize = 10,
-                                                                bool trackChanges = false,
-                                                                CancellationToken cancellationToken = default);
+                                                            int pageNumber = 1,
+                                                            int pageSize = 10,
+                                                            bool trackChanges = false,
+                                                            CancellationToken cancellationToken = default);
+
 
 }
+
+
+
