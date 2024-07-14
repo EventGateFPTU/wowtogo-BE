@@ -1,5 +1,6 @@
 using API.Endpoints.EndpointHandler.EventEndpointHandler.Commands;
 using API.Endpoints.EndpointHandler.EventEndpointHandler.Queries;
+using API.Endpoints.EndpointHandler.OrderEndpointHandler.Queries;
 using API.Endpoints.EndpointHandler.ShowEndpointHandler.Commands;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -22,10 +23,12 @@ public static class EventEndpoints
             .WithMetadata(new SwaggerOperationAttribute("Get all events"));
         group.MapGet("/featured", GetAllFeaturedEventsEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Get featured events"));
+        group.MapGet("/{eventId}/orders", GetOrdersByEventEndpointHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Get orders of event"))
+            .RequireAuthorization();
+        // POST
         group.MapPost("/search", SearchEventsEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Search events"));
-
-        // POST
         group.MapPost("/{eventId}/staff/{userId}", AddStaffEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Add a staff"))
             .RequireAuthorization();
@@ -34,8 +37,8 @@ public static class EventEndpoints
             .RequireAuthorization();
         // PUT
         group.MapPut("/{eventId}", UpdateEventEndpointHandler.Handle)
-            .WithMetadata(new SwaggerOperationAttribute("Update an event"));
-        // .RequireAuthorization();
+            .WithMetadata(new SwaggerOperationAttribute("Update an event"))
+            .RequireAuthorization();
         group.MapPut("/{eventId}/background", UploadBackgroundImageEndpointHandler.Handle)
             .DisableAntiforgery()
             .WithMetadata(new SwaggerOperationAttribute("Upload background image of an event"))
