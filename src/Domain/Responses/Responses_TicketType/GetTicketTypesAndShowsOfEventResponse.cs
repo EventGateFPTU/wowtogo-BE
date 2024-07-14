@@ -6,5 +6,7 @@ public record GetTicketTypesAndShowsOfEventResponse(
     Guid ShowId,
     string ShowName,
     DateTimeOffset StartsAt,
-    DateTimeOffset EndsAt
+    DateTimeOffset EndsAt,
+    decimal Price,
+    int Amount
     );
