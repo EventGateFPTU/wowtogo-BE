@@ -16,5 +16,7 @@ public interface IUnitOfWork : IDisposable
     ITicketTypeRepository TicketTypeRepository { get; }
     ITicketTypeShowRepository TicketTypeShowRepository { get; }
     IUserRepository UserRepository { get; }
+    ICheckinRepository CheckinRepository { get; }
+    IShowStaffRepository ShowStaffRepository { get; }
     Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

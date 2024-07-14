@@ -20,6 +20,8 @@ public class UnitOfWork(WowToGoDBContext context) : IUnitOfWork
     private ITicketTypeRepository _ticketTypeRepository = null!;
     private IUserRepository _userRepository = null!;
     private ITicketTypeShowRepository _ticketTypeShowRepository = null!;
+    private IShowStaffRepository _showStaffRepository = null!;
+    private ICheckinRepository _checkinRepository = null!;
     private bool _disposed = true;
     // NOTE : init all repositories here
     public IArticleRepository Articles => _articleRepository ??= new ArticleRepository(_context);
@@ -39,6 +41,8 @@ public class UnitOfWork(WowToGoDBContext context) : IUnitOfWork
     public ITicketRepository TicketRepository => _ticketRepository ??= new TicketRepository(_context);
     public ITicketTypeRepository TicketTypeRepository => _ticketTypeRepository ??= new TicketTypeRepository(_context);
     public IUserRepository UserRepository => _userRepository ??= new UserRepository(_context);
+    public ICheckinRepository CheckinRepository => _checkinRepository ?? new CheckinRepository(_context);
+    public IShowStaffRepository ShowStaffRepository => _showStaffRepository ?? new ShowStaffRepository(_context);
     public ITicketTypeShowRepository TicketTypeShowRepository => _ticketTypeShowRepository ??= new TicketTypeShowRepository(_context);
 
 
