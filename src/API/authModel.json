@@ -38,8 +38,21 @@
     {
       "type": "show",
       "relations": {
+        "allowed_ticket_type": {
+          "this": {}
+        },
         "assignee": {
           "this": {}
+        },
+        "can_be_assigned": {
+          "tupleToUserset": {
+            "computedUserset": {
+              "relation": "staff"
+            },
+            "tupleset": {
+              "relation": "event"
+            }
+          }
         },
         "can_assign_staff": {
           "tupleToUserset": {
@@ -50,9 +63,6 @@
               "relation": "event"
             }
           }
-        },
-        "allowed_ticket_type": {
-          "this": {}
         },
         "can_checkin": {
           "tupleToUserset": {
@@ -70,6 +80,13 @@
       },
       "metadata": {
         "relations": {
+          "allowed_ticket_type": {
+            "directly_related_user_types": [
+              {
+                "type": "ticket_type"
+              }
+            ]
+          },
           "assignee": {
             "directly_related_user_types": [
               {
@@ -77,15 +94,11 @@
               }
             ]
           },
-          "can_assign_staff": {
+          "can_be_assigned": {
             "directly_related_user_types": []
           },
-          "allowed_ticket_type": {
-            "directly_related_user_types": [
-              {
-                "type": "ticket_type"
-              }
-            ]
+          "can_assign_staff": {
+            "directly_related_user_types": []
           },
           "can_checkin": {
             "directly_related_user_types": []
@@ -103,9 +116,6 @@
     {
       "type": "ticket_type",
       "relations": {
-        "show": {
-          "this": {}
-        },
         "assignee": {
           "union": {
             "child": [
@@ -138,19 +148,15 @@
         "event": {
           "this": {}
         },
+        "show": {
+          "this": {}
+        },
         "ticket": {
           "this": {}
         }
       },
       "metadata": {
         "relations": {
-          "show": {
-            "directly_related_user_types": [
-              {
-                "type": "show"
-              }
-            ]
-          },
           "assignee": {
             "directly_related_user_types": [
               {
@@ -165,6 +171,13 @@
             "directly_related_user_types": [
               {
                 "type": "event"
+              }
+            ]
+          },
+          "show": {
+            "directly_related_user_types": [
+              {
+                "type": "show"
               }
             ]
           },

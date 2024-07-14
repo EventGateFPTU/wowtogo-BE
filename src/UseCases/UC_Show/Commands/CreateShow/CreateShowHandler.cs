@@ -4,6 +4,7 @@ using Domain.Interfaces.Data;
 using Domain.Models;
 using Domain.Responses.Responses_Show;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using UseCases.Mapper.Mapper_Show;
 
 namespace UseCases.UC_Show.Commands.CreateShow;
@@ -29,10 +30,11 @@ public class CreateShowHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateS
                 ShowId = newShowId
             }).ToList()
         };
-        unitOfWork.ShowRepository.Add(show);
+        var dbSet = unitOfWork.ShowRepository.DBSet() as DbSet<Show>;
+        var addEntry = dbSet.Add(show);
         var showEvent = new ShowCreatedEvent(
             eventId: request.EventId,
-            showId: newShowId,
+            showId: addEntry.Entity.Id,
             ticketTypeIds: request.TicketTypeIds
         );
         show.AddDomainEvent(showEvent);

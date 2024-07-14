@@ -9,6 +9,7 @@ public static class Relations
     // Show
     public const string ShowAssignee = "assignee";
     public const string CanAssignStaffShow = "can_assign_staff";
+    public const string CanBeAssignedShow = "can_be_assigned";
     public const string AllowedTicketType = "allowed_ticket_type";
     public const string ShowEvent = "event";
     public const string CanCheckInShow = "can_checkin";
@@ -16,6 +17,7 @@ public static class Relations
     // Ticket type
     public const string TicketTypeShow = "show";
     public const string TicketTypeAssignee = "assignee";
+    public const string CanBeAssignedTicketType = "can_be_assigned";
     public const string CanAssignStaffTicketType = "can_assign_staff";
     public const string TicketTypeEvent = "event";
     public const string TicketTypeTicket = "ticket";

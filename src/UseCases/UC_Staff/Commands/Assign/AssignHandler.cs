@@ -7,23 +7,34 @@ using UseCases.Common.Models;
 
 namespace UseCases.UC_Staff.Commands.Assign;
 
-public class AssignHandler(IUnitOfWork unitOfWork, CurrentUser currentUser, IPermissionManager permissionManager): IRequestHandler<AssignCommand, Result>
+public class AssignHandler(CurrentUser currentUser, IPermissionManager permissionManager): IRequestHandler<AssignCommand, Result>
 {
     public async Task<Result> Handle(AssignCommand request, CancellationToken cancellationToken)
     {
-        if (!HasPermissionToAssignStaff(request.ShowId)) return Result.Forbidden();
-        // unitOfWork.
-        throw new NotImplementedException();
+        var userObj = RelationObjects.User(request.UserId.ToString());
+        var showObj = RelationObjects.Show(request.ShowId.ToString());
+        if (!await HasPermissionToAssignStaff(showObj, userObj)) 
+            return Result.Forbidden();
+
+        var isSuccess = await permissionManager.PutPermission((userObj, Relations.ShowAssignee, showObj));
+        return isSuccess ? Result.SuccessWithMessage("Successfully assign staff permission") : Result.Error();
     }
 
-    private bool HasPermissionToAssignStaff(Guid showId)
+    private async Task<bool> HasPermissionToAssignStaff(string showObj, string userObj)
     {
-        // TODO: use permissionManager to check
-        // permissionManager.HasPermission()
+        var currentUserObj = RelationObjects.User(currentUser.User!.Id.ToString());
+        var userIsStaffOfEvent = await permissionManager.HasPermission(
+            userObj,
+            Relations.CanBeAssignedShow,
+            showObj
+            );
         
-        // if show id not found in the event
+        var hasPermission = await permissionManager.HasPermission(
+            currentUserObj,
+            Relations.CanAssignStaffShow,
+            showObj
+            );
         
-        // if can assign
-        return true;
+        return userIsStaffOfEvent && hasPermission;
     }
 }

@@ -7,7 +7,7 @@ public static class StaffEndpoints
     public static RouteGroupBuilder MapStaffEndpoints(this RouteGroupBuilder group)
     {
         // Post methods
-        group.MapPost("assign", () => "a")
+        group.MapPost("assign", AssignEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Assign staff to checkin for show"))
             .RequireAuthorization();
         // Put methods
