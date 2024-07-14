@@ -1,4 +1,5 @@
 using Ardalis.Result;
+using Domain.Events.TicketTypes;
 using Domain.Interfaces.Data;
 using Domain.Models;
 using Domain.Responses.Responses_TicketType;
@@ -35,7 +36,12 @@ public class CreateTicketTypeHandler(IUnitOfWork unitOfWork) : IRequestHandler<C
             EventId = request.EventId
         };
         unitOfWork.TicketTypeRepository.Add(ticketType);
-        if (!await unitOfWork.SaveChangesAsync()) return Result.Error("Failed to create ticket type");
+        var ttEvent = new TicketTypeCreatedEvent(
+           eventId: request.EventId,
+           ticketTypeId: ticketTypeId
+        );
+        ticketType.AddDomainEvent(ttEvent);
+        if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to create ticket type");
         return Result.Success(ticketType.MapToTicketTypeResponse(), "Ticket type is created successfully");
     }
 }

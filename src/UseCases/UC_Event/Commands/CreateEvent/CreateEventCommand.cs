@@ -2,7 +2,7 @@ using Ardalis.Result;
 using Domain.Responses.Responses_Event;
 using MediatR;
 
-namespace UseCases.UC_Event.Commands;
+namespace UseCases.UC_Event.Commands.CreateEvent;
 public record CreateEventCommand(
     string Title,
     string Description,

@@ -1,4 +1,5 @@
 using Ardalis.Result;
+using Domain.Events.Tickets;
 using Domain.Interfaces.Data;
 using Domain.Interfaces.Email;
 using Domain.Models;
@@ -16,13 +17,18 @@ public class CreateTicketHandler(IUnitOfWork unitOfWork, IMailService mailServic
         if (checkingAttendee is null) return Result.NotFound("Attendee is not found !");
         TicketType? checkingTicketType = await unitOfWork.TicketTypeRepository.FindAsync(tt => tt.Id.Equals(request.TicketTypeId), cancellationToken: cancellationToken);
         if (checkingTicketType is null) return Result.NotFound("Ticket Type is not found !");
+        var code = GenerateRandom6CharsCode.Generate();
+        // TODO: What if duplicated?
+
         Ticket ticket = new()
         {
             TicketTypeId = request.TicketTypeId,
             AttendeeId = request.AttendeeId,
-            Code = GenerateRandom6CharsCode.Generate(),
+            Code = code,  
         };
         unitOfWork.TicketRepository.Add(ticket);
+        // OpenFga
+        ticket.AddDomainEvent(new TicketCreatedEvent(ticketId: ticket.Id, ticketTypeId: request.TicketTypeId));
         if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to create ticket");
         CreateTicketResponse? ticketDetail = await unitOfWork.TicketRepository.GetCreatedTicketDetail(ticket.Id, cancellationToken: cancellationToken);
         if (ticketDetail == null) return Result.Error("Successfully created the ticket but failed to get its detail");
