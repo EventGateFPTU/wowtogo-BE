@@ -7,14 +7,14 @@ public class CheckinEndpointHandler
 {
     public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender, CheckinRequest request, CancellationToken cancellationToken = default)
     {
-        Result result = await sender.Send(new CheckinCommand(request.Code, request.ShowId, request.usedInFormat), cancellationToken);
-        if (!result.IsSuccess)
+        var result = await sender.Send(new CheckinCommand(request.Code, request.ShowId, request.UsedInFormat), cancellationToken);
+        if (result.IsSuccess) return Results.Ok(result);
+        return result.Status switch
         {
-            if (result.Status == ResultStatus.NotFound)
-                return Results.NotFound(result);
-            return Results.BadRequest(result);
-        }
-        return Results.NoContent();
+            ResultStatus.NotFound => Results.NotFound(result),
+            ResultStatus.Forbidden => Results.Forbid(),
+            _ => Results.BadRequest(result)
+        };
     }
-    public record CheckinRequest(Guid ShowId, string Code, string usedInFormat);
+    public record CheckinRequest(Guid ShowId, string Code, string UsedInFormat);
 }

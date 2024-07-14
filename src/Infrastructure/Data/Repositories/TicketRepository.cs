@@ -40,6 +40,7 @@ public class TicketRepository(WowToGoDBContext context) : RepositoryBase<Ticket>
         IQueryable<Ticket> query = _dbSet;
         if (!trackChanges) query = query.AsNoTracking();
         return await query
+            .Include(t => t.Attendee)
             .Include(t => t.TicketType)
             .ThenInclude(tt => tt.TicketTypeShows)
             .ThenInclude(tts => tts.Show)
