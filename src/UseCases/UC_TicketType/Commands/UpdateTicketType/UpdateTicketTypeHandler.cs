@@ -30,19 +30,6 @@ public class UpdateTicketTypeHandler(IUnitOfWork unitOfWork) : IRequestHandler<U
             checkingTicketType.MostAmountBuy = request.MostAmountBuy;
             checkingTicketType.UpdatedAt = DateTimeOffset.UtcNow;
         }
-        if (request.showId.Any())
-        {
-            IEnumerable<TicketTypeShow> checkingTicketTypeShow = await unitOfWork.TicketTypeShowRepository.FindManyAsync(tts => checkingTicketType.Id.Equals(tts.TicketTypeId), cancellationToken: cancellationToken);
-            if (checkingTicketTypeShow.Any())
-            {
-                unitOfWork.TicketTypeShowRepository.RemoveRange(checkingTicketTypeShow);
-            }
-            unitOfWork.TicketTypeShowRepository.AddRange(request.showId.Select(showId => new TicketTypeShow
-            {
-                ShowId = showId,
-                TicketTypeId = checkingTicketType.Id
-            }));
-        }
         if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to update ticket type");
         return Result.SuccessWithMessage("Ticket type is updated successfully");
     }
