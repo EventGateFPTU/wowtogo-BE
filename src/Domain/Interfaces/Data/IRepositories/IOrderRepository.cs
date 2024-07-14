@@ -1,3 +1,7 @@
+using Domain.Models;
+using Domain.Responses.Responses_Order;
+using Domain.Responses.Shared;
+
 namespace Domain.Interfaces.Data.IRepositories;
 public interface IOrderRepository : IRepositoryBase<Order>
 {
