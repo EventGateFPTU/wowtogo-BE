@@ -1,21 +1,18 @@
-using Ardalis.Result;
+﻿using Ardalis.Result;
 using Domain.Interfaces.Data;
-using Domain.Models;
 using Domain.Responses.Responses_Order;
+using Domain.Responses.Shared;
 using MediatR;
 
-namespace UseCases.UC_Order.Queries.GetPaidOrders;
-public class GetPaidOrdersHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetPaidOrdersQuery, Result<GetPaidOrdersResponse>>
+namespace UseCases.UC_Order.Queries.GetPaidOrders
 {
-    public async Task<Result<GetPaidOrdersResponse>> Handle(GetPaidOrdersQuery request, CancellationToken cancellationToken)
+    public class GetPaidOrdersHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetPaidOrdersQuery, Result<PaginatedResponse<PaidOrderDB>>>
     {
-        User? user = await unitOfWork.UserRepository.FindAsync(u => u.Id.Equals(request.UserId), cancellationToken: cancellationToken);
-        if (user is null) return Result.NotFound("User is not found");
-        IEnumerable<OrderResponse> orders = await unitOfWork.OrderRepository.GetPaidOrdersAsync(userId: request.UserId,
-                                                                                                    pageNumber: request.PageNumber,
-                                                                                                    pageSize: request.PageSize,
-                                                                                                    cancellationToken: cancellationToken);
-        if (!orders.Any()) return Result.NotFound("No paid orders are found");
-        return Result.Success(new GetPaidOrdersResponse(orders, request.PageNumber, request.PageSize), "Get paid orders successfully");
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        public async Task<Result<PaginatedResponse<PaidOrderDB>>> Handle(GetPaidOrdersQuery request, CancellationToken cancellationToken)
+        {
+            PaginatedResponse<PaidOrderDB> gettingPaidOrders = await _unitOfWork.OrderRepository.GetPaidOrdersAsync(request.UserId, request.PageNumber, request.PageSize, false, cancellationToken);
+            return Result.Success(gettingPaidOrders, "Get Paid Order Successfully");
+        }
     }
 }

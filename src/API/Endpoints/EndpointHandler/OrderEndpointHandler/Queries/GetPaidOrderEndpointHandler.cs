@@ -1,5 +1,6 @@
 using Ardalis.Result;
 using Domain.Responses.Responses_Order;
+using Domain.Responses.Shared;
 using MediatR;
 using UseCases.UC_Order.Queries.GetPaidOrders;
 
@@ -11,9 +12,9 @@ public class GetPaidOrderEndpointHandler
                                                                         int pageNumber = 1,
                                                                         int pageSize = 10)
     {
-        Result<GetPaidOrdersResponse> result = await sender.Send(new GetPaidOrdersQuery(UserId: userId,
-                                                                                         PageNumber: pageNumber,
-                                                                                         PageSize: pageSize));
+        Result<PaginatedResponse<PaidOrderDB>> result = await sender.Send(new GetPaidOrdersQuery(UserId: userId,
+                                                                                          PageNumber: pageNumber,
+                                                                                          PageSize: pageSize));
         if (!result.IsSuccess) return Results.NotFound(result);
         return Results.Ok(result);
     }

@@ -1,21 +1,16 @@
 using Ardalis.Result;
 using Domain.Interfaces.Data;
-using Domain.Models;
 using Domain.Responses.Responses_Order;
+using Domain.Responses.Shared;
 using MediatR;
 
 namespace UseCases.UC_Order.Queries.GetPendingOrders;
-public class GetPendingOrdersHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetPendingOrdersQuery, Result<GetPendingOrdersResponse>>
+public class GetPendingOrdersHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetPendingOrdersQuery, Result<PaginatedResponse<PendingOrderDB>>>
 {
-    public async Task<Result<GetPendingOrdersResponse>> Handle(GetPendingOrdersQuery request, CancellationToken cancellationToken)
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    public async Task<Result<PaginatedResponse<PendingOrderDB>>> Handle(GetPendingOrdersQuery request, CancellationToken cancellationToken)
     {
-        User? user = await unitOfWork.UserRepository.FindAsync(u => u.Id.Equals(request.UserId), cancellationToken: cancellationToken);
-        if (user is null) return Result.NotFound("User is not found");
-        IEnumerable<OrderResponse> orders = await unitOfWork.OrderRepository.GetPendingOrdersAsync(userId: request.UserId,
-                                                                                                    pageNumber: request.PageNumber,
-                                                                                                    pageSize: request.PageSize,
-                                                                                                    cancellationToken: cancellationToken);
-        if (!orders.Any()) return Result.NotFound("No pending orders is found");
-        return Result.Success(new GetPendingOrdersResponse(orders, request.PageNumber, request.PageSize), "Get pending orders successfully");
+        PaginatedResponse<PendingOrderDB> gettingPendingOrders = await _unitOfWork.OrderRepository.GetPendingOrdersAsync(request.UserId, request.PageNumber, request.PageSize, false, cancellationToken);
+        return Result.Success(gettingPendingOrders, "Get Pending Order Successfully");
     }
 }
