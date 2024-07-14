@@ -26,6 +26,9 @@ public static class EventEndpoints
         group.MapGet("/{eventId}/orders", GetOrdersByEventEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Get orders of event"))
             .RequireAuthorization();
+        group.MapGet("/{eventId}/checkins", GetCheckinByEventEndpointHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Get checkins by event"))
+            .RequireAuthorization();
         // POST
         group.MapPost("/search", SearchEventsEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Search events"));

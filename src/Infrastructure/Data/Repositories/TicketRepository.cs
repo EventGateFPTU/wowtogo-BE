@@ -1,6 +1,7 @@
 using Domain.Interfaces.Data.IRepositories;
 using Domain.Models;
 using Domain.Responses.Responses_Ticket;
+using Domain.Responses.Shared;
 using Microsoft.EntityFrameworkCore;
 using UseCases.Mapper.Mapper_Ticket;
 
@@ -44,5 +45,26 @@ public class TicketRepository(WowToGoDBContext context) : RepositoryBase<Ticket>
             .ThenInclude(tts => tts.Show)
             .Where(t => t.Code == code && t.TicketType.TicketTypeShows.Any(tts => tts.ShowId == showId))
             .SingleOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<PaginatedResponse<GetTicketDetailsResponse>> GetCheckinsByEventAsync(Guid eventId, int pageNumber, int pageSize, bool trackChanges = false, CancellationToken cancellationToken = default)
+    {
+        IQueryable<Ticket> query = trackChanges ? _dbSet : _dbSet.AsNoTracking();
+        query = query.Include(t => t.TicketType)
+                    .ThenInclude(tt => tt.Event)
+                    .Where(tt=>tt.UsedAt != null)
+                    .Where(t => t.TicketType.Event.Id.Equals(eventId));
+        int count = query.Count();
+        IEnumerable<GetTicketDetailsResponse> result = await query
+        .Skip(pageSize * (pageNumber - 1))
+        .Take(pageSize)
+        .Select(t => t.MapToGetTicketDetailsResponse())
+        .ToListAsync(cancellationToken);
+        return new PaginatedResponse<GetTicketDetailsResponse>(
+            Data: result,
+            PageNumber: pageNumber,
+            PageSize: pageSize,
+            Count: count
+        );
     }
 }
