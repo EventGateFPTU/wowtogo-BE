@@ -22,6 +22,5 @@ namespace API.Endpoints.EndpointHandler.OrganizerEndpointHandler.Commands
 	}
 	public record CreateOrganizerRequest(
 				string OrganizationName,
-						string Description,
-								string ImageUrl);
+						string Description);
 }

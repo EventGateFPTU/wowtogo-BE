@@ -10,7 +10,10 @@ public static class OrganizerEndpoints
 	{
 		// GET
 		group.MapGet("", GetAllOrganizerEndpointHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Get all organizers"));
-		group.MapGet("/events", GetOrganizerEvents.Handle).WithMetadata(new SwaggerOperationAttribute("Get all events of current user"));
+		group.MapGet("/events", GetOrganizerEventsHandler.Handle).WithMetadata(new SwaggerOperationAttribute("Get all events of current user"));
+		group.MapGet("/organization", GetOrganizationHandler.Handle)
+			.WithMetadata(new SwaggerOperationAttribute("Get current organizer organization"))
+			.RequireAuthorization();
 		// POST
 		group.MapPost("", CreateOrganizerEndpointHandler.Handle).DisableAntiforgery().WithMetadata(new SwaggerOperationAttribute("Create organizer")).RequireAuthorization();
 		// PUT

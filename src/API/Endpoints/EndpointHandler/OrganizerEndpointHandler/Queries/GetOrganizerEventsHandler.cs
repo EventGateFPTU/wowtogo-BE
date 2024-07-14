@@ -6,9 +6,9 @@ using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace API.Endpoints.EndpointHandler.OrganizerEndpointHandler.Queries;
 
-public class GetOrganizerEvents
+public class GetOrganizerEventsHandler
 {
-    public static async Task<IResult> Handle(ISender sender, int pageNumber = 1, int pageSize = 10, string? searchTerm = null)
+    public static async Task<IResult> Handle(ISender sender)
     {
         Result<List<EventDB>> result = await sender.Send(new GetOrganizerEventsQuery());
         if (result.IsSuccess) return Results.Ok(result);

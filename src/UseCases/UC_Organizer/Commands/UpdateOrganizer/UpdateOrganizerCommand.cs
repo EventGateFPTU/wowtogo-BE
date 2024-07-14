@@ -6,7 +6,6 @@ namespace UseCases.UC_Organizer.Commands.UpdateOrganizer
 	public record UpdateOrganizerCommand(
 				Guid Id,
 				string OrganizationName,
-				string Description,
-				string ImageUrl)
+				string Description)
 		: IRequest<Result>;
 }

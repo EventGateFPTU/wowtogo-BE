@@ -11,9 +11,7 @@ namespace API.Endpoints.EndpointHandler.OrganizerEndpointHandler.Commands
 			var result = await sender.Send(new UpdateOrganizerCommand(
 								organizerId,
 												request.OrganizationName,
-																request.Description,
-																				request.ImageUrl
-																								));
+																request.Description));
 			if (!result.IsSuccess)
 			{
 				if (result.Status == ResultStatus.NotFound) return Results.NotFound(result);
@@ -24,6 +22,5 @@ namespace API.Endpoints.EndpointHandler.OrganizerEndpointHandler.Commands
 	}
 	public record UpdateOrganizerRequest(
 						string OrganizationName,
-						string Description,
-						string ImageUrl);
+						string Description);
 }
