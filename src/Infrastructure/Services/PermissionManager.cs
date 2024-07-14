@@ -1,6 +1,7 @@
 using OpenFga.Sdk.Client;
 using OpenFga.Sdk.Client.Model;
 using OpenFga.Sdk.Exceptions;
+using OpenFga.Sdk.Model;
 using UseCases.Common.Contracts;
 
 namespace Infrastructure.Services;
@@ -57,5 +58,25 @@ public class PermissionManager(OpenFgaClient client) : IPermissionManager
         var res = await client.Write(body);
 
         return res.Deletes.Count > 0;
+    }
+
+    public async Task<IEnumerable<string>> QueryAllObjectsInTypeDefinition(string user, string relation, string context)
+    {
+        try
+        {
+            var body = new ClientListObjectsRequest
+            {
+                User = user,
+                Relation = relation,
+                Context = context
+            };
+            var res = await client.ListObjects(body);
+            return res.Objects;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return [];
+        }
     }
 }
