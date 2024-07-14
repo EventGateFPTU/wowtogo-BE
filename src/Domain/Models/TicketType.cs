@@ -13,7 +13,10 @@ public class TicketType : BaseEntity
     public int Amount { get; set; } = 0;
     public int LeastAmountBuy { get; set; } = 0;
     public int MostAmountBuy { get; set; } = 0;
+    public required Guid EventId { get; set; }
     // -----------------------------------------
+    [ForeignKey(nameof(EventId))]
+    public Event Event { get; set; } = null!;
     public ICollection<TicketTypeShow> TicketTypeShows { get; set; } = [];
     public ICollection<Order> Orders { get; set; } = [];
     public ICollection<Ticket> Tickets { get; set; } = [];

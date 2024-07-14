@@ -32,7 +32,7 @@ public static class WowToGoDbContextSeed
         EventCategory[] eventCategories = EventCategoryGenerator.GenerateEventCategories(events, categories);
         Staff[] staffs = StaffGenerator.GenerateStaff(users, events);
         Show[] shows = ShowGenerator.GenerateShows(events);
-        TicketType[] ticketTypes = TicketTypeGenerator.GenerateTicketTypes(shows);
+        TicketType[] ticketTypes = TicketTypeGenerator.GenerateTicketTypes(events);
         Attendee[] attendees = AttendeeGenerator.GenerateAttendees(users, events);
         Order[] orders = OrderGenerator.GenerateOrders(ticketTypes, users);
         Ticket[] tickets = TicketGenerator.GenerateTickets(attendees, ticketTypes);

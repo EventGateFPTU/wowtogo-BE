@@ -10,11 +10,6 @@ public class CreateTicketTypeHandler(IUnitOfWork unitOfWork) : IRequestHandler<C
 {
     public async Task<Result<CreateTicketTypeResponse>> Handle(CreateTicketTypeCommand request, CancellationToken cancellationToken)
     {
-        if (request.showId.Count() > 0)
-        {
-            IEnumerable<Show> checkingShows = await unitOfWork.ShowRepository.FindManyAsync(s => request.showId.Contains(s.Id), cancellationToken: cancellationToken);
-            if (checkingShows.Count() != request.showId.Count()) return Result.Error("Some shows are not found");
-        }
         if (request.FromDate > request.ToDate) return Result.Error("From date should be less than to date");
         if (request.Amount < 0) return Result.Error("Amount should be greater than 0");
         if (request.LeastAmountBuy < 0) return Result.Error("Least amount buy should be greater than 0");
@@ -37,11 +32,7 @@ public class CreateTicketTypeHandler(IUnitOfWork unitOfWork) : IRequestHandler<C
             LeastAmountBuy = request.LeastAmountBuy,
             MostAmountBuy = request.MostAmountBuy,
             UpdatedAt = DateTimeOffset.UtcNow,
-            TicketTypeShows = request.showId.Select(showId => new TicketTypeShow
-            {
-                ShowId = showId,
-                TicketTypeId = ticketTypeId
-            }).ToList()
+            EventId = request.EventId
         };
         unitOfWork.TicketTypeRepository.Add(ticketType);
         if (!await unitOfWork.SaveChangesAsync()) return Result.Error("Failed to create ticket type");
