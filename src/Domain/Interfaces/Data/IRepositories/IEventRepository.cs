@@ -18,4 +18,6 @@ public interface IEventRepository : IRepositoryBase<Event>
         bool trackChanges = false, CancellationToken cancellationToken = default);
 
     Task<List<EventDB>> GetOrganizerEvents(Guid organizerId, CancellationToken cancellationToken = default);
+
+    Task<PaginatedResponse<GetEventResponse>> GetEventsOfStaff(Guid staffId,int pageNumber,int pageSize,bool trackChanges = false,CancellationToken cancellationToken = default);
 }
