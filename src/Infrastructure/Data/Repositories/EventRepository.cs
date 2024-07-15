@@ -4,9 +4,7 @@ using Domain.Models;
 using Domain.Responses.Responses_Event;
 using Domain.Responses.Shared;
 using Microsoft.EntityFrameworkCore;
-using UseCases.Mapper.Mapper_Category;
 using UseCases.Mapper.Mapper_Event;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Infrastructure.Data.Repositories;
 public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(context), IEventRepository
@@ -22,7 +20,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
         eventQuery = eventQuery
             .Include(e => e.Organizer)
             .Where(e => e.Status == EventStatusEnum.Published);
-        int count = eventQuery.Count();
+        int count = await eventQuery.CountAsync(cancellationToken);
         IEnumerable<EventDB> result = await eventQuery
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
@@ -50,7 +48,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             .Include(e => e.Organizer)
             .Include(e => e.Shows).ThenInclude(s => s.TicketTypeShow).ThenInclude(tts => tts.TicketType).ThenInclude(tt => tt.Orders)
             .Where(e => e.Status == EventStatusEnum.Published);
-        int count = eventQuery.Count();
+        int count = await eventQuery.CountAsync();
         IEnumerable<EventDB> result = await eventQuery
             .Select(e => new
             {
@@ -106,8 +104,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             var dateOnly = date.Value.Date;
             eventQuery = eventQuery.Where(x => x.Shows.Any(y => y.StartsAt <= dateOnly && dateOnly <= y.EndsAt));
         }
-
-        int count = eventQuery.Count();
+        int count = await eventQuery.CountAsync(cancellationToken);
         IEnumerable<EventDB> result = await eventQuery
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
@@ -142,4 +139,21 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<PaginatedResponse<GetEventResponse>> GetEventsOfStaff(Guid staffId, int pageNumber, int pageSize, bool trackChanges = false, CancellationToken cancellationToken = default)
+    {
+        IQueryable<Event> query = trackChanges ? _dbSet : _dbSet.AsNoTracking();
+        query = query.Include(e => e.Staffs).Include(e => e.Organizer)
+            .Where(e => e.Staffs.Any(s => s.UserId.Equals(staffId)));
+        int count = await query.CountAsync(cancellationToken);
+        IEnumerable<GetEventResponse> result = await query.Skip(pageSize * (pageNumber - 1))
+        .Take(pageSize)
+        .Select(e => e.MapToGetEventResponse())
+        .ToListAsync(cancellationToken);
+        return new PaginatedResponse<GetEventResponse>(
+            Data: result,
+            PageNumber: pageNumber,
+            PageSize: pageSize,
+            Count: count
+        );
+    }
 }
