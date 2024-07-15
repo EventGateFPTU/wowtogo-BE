@@ -8,6 +8,8 @@ public class CreateAttendeeHandler(IUnitOfWork unitOfWork) : IRequestHandler<Cre
 {
     public async Task<Result> Handle(CreateAttendeeCommand request, CancellationToken cancellationToken)
     {
+        Attendee? checkingAttendee = await unitOfWork.AttendeeRepository.FindAsync(a => a.EventId.Equals(request.EventId) && a.UserId.Equals(request.UserId));
+        if (checkingAttendee is not null) return Result.Conflict("User already participated in the event");
         // Check if the user is not found
         User? user = await unitOfWork.UserRepository.FindAsync(u => u.Id.Equals(request.UserId), cancellationToken: cancellationToken);
         if (user is null) return Result.NotFound("User not found");
