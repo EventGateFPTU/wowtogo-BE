@@ -18,7 +18,13 @@ public class CheckinHandler(IUnitOfWork unitOfWork, CurrentUser currentUser, IPe
     {
         Ticket? ticket = await unitOfWork.TicketRepository.GetTicketDetailByCode(request.Code, request.ShowId, trackChanges: true, cancellationToken: cancellationToken);
         if (ticket is null) return Result.NotFound("Ticket is not found");
+        
+        // TODO: When already checked-in, return attendee info
         if (ticket.IsCheckedIn()) return Result.Error("Ticket is already checked in");
+         
+        // var checkedInHistory = await unitOfWork.CheckinRepository
+        //     .FindManyAsync(c => c.ShowId.Equals(request.ShowId) && c.TicketId.Equals(ticket.Id), cancellationToken: cancellationToken);
+        
         if (!Enum.TryParse(request.UsedInFormat, out UsedInFormatEnum usedInFormatEnum))
             return Result.Error("Invalid used in format");
 
@@ -39,8 +45,6 @@ public class CheckinHandler(IUnitOfWork unitOfWork, CurrentUser currentUser, IPe
         if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to check in ticket");
 
         var result = ticket.Attendee.MapToAttendeeDetailResponse(ticket);
-        var attendee = await unitOfWork.AttendeeRepository
-            .FindAsync(a => a.Id.Equals(ticket.AttendeeId), cancellationToken: cancellationToken);
         return Result.Success(result, "Ticket is checked in successfully");
     }
 
