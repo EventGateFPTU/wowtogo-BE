@@ -61,6 +61,7 @@ public static class DependencyInjection
         string senderName = configuration.GetValue<string>("SENDER_NAME") ?? string.Empty;
         string senderEmail = configuration.GetValue<string>("SENDER_EMAIL") ?? string.Empty;
         string token = configuration.GetValue<string>("TOKEN") ?? string.Empty;
+        string templateId = configuration.GetValue<string>("TEMPLATE_ID") ?? string.Empty;
         services.Configure<MailSettings>(model =>
         {
             model.Host = host;
@@ -70,6 +71,7 @@ public static class DependencyInjection
             model.SenderName = senderName;
             model.SenderEmail = senderEmail;
             model.Token = token;
+            model.TemplateId = templateId;
         });
         return services;
     }

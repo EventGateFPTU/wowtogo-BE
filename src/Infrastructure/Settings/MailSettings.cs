@@ -8,4 +8,5 @@ public class MailSettings
     public string SenderName { get; set; } = string.Empty;
     public string SenderEmail { get; set; } = string.Empty;
     public string Token { get; set; } = string.Empty;
+    public string TemplateId { get; set; } = string.Empty;
 }

@@ -33,7 +33,7 @@ public class MailService(IOptionsMonitor<MailSettings> mailSettings, IQRCoderSer
         var httpClient = new HttpClient();
         var request = new
         {
-            template_uuid = "b00bdc21-361b-4261-beaa-d87964b4e847",
+            template_uuid = _mailSettings.TemplateId,
             from = new
             {
                 email = _mailSettings.SenderEmail,
