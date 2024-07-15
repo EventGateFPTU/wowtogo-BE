@@ -4,6 +4,5 @@ namespace Domain.Responses.Responses_Staff;
 
 public record CheckinResponse(
     AttendeeDetailResponse AttendeeDetail,
-    bool IsCheckedIn
-    
+    bool IsCheckedIn    
 );

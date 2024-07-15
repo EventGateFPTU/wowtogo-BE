@@ -8,8 +8,6 @@ using UseCases.Mapper.Mapper_Organizer;
 namespace Infrastructure.Data.Repositories;
 public class OrganizerRepository(WowToGoDBContext dbContext) : RepositoryBase<Organizer>(dbContext), IOrganizerRepository
 {
-	private IOrganizerRepository _organizerRepositoryImplementation;
-
 	public async Task<PaginatedResponse<OrganizerDB>> GetAllOrganizerAsync(int pageNumber, int pageSize, string? searchTerm, bool trackChanges, CancellationToken cancellationToken)
 	{
 		IQueryable<Organizer> organizersQuery = _dbSet;

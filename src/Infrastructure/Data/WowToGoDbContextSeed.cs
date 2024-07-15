@@ -1,8 +1,6 @@
 using Domain.Models;
 using Infrastructure.Data.DataGenerator;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Data;
 public static class WowToGoDbContextSeed
@@ -37,6 +35,7 @@ public static class WowToGoDbContextSeed
         Order[] orders = OrderGenerator.GenerateOrders(ticketTypes, users);
         Ticket[] tickets = TicketGenerator.GenerateTickets(attendees, ticketTypes);
         TicketTypeShow[] ticketTypeShows = TicketTypeShowGenerator.GenerateTicketTypeShows(ticketTypes, shows);
+        Checkin[] checkins = CheckinGenerator.GenerateCheckins(shows, tickets);
         // Seed data
         await context.Articles.AddRangeAsync(articles);
         await context.Users.AddRangeAsync(users);
@@ -51,6 +50,7 @@ public static class WowToGoDbContextSeed
         await context.Orders.AddRangeAsync(orders);
         await context.Tickets.AddRangeAsync(tickets);
         await context.TicketTypeShows.AddRangeAsync(ticketTypeShows);
+        await context.Checkins.AddRangeAsync(checkins);
         await context.SaveChangesAsync();
     }
 }

@@ -8,8 +8,6 @@ using UseCases.Mapper.Mapper_Category;
 namespace Infrastructure.Data.Repositories;
 public class CategoryRepository(WowToGoDBContext dbContext) : RepositoryBase<Category>(dbContext), ICategoryRepository
 {
-    private ICategoryRepository _categoryRepositoryImplementation;
-
     public async Task<PaginatedResponse<CategoryDB>> GetCategoriesAsync(string? searchTerm, int pageNumber = 1, int pageSize = 10, bool trackChanges = false, CancellationToken cancellationToken = default)
     {
         IQueryable<Category> categoriesQuery = _dbSet;

@@ -11,8 +11,6 @@ public static class GetTicketDetailResponseMapper
             TicketType: ticket.TicketType?.Name ?? string.Empty,
             EventName: ticket.TicketType?.TicketTypeShows.FirstOrDefault()?.Show.Title ?? string.Empty,
             Code: ticket.Code,
-            UsedInFormat: ticket.UsedInFormat.ToString(),
-            CreatedAt: ticket.CreatedAt,
-            UsedAt: ticket.UsedAt
+            CreatedAt: ticket.CreatedAt
         );
 }

@@ -18,30 +18,30 @@ public class CheckinHandler(IUnitOfWork unitOfWork, CurrentUser currentUser, IPe
     {
         Ticket? ticket = await unitOfWork.TicketRepository.GetTicketDetailByCode(request.Code, request.ShowId, trackChanges: true, cancellationToken: cancellationToken);
         if (ticket is null) return Result.NotFound("Ticket is not found");
-        
+
         // TODO: When already checked-in, return attendee info
-        if (ticket.IsCheckedIn()) return Result.Error("Ticket is already checked in");
-         
+        // if (ticket.IsCheckedIn()) return Result.Error("Ticket is already checked in");
+
         // var checkedInHistory = await unitOfWork.CheckinRepository
         //     .FindManyAsync(c => c.ShowId.Equals(request.ShowId) && c.TicketId.Equals(ticket.Id), cancellationToken: cancellationToken);
-        
+
         if (!Enum.TryParse(request.UsedInFormat, out UsedInFormatEnum usedInFormatEnum))
             return Result.Error("Invalid used in format");
 
         if (!await CurrentUserCanCheckInTicket(ticket.Id))
             return Result.Error("The current user can not check-in for this ticket");
-        
+
         if (!await TicketCanPassShow(ticketId: ticket.Id, showId: request.ShowId))
             return Result.Forbidden();
-        
-        ticket.CheckIn(usedInFormatEnum);
+
+        // ticket.CheckIn(usedInFormatEnum);
         var newCheckIn = new Domain.Models.Checkin
         {
             ShowId = request.ShowId,
             TicketId = ticket.Id
         };
         unitOfWork.CheckinRepository.Add(newCheckIn);
-        
+
         if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to check in ticket");
 
         var result = ticket.Attendee.MapToAttendeeDetailResponse(ticket);
