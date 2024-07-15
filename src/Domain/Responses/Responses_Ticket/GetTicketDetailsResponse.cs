@@ -4,6 +4,4 @@ public record GetTicketDetailsResponse(Guid Id,
                             string TicketType,
                             string EventName,
                             string Code,
-                            string? UsedInFormat,
-                            DateTimeOffset CreatedAt,
-                            DateTimeOffset? UsedAt);
+                            DateTimeOffset CreatedAt);

@@ -94,7 +94,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             var pattern = $"%{searchTerm.Trim()}%";
             eventQuery = eventQuery.Where(x => EF.Functions.ILike(x.Title, pattern));
         }
-        
+
         if (!string.IsNullOrEmpty(location))
         {
             var pattern = $"%{location.Trim()}%";
@@ -106,7 +106,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             var dateOnly = date.Value.Date;
             eventQuery = eventQuery.Where(x => x.Shows.Any(y => y.StartsAt <= dateOnly && dateOnly <= y.EndsAt));
         }
-        
+
         int count = eventQuery.Count();
         IEnumerable<EventDB> result = await eventQuery
             .Skip((pageNumber - 1) * pageSize)
@@ -121,9 +121,9 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
         );
     }
 
-    public Task<List<EventDB>> GetOrganizerEvents(Guid organizerId, CancellationToken cancellationToken = default)
+    public async Task<List<EventDB>> GetOrganizerEvents(Guid organizerId, CancellationToken cancellationToken = default)
     {
-        return context.Events
+        return await _dbSet
             .Include(e => e.Organizer)
             .Where(x => x.Organizer.User.Id == organizerId)
             .Select(x => x.MapEventDB())

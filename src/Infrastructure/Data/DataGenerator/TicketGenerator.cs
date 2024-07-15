@@ -13,8 +13,6 @@ public static class TicketGenerator
             .RuleFor(t => t.AttendeeId, f => f.PickRandom(attendees).Id)
             .RuleFor(t => t.TicketTypeId, f => f.PickRandom(ticketTypes).Id)
             .RuleFor(t => t.Code, f => f.Random.AlphaNumeric(10).ToUpper())
-            .RuleFor(t => t.UsedInFormat, f => f.PickRandom<UsedInFormatEnum>())
-            .RuleFor(t => t.UsedAt, f => f.Date.Future())
             .RuleFor(t => t.CreatedAt, f => f.Date.Past())
             .RuleFor(t => t.UpdatedAt, f => f.Date.Past())
             .Generate(20)

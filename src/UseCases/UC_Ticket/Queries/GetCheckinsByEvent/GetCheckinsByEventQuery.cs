@@ -1,4 +1,5 @@
 using Ardalis.Result;
+using Domain.Responses.Responses_Checkin;
 using Domain.Responses.Responses_Ticket;
 using Domain.Responses.Shared;
 using MediatR;
@@ -8,4 +9,4 @@ public record GetCheckinsByEventQuery(
     Guid EventId,
     int PageNumber,
     int PageSize
-) : IRequest<Result<PaginatedResponse<GetTicketDetailsResponse>>>;
+) : IRequest<Result<PaginatedResponse<GetCheckinDetailResponse>>>;
