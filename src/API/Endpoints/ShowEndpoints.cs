@@ -10,8 +10,7 @@ public static class ShowEndpoints
     {
         // GET
         group.MapGet("/{showId}/tickets", GetTicketTypesOfShowEndpointHandler.Handle)
-            .WithMetadata(new SwaggerOperationAttribute("Get all ticket types of a show"))
-            .RequireAuthorization();
+            .WithMetadata(new SwaggerOperationAttribute("Get all ticket types of a show"));
         group.MapGet("/{showId}", GetShowDetailsEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Get details of a show"));
         // POST

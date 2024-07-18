@@ -13,13 +13,16 @@ public class UserRepository(WowToGoDBContext context) : RepositoryBase<User>(con
             .Where(u => u.Subject.Equals(subject))
             .FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
-    public async Task<PaginatedResponse<PublicUserDetailResponse>> SearchUserByEmail(string emailTerm, int pageNumber = 1, int pageSize = 10,
+    public async Task<PaginatedResponse<PublicUserDetailResponse>> SearchUserByEmail(string? emailTerm, int pageNumber = 1, int pageSize = 10,
         CancellationToken cancellationToken = default)
     {
         var query = _dbSet.AsNoTracking();
-        query = query.Where(u => EF.Functions.ILike(u.Email, $"%{emailTerm}%"))
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize);
+        if (!string.IsNullOrEmpty(emailTerm))
+        {
+            query = query.Where(u => EF.Functions.ILike(u.Email, $"%{emailTerm}%"));
+        }
+        
+        query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
         var count = query.Count();
         var data = await query

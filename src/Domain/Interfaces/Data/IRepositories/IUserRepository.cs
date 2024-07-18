@@ -8,7 +8,7 @@ public interface IUserRepository : IRepositoryBase<User>
     Task<User?> GetUserBySubject(string subject, CancellationToken cancellationToken = default);
 
     Task<PaginatedResponse<PublicUserDetailResponse>> SearchUserByEmail(
-        string emailTerm,
+        string? emailTerm,
         int pageNumber = 1,
         int pageSize = 10,
         CancellationToken cancellationToken = default
