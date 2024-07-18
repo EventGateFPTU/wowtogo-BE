@@ -6,7 +6,7 @@ using MediatR;
 namespace UseCases.UC_User.Queries.GetUsersByEmail;
 
 public record GetUsersByEmailQuery(
-    string SearchTerm,
+    string? SearchTerm,
     int PageNumber = 1,
-    int PageSize = 7
+    int PageSize = 5
     ) : IRequest<Result<PaginatedResponse<PublicUserDetailResponse>>>;
