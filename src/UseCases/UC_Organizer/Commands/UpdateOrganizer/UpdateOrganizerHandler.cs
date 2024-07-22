@@ -20,7 +20,7 @@ namespace UseCases.UC_Organizer.Commands.UpdateOrganizer
 
             //check if the user is authorized to update the organizer
 			Organizer? organizer = await unitOfWork.OrganizerRepository.FindAsync(c => c.Id.Equals(request.Id), trackChanges: true, cancellationToken: cancellationToken);
-			
+			if (organizer is null) return Result.NotFound("Organizer not found");
 			if(currentUser.User.Id != organizer.Id ) return Result.Unavailable("You are not authorized to update this organizer");
             organizer.OrganizationName = request.OrganizationName;
 			organizer.Description = request.Description;
