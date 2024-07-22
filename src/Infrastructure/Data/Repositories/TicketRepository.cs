@@ -47,6 +47,18 @@ public class TicketRepository(WowToGoDBContext context) : RepositoryBase<Ticket>
             .Where(t => t.Code == code && t.TicketType.TicketTypeShows.Any(tts => tts.ShowId == showId))
             .SingleOrDefaultAsync(cancellationToken);
     }
+    public async Task<Ticket?> GetTicketDetailById(Guid id, bool trackChanges = false, CancellationToken cancellationToken = default)
+    {
+        IQueryable<Ticket> query = _dbSet;
+        if (!trackChanges) query = query.AsNoTracking();
+        return await query
+            .Include(t => t.Attendee)
+            .Include(t => t.TicketType)
+            .ThenInclude(tt => tt.TicketTypeShows)
+            .ThenInclude(tts => tts.Show)
+            .Where(t => t.Id.Equals(id))
+            .SingleOrDefaultAsync(cancellationToken);
+    }
 
 
 
