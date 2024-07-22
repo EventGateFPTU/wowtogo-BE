@@ -10,4 +10,8 @@ public interface IStaffRepository : IRepositoryBase<Staff>
         int pageSize = 10,
         bool trackChanges = false,
         CancellationToken cancellationToken = default);
+    
+    Task<List<StaffResponse>> GetStaffsByStaffIdsAsync(Guid[] staffIds,
+        bool trackChanges = false,
+        CancellationToken cancellationToken = default);
 }

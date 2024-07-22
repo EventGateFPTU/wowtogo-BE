@@ -13,6 +13,8 @@ public static class ShowEndpoints
             .WithMetadata(new SwaggerOperationAttribute("Get all ticket types of a show"));
         group.MapGet("/{showId}", GetShowDetailsEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Get details of a show"));
+        group.MapGet("/{showId}/staffs", GetShowStaffsHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Get details of a show"));
         // POST
         group.MapPost("", CreateShowEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Create a show"))

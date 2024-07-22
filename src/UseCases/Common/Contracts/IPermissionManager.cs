@@ -6,4 +6,5 @@ public interface IPermissionManager
     Task<bool> PutPermission(params (string user, string relation, string obj)[] permissions);
     Task<bool> RevokePermission(params (string user, string relation, string obj)[] permissions);
     Task<IEnumerable<string>> QueryAllObjectsInTypeDefinition(string user, string relation, string context);
+    Task<IEnumerable<string>> ListUsersAsync(string type, string id, string relation);
 }
