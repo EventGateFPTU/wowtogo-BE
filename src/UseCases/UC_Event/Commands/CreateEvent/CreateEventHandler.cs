@@ -1,5 +1,4 @@
 using Ardalis.Result;
-using Domain.Events;
 using Domain.Events.Events;
 using Domain.Interfaces.Data;
 using Domain.Models;
@@ -14,7 +13,7 @@ public class CreateEventHandler(IUnitOfWork unitOfWork, CurrentUser currentUser)
     {
         // check if categories exist
         var categories = await unitOfWork.CategoryRepository.FindManyAsync(c => request.CategoryIds.Contains(c.Id), cancellationToken: cancellationToken);
-        
+
         // check if user is already a organizer
         Organizer? organizer = await unitOfWork.OrganizerRepository.FindAsync(o => o.Id == currentUser.User!.Id, cancellationToken: cancellationToken);
         if (organizer is null)
@@ -45,9 +44,9 @@ public class CreateEventHandler(IUnitOfWork unitOfWork, CurrentUser currentUser)
         // Open FGA
         unitOfWork.EventRepository.Add(newEvent);
         newEvent.AddDomainEvent(new EventCreatedEvent(eventId: newEvent.Id, currentUserId: currentUser.User.Id));
-        
+
         if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to create event");
-        var createdEvent = await unitOfWork.EventRepository.GetEventAsync(newEventId,cancellationToken: cancellationToken);
-        return createdEvent is not null? Result.Success(createdEvent, "Event created successfully") : Result.Error("Failed to create event");
+        var createdEvent = await unitOfWork.EventRepository.GetEventAsync(newEventId, cancellationToken: cancellationToken);
+        return createdEvent is not null ? Result.Success(createdEvent, "Event created successfully") : Result.Error("Failed to create event");
     }
 }
