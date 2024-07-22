@@ -17,9 +17,7 @@ public class AssignEndpointHandler
             ), cancellationToken);
 
         if (result.IsSuccess) return Results.NoContent();
-        if (result.Status == ResultStatus.Forbidden)
-            return Results.BadRequest("No permission");
-        return Results.BadRequest("Something went wrong");
+        return Results.BadRequest(result);
     }
 
     public record AssignRequest(
