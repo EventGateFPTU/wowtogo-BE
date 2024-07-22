@@ -9,6 +9,7 @@ public static class StaffResponseMapper
     {
         return new StaffResponse(
             Id: staff.Id,
+            UserId: staff.UserId,
             Fullname: staff.User.FirstName +" "+ staff.User.LastName,
             Email: staff.User.Email
             );
