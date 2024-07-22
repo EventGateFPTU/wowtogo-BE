@@ -13,8 +13,9 @@ public class AssignHandler(CurrentUser currentUser, IPermissionManager permissio
 {
     public async Task<Result> Handle(AssignCommand request, CancellationToken cancellationToken)
     {
-        if (!await HasPermissionToAssignStaff(request.ShowId, request.UserId)) 
-            return Result.Forbidden();
+        var (canAssign, errorMsg) = await HasPermissionToAssignStaff(request.ShowId, request.UserId);
+        if (!canAssign) return Result.Error(errorMsg);
+        
         var staff = await unitOfWork.StaffRepository
             .FindAsync(x => x.UserId.Equals(request.UserId), cancellationToken: cancellationToken);
         if (staff is null) return Result.NotFound("Staff not found");
@@ -33,7 +34,7 @@ public class AssignHandler(CurrentUser currentUser, IPermissionManager permissio
         return isSuccess ? Result.SuccessWithMessage("Successfully assign staff permission") : Result.Error();
     }
 
-    private async Task<bool> HasPermissionToAssignStaff(Guid showId, Guid staffUserId)
+    private async Task<(bool canAssign, string errorMsg)> HasPermissionToAssignStaff(Guid showId, Guid staffUserId)
     {
         var userObj = RelationObjects.User(staffUserId.ToString());
         var showObj = RelationObjects.Show(showId.ToString());
@@ -57,8 +58,15 @@ public class AssignHandler(CurrentUser currentUser, IPermissionManager permissio
             showObj
             );
         
-        return !userIsAlreadyAssignee 
-               && userIsStaffOfEvent 
-               && hasPermission;
+        if ( userIsAlreadyAssignee )
+            return (false, "User is already assigned");
+        
+        if ( !userIsStaffOfEvent )
+            return (false, "User is not staff of event");
+        
+        if ( !hasPermission )
+            return (false, "You don't have permission to assign staff");
+        
+        return (true, "");
     }
 }

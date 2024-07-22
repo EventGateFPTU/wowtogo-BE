@@ -1,4 +1,5 @@
 ﻿using Ardalis.Result;
+using Domain.Models;
 using MediatR;
 
 namespace UseCases.UC_Organizer.Commands.UpdateOrganizer
@@ -7,5 +8,5 @@ namespace UseCases.UC_Organizer.Commands.UpdateOrganizer
 				Guid Id,
 				string OrganizationName,
 				string Description)
-		: IRequest<Result>;
+		: IRequest<Result<Organizer>>;
 }
