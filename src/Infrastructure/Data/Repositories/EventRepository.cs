@@ -48,7 +48,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             .Include(e => e.Organizer)
             .Include(e => e.Shows).ThenInclude(s => s.TicketTypeShow).ThenInclude(tts => tts.TicketType).ThenInclude(tt => tt.Orders)
             .Where(e => e.Status == EventStatusEnum.Published);
-        int count = await eventQuery.CountAsync();
+        int count = await eventQuery.CountAsync(cancellationToken: cancellationToken);
         IEnumerable<EventDB> result = await eventQuery
             .Select(e => new
             {
@@ -156,4 +156,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             Count: count
         );
     }
+
+    public async Task<Event?> GetEventWithOrganizer(Guid eventId, CancellationToken cancellationToken = default, bool trackChanges = false)
+        => await _dbSet.Include(e => e.Organizer).FirstOrDefaultAsync(e => e.Id.Equals(eventId));
 }

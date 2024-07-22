@@ -2,33 +2,32 @@
 using Domain.Interfaces.Data;
 using Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Events.Events;
-using UseCases.Common.Contracts;
 using UseCases.Common.Models;
 
 namespace UseCases.UC_Event.Commands.UpdateEvent
 {
-    public class UpdateEventHandler(IUnitOfWork unitOfWork, CurrentUser currentUser, IPermissionManager permissionManager) : IRequestHandler<UpdateEventCommand, Result>
+    public class UpdateEventHandler(IUnitOfWork unitOfWork, CurrentUser currentUser) : IRequestHandler<UpdateEventCommand, Result>
     {
         public async Task<Result> Handle(UpdateEventCommand request, CancellationToken cancellationToken)
         {
-            Event? checkingEvent = await unitOfWork.EventRepository.FindAsync(e => e.Id.Equals(request.Id), trackChanges: true, cancellationToken: cancellationToken);
+            Event? checkingEvent = await unitOfWork.EventRepository.GetEventWithOrganizer(eventId: request.Id,
+                                                                                        cancellationToken: cancellationToken,
+                                                                                        trackChanges: true);
             if (checkingEvent is null) return Result.NotFound("Event is not found");
-            
+
             if (!CanUpdate(checkingEvent)) return Result.Forbidden();
-            
+            // NOTE : check if event status is valid
+            if (checkingEvent.Status == Domain.Enums.EventStatusEnum.Canceled) return Result.Unavailable("Event is cancelled");
+            if (checkingEvent.Status == Domain.Enums.EventStatusEnum.Published) return Result.Unavailable("Event is already published");
+            if (checkingEvent.Status == Domain.Enums.EventStatusEnum.Completed) return Result.Unavailable("Event is already completed");
+
             // NOTE : update event information
             checkingEvent.Title = request.Title;
             checkingEvent.Description = request.Description;
             checkingEvent.Location = request.Location;
             checkingEvent.Status = request.Status;
             checkingEvent.UpdatedAt = DateTimeOffset.UtcNow;
-            if (request.CategoryIds.Any())
+            if (request.CategoryIds.Length != 0)
             {
                 IEnumerable<EventCategory> eventCategories = await unitOfWork.EventCategoryRepository.FindManyAsync(ec => ec.EventId.Equals(request.Id), cancellationToken: cancellationToken);
                 IEnumerable<Category> checkingEventCategories = await unitOfWork.CategoryRepository
@@ -41,8 +40,8 @@ namespace UseCases.UC_Event.Commands.UpdateEvent
                     CategoryId = ecId,
                 }));
             }
-            
-            
+
+
             if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to update event");
             return Result.Success();
         }
