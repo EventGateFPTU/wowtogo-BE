@@ -5,5 +5,5 @@ namespace UseCases.Mapper.Mapper_Category;
 public static class CategoryDBMapper
 {
     public static CategoryDB MapCategoryDB(this Category category)
-        => new CategoryDB(category.Id, category.Name);
+        => new(category.Id, category.Name);
 }

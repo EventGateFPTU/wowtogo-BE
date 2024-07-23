@@ -10,4 +10,4 @@ public record GetFeaturedEventQuery
     int PageNumber,
     int PageSize,
     string? SearchTerm
-) : IRequest<Result<PaginatedResponse<EventDB>>>;
+) : IRequest<Result<PaginatedResponse<GetEventResponse>>>;
