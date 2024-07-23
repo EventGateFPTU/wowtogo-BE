@@ -53,7 +53,9 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             .Select(e => new
             {
                 Event = e.MapEventDB(),
-                Rate = e.Shows.SelectMany(s => s.TicketTypeShow).Select(tts => tts.TicketType).Select(tt => tt.Orders).Count() / (DateTime.UtcNow - e.CreatedAt).Days,
+                Rate = e.Shows.SelectMany(s => s.TicketTypeShow)
+                    .Select(tts => tts.TicketType)
+                    .Select(tt => tt.Orders).Count() / ((DateTime.UtcNow - e.CreatedAt).Days <= 0? 1 : (DateTime.UtcNow - e.CreatedAt).Days),
             })
             .OrderByDescending(o => o.Rate)
             .Skip((pageNumber - 1) * pageSize)
