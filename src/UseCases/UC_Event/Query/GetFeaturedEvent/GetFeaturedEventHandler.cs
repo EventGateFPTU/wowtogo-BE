@@ -7,11 +7,11 @@ using MediatR;
 
 namespace UseCases.UC_Event.Query.GetFeaturedEvent;
 
-public class GetFeaturedEventHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetFeaturedEventQuery, Result<PaginatedResponse<EventDB>>>
+public class GetFeaturedEventHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetFeaturedEventQuery, Result<PaginatedResponse<GetEventResponse>>>
 {
-    public async Task<Result<PaginatedResponse<EventDB>>> Handle(GetFeaturedEventQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaginatedResponse<GetEventResponse>>> Handle(GetFeaturedEventQuery request, CancellationToken cancellationToken)
     {
-        PaginatedResponse<EventDB> eventDBs = await unitOfWork.EventRepository.GetFeaturedEventsAsync(request.PageNumber, request.PageSize, request.SearchTerm, false, cancellationToken);
+        PaginatedResponse<GetEventResponse> eventDBs = await unitOfWork.EventRepository.GetFeaturedEventsAsync(request.PageNumber, request.PageSize, request.SearchTerm, false, cancellationToken);
         return Result.Success(eventDBs, "Events are found successfully");
     }
 }
