@@ -14,6 +14,9 @@ public static class StaffEndpoints
         group.MapPost("assign", AssignEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Assign staff to checkin for show"))
             .RequireAuthorization();
+        group.MapPost("unassign", UnassignEndpointHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Unassign staff"))
+            .RequireAuthorization();
         // Put methods
         group.MapPut("checkin", CheckinEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Checkin a ticket"))
