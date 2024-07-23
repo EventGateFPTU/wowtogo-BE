@@ -162,5 +162,5 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
     }
 
     public async Task<Event?> GetEventWithOrganizer(Guid eventId, CancellationToken cancellationToken = default, bool trackChanges = false)
-        => await _dbSet.Include(e => e.Organizer).FirstOrDefaultAsync(e => e.Id.Equals(eventId));
+        => await _dbSet.Include(e => e.Organizer).Include(e => e.Staffs).FirstOrDefaultAsync(e => e.Id.Equals(eventId));
 }
