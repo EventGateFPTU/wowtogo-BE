@@ -79,4 +79,21 @@ public class PermissionManager(OpenFgaClient client) : IPermissionManager
             return [];
         }
     }
+
+    public async Task<IEnumerable<string>> ListUsersAsync(string type, string id, string relation)
+    {
+        var body = new ClientListUsersRequest
+        {
+            Object = new FgaObject
+            {
+                Type = type,
+                Id = id,
+            },
+            Relation = relation,
+            UserFilters = [new UserTypeFilter { Type = "user" }],
+        };
+        
+        var response = await client.ListUsers(body);
+        return response.Users.Where(x => x.Object is not null).Select(x => x.Object!.Id);
+    }
 }
