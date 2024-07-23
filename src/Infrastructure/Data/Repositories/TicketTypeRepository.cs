@@ -24,6 +24,7 @@ public class TicketTypeRepository(WowToGoDBContext dbContext) : RepositoryBase<T
             .Include(tt => tt.TicketTypeShows)
             .ThenInclude(tts => tts.Show)
             .ThenInclude(s => s.Event)
+            .Include(s => s.Event).ThenInclude(e => e.Organizer)
             .Where(tt => tt.Id.Equals(ticketId))
             .FirstOrDefaultAsync(cancellationToken);
 

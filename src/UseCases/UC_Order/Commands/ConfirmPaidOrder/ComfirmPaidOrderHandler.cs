@@ -4,10 +4,11 @@ using Domain.Interfaces.Data;
 using Domain.Models;
 using Domain.Responses.Responses_Ticket;
 using MediatR;
+using UseCases.Common.Models;
 using UseCases.UC_Ticket.Commands.CreateTicket;
 
 namespace UseCases.UC_Order.Commands.ConfirmPaidOrder;
-public class ComfirmPaidOrderHandler(IUnitOfWork unitOfWork, ISender sender) : IRequestHandler<ConfirmPaidOrderCommand, Result<CreateTicketResponse>>
+public class ComfirmPaidOrderHandler(IUnitOfWork unitOfWork, ISender sender, CurrentUser currentUser) : IRequestHandler<ConfirmPaidOrderCommand, Result<CreateTicketResponse>>
 {
     public async Task<Result<CreateTicketResponse>> Handle(ConfirmPaidOrderCommand request, CancellationToken cancellationToken)
     {
@@ -15,10 +16,10 @@ public class ComfirmPaidOrderHandler(IUnitOfWork unitOfWork, ISender sender) : I
         Order? order = await unitOfWork.OrderRepository.FindAsync(o => o.Id.Equals(request.OrderId), cancellationToken: cancellationToken, trackChanges: true);
         if (order is null) return Result.NotFound("Order is not found");
         // Check if the user is valid
+        // TODO: Check if user is the ticket owner
+        if (!IsCurrentUserOwnOrder(order)) return Result.Forbidden();
         User? user = await unitOfWork.UserRepository.FindAsync(u => u.Id.Equals(order.UserId), cancellationToken: cancellationToken);
         if (user is null) return Result.NotFound("User not found");
-        // TODO: Check if user is the ticket owner
-
         if (order.Status != OrderStatusEnum.Pending)
             return Result.Error("Order should be pending");
         // Check if the event is valid
@@ -33,4 +34,6 @@ public class ComfirmPaidOrderHandler(IUnitOfWork unitOfWork, ISender sender) : I
         if (ticketResult.Status != ResultStatus.Ok) return Result.Error("Failed to create ticket");
         return Result.Success(ticketResult, "Order is confirmed and ticket is created successfully");
     }
+    private bool IsCurrentUserOwnOrder(Order order)
+        => order.UserId.Equals(currentUser.User!.Id);
 }
