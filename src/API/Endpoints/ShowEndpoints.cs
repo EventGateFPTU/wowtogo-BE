@@ -14,7 +14,8 @@ public static class ShowEndpoints
         group.MapGet("/{showId}", GetShowDetailsEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Get details of a show"));
         group.MapGet("/{showId}/staffs", GetShowStaffsHandler.Handle)
-            .WithMetadata(new SwaggerOperationAttribute("Get details of a show"));
+            .WithMetadata(new SwaggerOperationAttribute("get assigned staffs of show"))
+            .RequireAuthorization();;
         // POST
         group.MapPost("", CreateShowEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Create a show"))
