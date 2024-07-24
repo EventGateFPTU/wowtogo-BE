@@ -1,6 +1,5 @@
 ﻿using Ardalis.Result;
 using MediatR;
-using UseCases.UC_Staff.Commands.Checkin;
 using UseCases.UC_Staff.Queries.GetCheckinInfo;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 

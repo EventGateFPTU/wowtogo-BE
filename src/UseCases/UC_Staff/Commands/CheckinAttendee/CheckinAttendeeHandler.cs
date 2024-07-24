@@ -15,7 +15,6 @@ public class CheckinAttendeeHandler(IUnitOfWork unitOfWork, CurrentUser currentU
         var ticket = await unitOfWork.TicketRepository.FindAsync(x => x.Id == request.TicketId, trackChanges: true, cancellationToken: cancellationToken);
         if (ticket is null) return Result.NotFound("Ticket is not found");
 
-
         if (!Enum.TryParse(request.UsedInFormat, out UsedInFormatEnum usedInFormatEnum))
             return Result.Error("Invalid used in format");
 
@@ -29,7 +28,8 @@ public class CheckinAttendeeHandler(IUnitOfWork unitOfWork, CurrentUser currentU
         var newCheckIn = new Domain.Models.Checkin
         {
             ShowId = request.ShowId,
-            TicketId = ticket.Id
+            TicketId = ticket.Id,
+            UsedInFormat = usedInFormatEnum,
         };
         unitOfWork.CheckinRepository.Add(newCheckIn);
 
