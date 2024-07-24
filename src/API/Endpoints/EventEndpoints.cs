@@ -53,6 +53,9 @@ public static class EventEndpoints
         group.MapPut("/publish/{eventId}", PublishEventEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Publish Event"))
             .RequireAuthorization();
+        group.MapPut("/cancel/{eventId}", CancelEventEndpointHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Cancel Event"))
+            .RequireAuthorization();
         // DELETE
         group.MapDelete("/staff/{staffId}", RemoveStaffEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Delete a staff"))

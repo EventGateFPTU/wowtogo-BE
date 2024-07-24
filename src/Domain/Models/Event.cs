@@ -24,4 +24,6 @@ public class Event : BaseEntity
 
     public void Publish()
         => Status = EventStatusEnum.Published;
+    public void Cancel()
+        => Status = EventStatusEnum.Canceled;
 }
