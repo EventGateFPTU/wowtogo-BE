@@ -17,7 +17,7 @@ using UseCases.UC_Order.Queries.GetPaidOrders;
 
 namespace UseCases.UC_Event.Query.GetEvents
 {
-    public class GetEventHandler(IUnitOfWork unitOfWork, CurrentUser currentUser) : IRequestHandler<GetEventQuery, Result<GetEventResponse>>
+    public class GetEventHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetEventQuery, Result<GetEventResponse>>
     {
         public async Task<Result<GetEventResponse>> Handle(GetEventQuery request, CancellationToken cancellationToken)
         {
@@ -28,13 +28,13 @@ namespace UseCases.UC_Event.Query.GetEvents
                 .FirstOrDefaultAsync(s => s.Id.Equals(request.EventID));*/
             var getEventOrganizer = await unitOfWork.EventRepository.GetEventWithOrganizer(request.EventID);
             var gettingEvent = unitOfWork.EventRepository.DBSet();
-            var getEvent = await gettingEvent
+            var eventDB = await gettingEvent
                 .Include(e => e.Organizer)
                 /*.Include(e => e.Staffs)*/
                 .FirstOrDefaultAsync(e => e.Id.Equals(request.EventID));
-            if (getEvent is null) return Result.NotFound("No events are found");
-            if (getEvent.Id != getEventOrganizer!.Id /*|| getEvent.Id != getStaff.Id*/) return Result.Error("You are not authorized to view this event");
-            return Result.Success(getEvent!.MapToGetEventResponse());
+            if (eventDB is null) return Result.NotFound("No events are found");
+            if (eventDB.Id != getEventOrganizer!.Id /*|| getEvent.Id != getStaff.Id*/) return Result.Error("You are not authorized to view this event");
+            return Result.Success(eventDB!.MapToGetEventResponse());
             
 
         }
