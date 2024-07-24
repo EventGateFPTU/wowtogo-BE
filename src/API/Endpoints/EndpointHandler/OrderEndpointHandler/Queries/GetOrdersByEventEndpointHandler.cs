@@ -13,7 +13,11 @@ public class GetOrdersByEventEndpointHandler
                                                                             Id: eventId,
                                                                             PageNumber: pageNumber,
                                                                             pageSize));
-        if (!result.IsSuccess) return Results.NotFound();
+        if (!result.IsSuccess)
+        {
+            if (result.Status == ResultStatus.Forbidden) return Results.Forbid();
+            return Results.NotFound();
+        }
         return Results.Ok(result);
     }
 }

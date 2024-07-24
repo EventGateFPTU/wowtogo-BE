@@ -4,10 +4,11 @@ using Domain.Interfaces.Data;
 using Domain.Models;
 using Domain.Responses.Responses_TicketType;
 using MediatR;
+using UseCases.Common.Models;
 using UseCases.Mapper.Mapper_TicketType;
 
 namespace UseCases.UC_TicketType.Commands.CreateTicketType;
-public class CreateTicketTypeHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateTicketTypeCommand, Result<CreateTicketTypeResponse>>
+public class CreateTicketTypeHandler(IUnitOfWork unitOfWork, CurrentUser currentUser) : IRequestHandler<CreateTicketTypeCommand, Result<CreateTicketTypeResponse>>
 {
     public async Task<Result<CreateTicketTypeResponse>> Handle(CreateTicketTypeCommand request, CancellationToken cancellationToken)
     {
@@ -39,4 +40,6 @@ public class CreateTicketTypeHandler(IUnitOfWork unitOfWork) : IRequestHandler<C
         if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to create ticket type");
         return Result.Success(ticketType.MapToTicketTypeResponse(), "Ticket type is created successfully");
     }
+    private bool IsCurrentUserOwnEvent(Event checkingEvent)
+        => checkingEvent.Organizer.Id.Equals(currentUser.User!.Id);
 }
