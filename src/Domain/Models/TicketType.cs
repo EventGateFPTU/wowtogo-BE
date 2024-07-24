@@ -20,4 +20,6 @@ public class TicketType : BaseEntity
     public ICollection<TicketTypeShow> TicketTypeShows { get; set; } = [];
     public ICollection<Order> Orders { get; set; } = [];
     public ICollection<Ticket> Tickets { get; set; } = [];
+    public void ReduceOneAmount()
+        => Amount = Amount - 1;
 }
