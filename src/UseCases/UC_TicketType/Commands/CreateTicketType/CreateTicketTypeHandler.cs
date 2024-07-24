@@ -12,19 +12,9 @@ public class CreateTicketTypeHandler(IUnitOfWork unitOfWork, CurrentUser current
 {
     public async Task<Result<CreateTicketTypeResponse>> Handle(CreateTicketTypeCommand request, CancellationToken cancellationToken)
     {
-        // check validation for the ticket type
-        if (request.FromDate > request.ToDate) return Result.Error("From date should be less than to date");
-        if (request.Amount < 0) return Result.Error("Amount should be greater than 0");
-        if (request.LeastAmountBuy < 0) return Result.Error("Least amount buy should be greater than 0");
-        if (request.MostAmountBuy < 0) return Result.Error("Most amount buy should be greater than 0");
-        if (request.LeastAmountBuy > request.MostAmountBuy) return Result.Error("Least amount buy should be less than most amount buy");
-        if (request.Price < 0) return Result.Error("Price should be greater than 0");
-        if (request.Amount < request.LeastAmountBuy) return Result.Error("Amount should be greater than least amount buy");
-        if (request.Amount < request.MostAmountBuy) return Result.Error("Amount should be greater than most amount buy");
         Event? checkingEvent = await unitOfWork.EventRepository.GetEventWithOrganizer(request.EventId, cancellationToken: cancellationToken);
         if (checkingEvent is null) return Result.NotFound("Event is not found");
         if (!IsCurrentUserOwnEvent(checkingEvent)) return Result.Forbidden();
-        // new ticket type
         Guid ticketTypeId = Guid.NewGuid();
         TicketType ticketType = new()
         {
@@ -41,6 +31,9 @@ public class CreateTicketTypeHandler(IUnitOfWork unitOfWork, CurrentUser current
             UpdatedAt = DateTimeOffset.UtcNow,
             EventId = request.EventId
         };
+        // check validation
+        var (validResult, message) = ticketType.IsValid();
+        if (!validResult) return Result.Error(message);
         unitOfWork.TicketTypeRepository.Add(ticketType);
         var ttEvent = new TicketTypeCreatedEvent(
            eventId: request.EventId,
