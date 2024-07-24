@@ -16,9 +16,11 @@ public class GetShowStaffsHandler(IUnitOfWork unitOfWork, IPermissionManager per
 
         var users = await permissionManager.ListUsersAsync("show", targetShow.Id.ToString(), Relations.ShowAssignee);
 
+        Console.WriteLine(users.Count());
         var userIds = users.Select(Guid.Parse);
+        Console.WriteLine(userIds.Count());
 
-        var staffs = await unitOfWork.StaffRepository.GetStaffsByStaffIdsAsync(userIds.ToArray(), cancellationToken: cancellationToken);
+        var staffs = await unitOfWork.StaffRepository.GetStaffsByStaffIdsAsync(request.ShowId, userIds.ToArray(), cancellationToken: cancellationToken);
 
         return Result.Success(staffs, "");
     }

@@ -11,7 +11,7 @@ public interface IStaffRepository : IRepositoryBase<Staff>
         bool trackChanges = false,
         CancellationToken cancellationToken = default);
     
-    Task<List<StaffResponse>> GetStaffsByStaffIdsAsync(Guid[] staffIds,
+    Task<List<StaffResponse>> GetStaffsByStaffIdsAsync(Guid showId, Guid[] staffIds,
         bool trackChanges = false,
         CancellationToken cancellationToken = default);
 }

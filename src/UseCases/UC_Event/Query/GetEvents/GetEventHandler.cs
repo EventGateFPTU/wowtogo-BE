@@ -30,8 +30,9 @@ namespace UseCases.UC_Event.Query.GetEvents
             var gettingEvent = unitOfWork.EventRepository.DBSet();
             var eventDB = await gettingEvent
                 .Include(e => e.Organizer)
-                /*.Include(e => e.Staffs)*/
-                .FirstOrDefaultAsync(e => e.Id.Equals(request.EventID));
+                .Include(x => x.EventCategories)
+                .ThenInclude(y => y.Category)
+                .FirstOrDefaultAsync(e => e.Id.Equals(request.EventID), cancellationToken: cancellationToken);
             if (eventDB is null) return Result.NotFound("No events are found");
             if (eventDB.Id != getEventOrganizer!.Id /*|| getEvent.Id != getStaff.Id*/) return Result.Error("You are not authorized to view this event");
             return Result.Success(eventDB!.MapToGetEventResponse());

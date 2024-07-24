@@ -28,12 +28,15 @@ public class StaffRepository(WowToGoDBContext dBContext) : RepositoryBase<Staff>
         );
     }
 
-    public async Task<List<StaffResponse>> GetStaffsByStaffIdsAsync(Guid[] staffIds, bool trackChanges = false, CancellationToken cancellationToken = default)
+    public async Task<List<StaffResponse>> GetStaffsByStaffIdsAsync(Guid showId, Guid[] staffIds, bool trackChanges = false, CancellationToken cancellationToken = default)
     {
-        IQueryable<Staff> query = _dbSet;
-        if (!trackChanges) query = query.AsNoTracking();
-        query = query.Include(s => s.User).Where(o => staffIds.Contains(o.UserId));
+        var query = dBContext.ShowStaffs.AsQueryable();
+        query = query
+            .Include(s => s.Staff)
+            .ThenInclude(x => x.User)
+            .Where(o => staffIds.Contains(o.Staff.UserId) && o.ShowId == showId);
         IEnumerable<StaffResponse> result = await query
+            .Select(x => x.Staff)
             .Select(o => o.MapToStaffResponse())
             .ToListAsync(cancellationToken);
         return result.ToList();
