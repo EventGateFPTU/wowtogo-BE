@@ -9,8 +9,7 @@ public static class TicketTypeEndpoint
     {
         // GET
         group.MapGet("{ticketTypeId:guid}", GetTicketTypeByIdHandler.Handle)
-            .WithMetadata(new SwaggerOperationAttribute("Create a ticket type"))
-            .RequireAuthorization();
+            .WithMetadata(new SwaggerOperationAttribute("Create a ticket type"));
         // POST
         group.MapPost("", CreateTicketTypeEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Create a ticket type"))
