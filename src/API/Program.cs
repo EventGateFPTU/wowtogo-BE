@@ -96,6 +96,7 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
+	app.MigrateDatabase<WowToGoDBContext>((_, _) => Task.CompletedTask);
 	app.UseCors(CorsPolicy.Production);
 }
 
