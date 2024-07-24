@@ -4,26 +4,23 @@ using Domain.Interfaces.Data;
 using Domain.Models;
 using Domain.Responses.Responses_Attendee;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using OpenFga.Sdk.ApiClient;
 using UseCases.Common.Constants;
 using UseCases.Common.Contracts;
 using UseCases.Common.Models;
 using UseCases.Mapper.Mapp_Attendee;
 
-namespace UseCases.UC_Staff.Commands.Checkin;
-public class CheckinHandler(IUnitOfWork unitOfWork, CurrentUser currentUser, IPermissionManager permissionManager) : IRequestHandler<CheckinCommand, Result<AttendeeDetailResponse>>
+namespace UseCases.UC_Staff.Commands.CheckinAttendee;
+public class CheckinAttendeeHandler(IUnitOfWork unitOfWork, CurrentUser currentUser, IPermissionManager permissionManager) : IRequestHandler<CheckinAttendeeCommand, Result<AttendeeDetailResponse>>
 {
-    public async Task<Result<AttendeeDetailResponse>> Handle(CheckinCommand request, CancellationToken cancellationToken)
+    public async Task<Result<AttendeeDetailResponse>> Handle(CheckinAttendeeCommand request, CancellationToken cancellationToken)
     {
         Ticket? ticket = await unitOfWork.TicketRepository.GetTicketDetailByCode(request.Code, request.ShowId, trackChanges: true, cancellationToken: cancellationToken);
         if (ticket is null) return Result.NotFound("Ticket is not found");
 
-        // TODO: When already checked-in, return attendee info
-        // if (ticket.IsCheckedIn()) return Result.Error("Ticket is already checked in");
+        Checkin? checkin = await unitOfWork.CheckinRepository.FindAsync(c => c.TicketId.Equals(ticket.Id) || c.ShowId.Equals(request.ShowId), cancellationToken: cancellationToken);
+        if (checkin is not null) return Result.Success(ticket.Attendee.MapToAttendeeDetailResponse(ticket), "Ticket is already checked in");
 
-        // var checkedInHistory = await unitOfWork.CheckinRepository
-        //     .FindManyAsync(c => c.ShowId.Equals(request.ShowId) && c.TicketId.Equals(ticket.Id), cancellationToken: cancellationToken);
+        // TODO: When already checked-in, return attendee info
 
         if (!Enum.TryParse(request.UsedInFormat, out UsedInFormatEnum usedInFormatEnum))
             return Result.Error("Invalid used in format");
@@ -35,7 +32,7 @@ public class CheckinHandler(IUnitOfWork unitOfWork, CurrentUser currentUser, IPe
             return Result.Forbidden();
 
         // ticket.CheckIn(usedInFormatEnum);
-        var newCheckIn = new Domain.Models.Checkin
+        var newCheckIn = new Checkin
         {
             ShowId = request.ShowId,
             TicketId = ticket.Id
