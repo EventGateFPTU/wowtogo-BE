@@ -30,13 +30,24 @@ public class CreateOrderHandler(IUnitOfWork unitOfWork, ISender sender, CurrentU
             TicketTypeId = request.TicketTypeId,
             UserId = currentUserId,
             TotalPrice = ticketType.Price,
-            Currency = request.Currency,
+            Currency = "VND",
             Status = Domain.Enums.OrderStatusEnum.Pending,
         };
         unitOfWork.OrderRepository.Add(order);
-        Result result = await sender.Send(new CreateAttendeeCommand(currentUserId, checkingEvent.Id, request.PhoneNumber, request.DateOfBirth), cancellationToken);
-        if (!result.IsSuccess) return Result.Error("Failed to create attendee");
-        // if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to create order");
+
+        Attendee attendee = new()
+        {
+            UserId = currentUserId,
+            EventId = checkingEvent.Id,
+            DateOfBirth = request.DateOfBirth,
+            PhoneNumber = request.PhoneNumber,
+            Email = request.Email,
+            FirstName = request.FirstName,
+            LastName = request.LastName
+        };
+        unitOfWork.AttendeeRepository.Add(attendee);
+        
+        if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to create order");
         return Result.Success(order.MapToCreateOrderResponse(), "Create Order Successfully !");
     }
 }

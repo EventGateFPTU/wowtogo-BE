@@ -11,8 +11,10 @@ public static class CreateOrderEndpointHandler
     {
         Result<CreateOrderResponse> result = await sender.Send(
             new CreateOrderCommand(request.TicketTypeId,
-                                request.Currency,
                                 request.PhoneNumber,
+                                request.FirstName,
+                                request.LastName,
+                                request.Email,
                                 request.DateOfBirth)
             );
         if (!result.IsSuccess)
@@ -27,6 +29,8 @@ public static class CreateOrderEndpointHandler
 
 public record CreateOrderRequest
     (Guid TicketTypeId,
-    string Currency,
+    string Email,
+    string FirstName,
+    string LastName,
     string PhoneNumber,
     DateTimeOffset DateOfBirth);
