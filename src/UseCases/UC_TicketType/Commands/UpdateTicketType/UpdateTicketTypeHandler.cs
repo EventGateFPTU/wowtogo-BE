@@ -2,14 +2,18 @@ using Ardalis.Result;
 using Domain.Interfaces.Data;
 using Domain.Models;
 using MediatR;
+using UseCases.Common.Models;
 
 namespace UseCases.UC_TicketType.Commands.UpdateTicketType;
-public class UpdateTicketTypeHandler(IUnitOfWork unitOfWork) : IRequestHandler<UpdateTicketTypeCommand, Result>
+public class UpdateTicketTypeHandler(IUnitOfWork unitOfWork, CurrentUser currentUser) : IRequestHandler<UpdateTicketTypeCommand, Result>
 {
     public async Task<Result> Handle(UpdateTicketTypeCommand request, CancellationToken cancellationToken)
     {
         TicketType? checkingTicketType = await unitOfWork.TicketTypeRepository.FindAsync(tt => tt.Id.Equals(request.Id), trackChanges: true, cancellationToken: cancellationToken);
         if (checkingTicketType is null) return Result.NotFound("Ticket type not found");
+        Event? checkingEvent = await unitOfWork.EventRepository.GetEventWithOrganizer(checkingTicketType.EventId, cancellationToken: cancellationToken);
+        if (checkingEvent is null) return Result.NotFound("Ticket type's event is not found");
+        if (!IsCurrentUserOwnEvent(checkingEvent)) return Result.Forbidden();
         if (request.FromDate > request.ToDate) return Result.Error("From date should be less than to date");
         if (request.Amount < 0) return Result.Error("Amount should be greater than 0");
         if (request.LeastAmountBuy < 0) return Result.Error("Least amount buy should be greater than 0");
@@ -33,4 +37,6 @@ public class UpdateTicketTypeHandler(IUnitOfWork unitOfWork) : IRequestHandler<U
         if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to update ticket type");
         return Result.SuccessWithMessage("Ticket type is updated successfully");
     }
+    private bool IsCurrentUserOwnEvent(Event checkingEvent)
+        => checkingEvent.Organizer.Id.Equals(currentUser.User!.Id);
 }
