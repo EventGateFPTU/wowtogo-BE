@@ -23,6 +23,7 @@ public class CreateTicketTypeEndpointHandler
         if (!result.IsSuccess)
         {
             if (result.Status == ResultStatus.NotFound) return Results.NotFound(result);
+            if (result.Status == ResultStatus.Forbidden) return Results.Forbid();
             return Results.BadRequest(result);
         }
         return Results.Created("", result);
