@@ -9,19 +9,14 @@ public class UpdateTicketTypeHandler(IUnitOfWork unitOfWork, CurrentUser current
 {
     public async Task<Result> Handle(UpdateTicketTypeCommand request, CancellationToken cancellationToken)
     {
-        TicketType? checkingTicketType = await unitOfWork.TicketTypeRepository.FindAsync(tt => tt.Id.Equals(request.Id), trackChanges: true, cancellationToken: cancellationToken);
+        TicketType? checkingTicketType = await unitOfWork.TicketTypeRepository.GetTicketIncludingEventAsync(request.Id, cancellationToken: cancellationToken);
         if (checkingTicketType is null) return Result.NotFound("Ticket type not found");
         Event? checkingEvent = await unitOfWork.EventRepository.GetEventWithOrganizer(checkingTicketType.EventId, cancellationToken: cancellationToken);
         if (checkingEvent is null) return Result.NotFound("Ticket type's event is not found");
         if (!IsCurrentUserOwnEvent(checkingEvent)) return Result.Forbidden();
-        if (request.FromDate > request.ToDate) return Result.Error("From date should be less than to date");
-        if (request.Amount < 0) return Result.Error("Amount should be greater than 0");
-        if (request.LeastAmountBuy < 0) return Result.Error("Least amount buy should be greater than 0");
-        if (request.MostAmountBuy < 0) return Result.Error("Most amount buy should be greater than 0");
-        if (request.LeastAmountBuy > request.MostAmountBuy) return Result.Error("Least amount buy should be less than most amount buy");
-        if (request.Price < 0) return Result.Error("Price should be greater than 0");
-        if (request.Amount < request.LeastAmountBuy) return Result.Error("Amount should be greater than least amount buy");
-        if (request.Amount < request.MostAmountBuy) return Result.Error("Amount should be greater than most amount buy");
+        if (!IsEventDraftModifiable(checkingTicketType)) return Result.Error($"Its event status is {checkingTicketType.Event.Status}, can not modified");
+        var (validResult, message) = checkingTicketType.IsValid();
+        if (!validResult) return Result.Error(message);
         {
             checkingTicketType.Name = request.Name;
             checkingTicketType.Description = request.Description;
@@ -39,4 +34,6 @@ public class UpdateTicketTypeHandler(IUnitOfWork unitOfWork, CurrentUser current
     }
     private bool IsCurrentUserOwnEvent(Event checkingEvent)
         => checkingEvent.Organizer.Id.Equals(currentUser.User!.Id);
+    private bool IsEventDraftModifiable(TicketType checkingTicketType)
+        => checkingTicketType.Event.Status == Domain.Enums.EventStatusEnum.Draft;
 }
