@@ -27,4 +27,15 @@ public class StaffRepository(WowToGoDBContext dBContext) : RepositoryBase<Staff>
             Count: count
         );
     }
+
+    public async Task<List<StaffResponse>> GetStaffsByStaffIdsAsync(Guid[] staffIds, bool trackChanges = false, CancellationToken cancellationToken = default)
+    {
+        IQueryable<Staff> query = _dbSet;
+        if (!trackChanges) query = query.AsNoTracking();
+        query = query.Include(s => s.User).Where(o => staffIds.Contains(o.UserId));
+        IEnumerable<StaffResponse> result = await query
+            .Select(o => o.MapToStaffResponse())
+            .ToListAsync(cancellationToken);
+        return result.ToList();
+    }
 }

@@ -14,7 +14,7 @@ public class GetAllFeaturedEventsEndpointHandler
         int pageSize = 10,
         string? searchTerm = null)
     {
-        Result<PaginatedResponse<EventDB>> result = await sender.Send(new GetFeaturedEventQuery(PageNumber: pageNumber,
+        Result<PaginatedResponse<GetEventResponse>> result = await sender.Send(new GetFeaturedEventQuery(PageNumber: pageNumber,
             PageSize: pageSize,
             SearchTerm: searchTerm));
         if (result.IsSuccess)

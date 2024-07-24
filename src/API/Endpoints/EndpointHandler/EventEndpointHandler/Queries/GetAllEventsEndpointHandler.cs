@@ -13,7 +13,7 @@ namespace API.Endpoints.EndpointHandler.EventEndpointHandler.Queries
                                                                         int pageSize = 10,
                                                                         string? searchTerm = null)
         {
-            Result<PaginatedResponse<EventDB>> result = await sender.Send(new GetAllEventsQuery(PageNumber: pageNumber,
+            Result<PaginatedResponse<GetEventResponse>> result = await sender.Send(new GetAllEventsQuery(PageNumber: pageNumber,
                                                                                          PageSize: pageSize,
                                                                                          SearchTerm: searchTerm));
             if (result.IsSuccess)

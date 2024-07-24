@@ -9,7 +9,7 @@ using UseCases.Mapper.Mapper_Event;
 namespace Infrastructure.Data.Repositories;
 public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(context), IEventRepository
 {
-    public async Task<PaginatedResponse<EventDB>> GetAllEventAsync(int pageNumber = 1, int pageSize = 10, string? searchTerm = null, bool trackChanges = false, CancellationToken cancellationToken = default)
+    public async Task<PaginatedResponse<GetEventResponse>> GetAllEventAsync(int pageNumber = 1, int pageSize = 10, string? searchTerm = null, bool trackChanges = false, CancellationToken cancellationToken = default)
     {
         IQueryable<Event> eventQuery = _dbSet;
         eventQuery = trackChanges ? eventQuery : eventQuery.AsNoTracking();
@@ -19,14 +19,15 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
         }
         eventQuery = eventQuery
             .Include(e => e.Organizer)
+            .Include(e => e.EventCategories).ThenInclude(ec => ec.Category)
             .Where(e => e.Status == EventStatusEnum.Published);
         int count = await eventQuery.CountAsync(cancellationToken);
-        IEnumerable<EventDB> result = await eventQuery
+        IEnumerable<GetEventResponse> result = await eventQuery
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .Select(c => c.MapEventDB())
+            .Select(c => c.MapToGetEventResponse())
             .ToListAsync(cancellationToken);
-        return new PaginatedResponse<EventDB>(
+        return new PaginatedResponse<GetEventResponse>(
             Data: result,
             PageNumber: pageNumber,
             PageSize: pageSize,
@@ -34,7 +35,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
         );
     }
 
-    public async Task<PaginatedResponse<EventDB>> GetFeaturedEventsAsync(int pageNumber = 1, int pageSize = 10,
+    public async Task<PaginatedResponse<GetEventResponse>> GetFeaturedEventsAsync(int pageNumber = 1, int pageSize = 10,
         string? searchTerm = null, bool trackChanges = false,
         CancellationToken cancellationToken = default)
     {
@@ -46,23 +47,24 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
         }
         eventQuery = eventQuery
             .Include(e => e.Organizer)
+            .Include(e => e.EventCategories).ThenInclude(ec => ec.Category)
             .Include(e => e.Shows).ThenInclude(s => s.TicketTypeShow).ThenInclude(tts => tts.TicketType).ThenInclude(tt => tt.Orders)
             .Where(e => e.Status == EventStatusEnum.Published);
         int count = await eventQuery.CountAsync(cancellationToken: cancellationToken);
-        IEnumerable<EventDB> result = await eventQuery
+        IEnumerable<GetEventResponse> result = await eventQuery
             .Select(e => new
             {
-                Event = e.MapEventDB(),
+                Event = e.MapToGetEventResponse(),
                 Rate = e.Shows.SelectMany(s => s.TicketTypeShow)
                     .Select(tts => tts.TicketType)
-                    .Select(tt => tt.Orders).Count() / ((DateTime.UtcNow - e.CreatedAt).Days <= 0? 1 : (DateTime.UtcNow - e.CreatedAt).Days),
+                    .Select(tt => tt.Orders).Count() / ((DateTime.UtcNow - e.CreatedAt).Days <= 0 ? 1 : (DateTime.UtcNow - e.CreatedAt).Days),
             })
             .OrderByDescending(o => o.Rate)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .Select(c => c.Event)
             .ToListAsync(cancellationToken);
-        return new PaginatedResponse<EventDB>(
+        return new PaginatedResponse<GetEventResponse>(
             Data: result,
             PageSize: pageSize,
             PageNumber: pageNumber,
@@ -164,5 +166,4 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
         IQueryable<Event> query = trackChanges ? _dbSet : _dbSet.AsNoTracking();
         return await query.Include(e => e.Organizer).Include(e => e.Staffs).Include(e => e.Shows).FirstOrDefaultAsync(e => e.Id.Equals(eventId), cancellationToken);
     }
-
 }
