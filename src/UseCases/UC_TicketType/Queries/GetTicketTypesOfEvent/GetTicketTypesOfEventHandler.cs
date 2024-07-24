@@ -1,5 +1,6 @@
 ﻿using Ardalis.Result;
 using Domain.Interfaces.Data;
+using Domain.Models;
 using Domain.Responses.Responses_TicketType;
 using Domain.Responses.Shared;
 using MediatR;
@@ -14,6 +15,9 @@ public class GetTicketTypesOfEventHandler(IUnitOfWork unitOfWork) : IRequestHand
     {
         var targetEvent = await unitOfWork.EventRepository.FindAsync(e => e.Id.Equals(request.EventId), cancellationToken: cancellationToken);
         if (targetEvent is null) return Result.NotFound("eventId not found");
+
+        if (targetEvent.Status == Domain.Enums.EventStatusEnum.Canceled) return Result.Error("Event is canceled");
+        if (targetEvent.Status == Domain.Enums.EventStatusEnum.Draft) return Result.Error("Event is draft");
 
         var ticketTypesAndShows = unitOfWork.TicketTypeShowRepository.DBSet().AsNoTracking();
         ticketTypesAndShows = ticketTypesAndShows

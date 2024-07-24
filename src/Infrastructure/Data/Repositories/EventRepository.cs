@@ -164,6 +164,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
     public async Task<Event?> GetEventWithOrganizer(Guid eventId, bool trackChanges = false, CancellationToken cancellationToken = default)
     {
         IQueryable<Event> query = trackChanges ? _dbSet : _dbSet.AsNoTracking();
-        return await query.Include(e => e.Organizer).Include(e => e.Staffs).FirstOrDefaultAsync(e => e.Id.Equals(eventId), cancellationToken);
+
+        return await query.Include(e => e.Organizer).Include(e => e.Staffs).Include(e => e.Shows).FirstOrDefaultAsync(e => e.Id.Equals(eventId), cancellationToken);
     }
 }
