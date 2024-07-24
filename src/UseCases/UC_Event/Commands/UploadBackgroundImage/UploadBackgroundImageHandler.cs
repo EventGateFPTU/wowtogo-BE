@@ -12,7 +12,7 @@ public class UploadBackgroundImageHandler(IUnitOfWork unitOfWork, IImageServices
     {
         string folderName = "event-background";
         string fileName = $"background-{request.EventId}";
-        Event? checkingEvent = await unitOfWork.EventRepository.GetEventWithOrganizer(eventId: request.EventId, cancellationToken: cancellationToken);
+        Event? checkingEvent = await unitOfWork.EventRepository.GetEventWithOrganizer(eventId: request.EventId, trackChanges: true, cancellationToken: cancellationToken);
         if (checkingEvent is null) return Result.NotFound("Event is not found");
         // NOTE: check if current user is organizer
         if (!IsCurrentUserOrganizer(organizer: checkingEvent.Organizer)) return Result.Forbidden();

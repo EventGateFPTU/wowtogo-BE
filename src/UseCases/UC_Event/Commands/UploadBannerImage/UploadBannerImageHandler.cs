@@ -12,7 +12,7 @@ public class UploadBannerImageHandler(IUnitOfWork unitOfWork, IImageServices ima
     {
         string folderName = "event-banner";
         string fileName = $"event-{request.EventId}";
-        Event? checkingEvent = await unitOfWork.EventRepository.FindAsync(e => e.Id.Equals(request.EventId), trackChanges: true, cancellationToken: cancellationToken);
+        Event? checkingEvent = await unitOfWork.EventRepository.GetEventWithOrganizer(request.EventId, trackChanges: true, cancellationToken: cancellationToken);
         if (checkingEvent is null) return Result.NotFound("Event is not found");
         // NOTE: check if current user is organizer
         if (!IsCurrentUserOrganizer(organizer: checkingEvent.Organizer)) return Result.Forbidden();
