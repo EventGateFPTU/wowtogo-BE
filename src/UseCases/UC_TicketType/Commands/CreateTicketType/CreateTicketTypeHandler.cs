@@ -12,6 +12,9 @@ public class CreateTicketTypeHandler(IUnitOfWork unitOfWork, CurrentUser current
 {
     public async Task<Result<CreateTicketTypeResponse>> Handle(CreateTicketTypeCommand request, CancellationToken cancellationToken)
     {
+        Event? checkingEvent = await unitOfWork.EventRepository.GetEventWithOrganizer(request.EventId, cancellationToken: cancellationToken);
+        if (checkingEvent is null) return Result.NotFound("Event is not found");
+        if (!IsCurrentUserOwnEvent(checkingEvent)) return Result.Forbidden();
         Guid ticketTypeId = Guid.NewGuid();
         TicketType ticketType = new()
         {
