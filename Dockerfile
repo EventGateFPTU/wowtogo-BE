@@ -21,4 +21,5 @@ RUN dotnet publish -c Release --no-restore -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-noble AS runtime
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY --from=publish /app/src/API/authModel.json authModel.json
 ENTRYPOINT ["dotnet", "API.dll"]

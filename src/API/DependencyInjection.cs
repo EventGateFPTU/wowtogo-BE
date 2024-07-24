@@ -30,7 +30,7 @@ public static class DependencyInjection
                         HeaderNames.ContentType,
                         HeaderNames.Authorization
                     ])
-                    .WithMethods("GET", "POST")
+                    .AllowAnyMethod()
                     .SetPreflightMaxAge(TimeSpan.FromSeconds(86400));
             });
         });
