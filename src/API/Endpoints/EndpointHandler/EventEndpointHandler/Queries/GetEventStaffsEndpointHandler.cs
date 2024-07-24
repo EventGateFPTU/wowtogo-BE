@@ -17,7 +17,11 @@ public class GetEventStaffsEndpointHandler
         var query = new GetEventStaffsQuery(eventId, pageNumber, pageSize);
         Result<PaginatedResponse<StaffResponse>> result = await sender.Send(query);
 
-        if (!result.IsSuccess) return Results.NotFound(result);
+        if (!result.IsSuccess)
+        {
+            if (result.Status == ResultStatus.Forbidden) return Results.Forbid();
+            return Results.NotFound(result);
+        }
         return Results.Ok(result);
     }
 }
