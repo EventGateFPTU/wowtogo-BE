@@ -50,6 +50,9 @@ public static class EventEndpoints
             .DisableAntiforgery()
             .WithMetadata(new SwaggerOperationAttribute("Upload background image of an event"))
             .RequireAuthorization();
+        group.MapPut("/publish/{eventId}", PublishEventEndpointHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Publish Event"))
+            .RequireAuthorization();
         // DELETE
         group.MapDelete("/staff/{staffId}", RemoveStaffEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Delete a staff"))
