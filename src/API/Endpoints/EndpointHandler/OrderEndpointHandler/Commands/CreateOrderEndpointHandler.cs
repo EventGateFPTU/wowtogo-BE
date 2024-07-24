@@ -10,9 +10,11 @@ public static class CreateOrderEndpointHandler
     public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender, [FromBody] CreateOrderRequest request)
     {
         Result<CreateOrderResponse> result = await sender.Send(
-            new CreateOrderCommand(request.TicketTypeId,
-                                request.Currency,
+                        new CreateOrderCommand(request.TicketTypeId,
                                 request.PhoneNumber,
+                                request.FirstName,
+                                request.LastName,
+                                request.Email,
                                 request.DateOfBirth)
             );
         if (!result.IsSuccess)
@@ -27,6 +29,8 @@ public static class CreateOrderEndpointHandler
 
 public record CreateOrderRequest
     (Guid TicketTypeId,
-    string Currency,
+    string Email,
+    string FirstName,
+    string LastName,
     string PhoneNumber,
     DateTimeOffset DateOfBirth);

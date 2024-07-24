@@ -1,29 +1,23 @@
 using Ardalis.Result;
 using Domain.Enums;
 using Domain.Interfaces.Data;
-using Domain.Models;
 using Domain.Responses.Responses_Attendee;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using OpenFga.Sdk.ApiClient;
 using UseCases.Common.Constants;
 using UseCases.Common.Contracts;
 using UseCases.Common.Models;
-using UseCases.Mapper.Mapp_Attendee;
 
-namespace UseCases.UC_Staff.Commands.Checkin;
-public class CheckinHandler(IUnitOfWork unitOfWork, CurrentUser currentUser, IPermissionManager permissionManager) : IRequestHandler<CheckinCommand, Result<AttendeeDetailResponse>>
+namespace UseCases.UC_Staff.Commands.CheckinAttendee;
+public class CheckinAttendeeHandler(IUnitOfWork unitOfWork, CurrentUser currentUser, IPermissionManager permissionManager) : IRequestHandler<CheckinAttendeeCommand, Result<AttendeeDetailResponse>>
 {
-    public async Task<Result<AttendeeDetailResponse>> Handle(CheckinCommand request, CancellationToken cancellationToken)
+    public async Task<Result<AttendeeDetailResponse>> Handle(CheckinAttendeeCommand request, CancellationToken cancellationToken)
     {
-        Ticket? ticket = await unitOfWork.TicketRepository.GetTicketDetailByCode(request.Code, request.ShowId, trackChanges: true, cancellationToken: cancellationToken);
+        var ticket = await unitOfWork.TicketRepository.FindAsync(x => x.Id == request.TicketId, trackChanges: true, cancellationToken: cancellationToken);
         if (ticket is null) return Result.NotFound("Ticket is not found");
 
-        // TODO: When already checked-in, return attendee info
-        // if (ticket.IsCheckedIn()) return Result.Error("Ticket is already checked in");
-
-        // var checkedInHistory = await unitOfWork.CheckinRepository
-        //     .FindManyAsync(c => c.ShowId.Equals(request.ShowId) && c.TicketId.Equals(ticket.Id), cancellationToken: cancellationToken);
+        var checkin = await unitOfWork.CheckinRepository.FindAsync(
+            x => x.ShowId == request.ShowId && x.TicketId == request.TicketId, cancellationToken: cancellationToken);
+        if (checkin is not null) return Result.Error("This ticket is already used!");
 
         if (!Enum.TryParse(request.UsedInFormat, out UsedInFormatEnum usedInFormatEnum))
             return Result.Error("Invalid used in format");
@@ -38,14 +32,14 @@ public class CheckinHandler(IUnitOfWork unitOfWork, CurrentUser currentUser, IPe
         var newCheckIn = new Domain.Models.Checkin
         {
             ShowId = request.ShowId,
-            TicketId = ticket.Id
+            TicketId = ticket.Id,
+            UsedInFormat = usedInFormatEnum,
         };
         unitOfWork.CheckinRepository.Add(newCheckIn);
 
         if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to check in ticket");
 
-        var result = ticket.Attendee.MapToAttendeeDetailResponse(ticket);
-        return Result.Success(result, "Ticket is checked in successfully");
+        return Result.Success();
     }
 
     private async Task<bool> TicketCanPassShow(Guid ticketId, Guid showId)

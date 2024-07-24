@@ -5,10 +5,9 @@ using Domain.Responses.Responses_Order;
 using MediatR;
 using UseCases.Common.Models;
 using UseCases.Mapper.Mapper_Order;
-using UseCases.UC_Attendees.Commands.CreateAttendee;
 
 namespace UseCases.UC_Order.Commands.CreateOrder;
-public class CreateOrderHandler(IUnitOfWork unitOfWork, ISender sender, CurrentUser currentUser) : IRequestHandler<CreateOrderCommand, Result<CreateOrderResponse>>
+public class CreateOrderHandler(IUnitOfWork unitOfWork, CurrentUser currentUser) : IRequestHandler<CreateOrderCommand, Result<CreateOrderResponse>>
 {
 
     public async Task<Result<CreateOrderResponse>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
@@ -17,6 +16,7 @@ public class CreateOrderHandler(IUnitOfWork unitOfWork, ISender sender, CurrentU
         // Check if the ticket type is not found
         TicketType? ticketType = await unitOfWork.TicketTypeRepository.FindAsync(tt => tt.Id.Equals(request.TicketTypeId), cancellationToken: cancellationToken);
         if (ticketType is null) return Result.NotFound("Ticket Type is not found");
+        if (ticketType.Amount <= 0) return Result.Error("Sold out !");
         Event? checkingEvent = await unitOfWork.TicketTypeRepository.GetEventFromTicketTypeIdAsync(request.TicketTypeId, cancellationToken);
         if (checkingEvent is null) return Result.NotFound("Event is not found");
         // Check if the ticket type is out of stock
@@ -30,13 +30,23 @@ public class CreateOrderHandler(IUnitOfWork unitOfWork, ISender sender, CurrentU
             TicketTypeId = request.TicketTypeId,
             UserId = currentUserId,
             TotalPrice = ticketType.Price,
-            Currency = request.Currency,
+            Currency = "VND",
             Status = Domain.Enums.OrderStatusEnum.Pending,
         };
         unitOfWork.OrderRepository.Add(order);
-        Result result = await sender.Send(new CreateAttendeeCommand(currentUserId, checkingEvent.Id, request.PhoneNumber, request.DateOfBirth), cancellationToken);
-        if (!result.IsSuccess) return Result.Error("Failed to create attendee");
-        // if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to create order");
+        Attendee attendee = new()
+        {
+            UserId = currentUserId,
+            EventId = checkingEvent.Id,
+            DateOfBirth = request.DateOfBirth,
+            PhoneNumber = request.PhoneNumber,
+            Email = request.Email,
+            FirstName = request.FirstName,
+            LastName = request.LastName
+        };
+        unitOfWork.AttendeeRepository.Add(attendee);
+
+        if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to create order");
         return Result.Success(order.MapToCreateOrderResponse(), "Create Order Successfully !");
     }
 }

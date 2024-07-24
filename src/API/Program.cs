@@ -18,6 +18,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+builder.Services.AddHealthChecks();
 
 builder.Services.AddServices(builder.Configuration);
 builder.Services.AddUseCases();
@@ -96,9 +97,11 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
+	app.MigrateDatabase<WowToGoDBContext>((_, _) => Task.CompletedTask);
 	app.UseCors(CorsPolicy.Production);
 }
 
+app.MapHealthChecks("/health");
 
 // app.UseHttpsRedirection();
 app.UseExceptionHandler();

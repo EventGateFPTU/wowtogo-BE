@@ -36,4 +36,6 @@ public class TicketType : BaseEntity
         if (Amount < MostAmountBuy) return (false, "Amount must greater than Most Amount Buy");
         return (true, "valid");
     }
+    public void ReduceOneAmount()
+        => Amount = Amount - 1;
 }
