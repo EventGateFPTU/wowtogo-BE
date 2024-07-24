@@ -15,6 +15,10 @@ public class CheckinAttendeeHandler(IUnitOfWork unitOfWork, CurrentUser currentU
         var ticket = await unitOfWork.TicketRepository.FindAsync(x => x.Id == request.TicketId, trackChanges: true, cancellationToken: cancellationToken);
         if (ticket is null) return Result.NotFound("Ticket is not found");
 
+        var checkin = await unitOfWork.CheckinRepository.FindAsync(
+            x => x.ShowId == request.ShowId && x.TicketId == request.TicketId, cancellationToken: cancellationToken);
+        if (checkin is not null) return Result.Error("This ticket is already used!");
+
         if (!Enum.TryParse(request.UsedInFormat, out UsedInFormatEnum usedInFormatEnum))
             return Result.Error("Invalid used in format");
 
