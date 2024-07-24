@@ -2,7 +2,6 @@ using Ardalis.Result;
 using Domain.Responses.Responses_Order;
 using Domain.Responses.Shared;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 using UseCases.UC_Order.Queries.GetOrdersByEvent;
 
 namespace API.Endpoints.EndpointHandler.OrderEndpointHandler.Queries;
@@ -14,7 +13,11 @@ public class GetOrdersByEventEndpointHandler
                                                                             Id: eventId,
                                                                             PageNumber: pageNumber,
                                                                             pageSize));
-        if (!result.IsSuccess) return Results.NotFound();
+        if (!result.IsSuccess)
+        {
+            if (result.Status == ResultStatus.Forbidden) return Results.Forbid();
+            return Results.NotFound();
+        }
         return Results.Ok(result);
     }
 }
