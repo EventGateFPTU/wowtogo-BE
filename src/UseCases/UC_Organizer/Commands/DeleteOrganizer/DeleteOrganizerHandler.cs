@@ -15,7 +15,7 @@ namespace UseCases.UC_Organizer.Commands.DeleteOrganizer
 
             Organizer? checkingOrganizer = await unitOfWork.OrganizerRepository.FindAsync(c => c.Id.Equals(request.Id), cancellationToken: cancellationToken);
 			if (checkingOrganizer is null) return Result.NotFound("Organizer not found");
-            if (currentUser.User.Id != checkingOrganizer.Id) return Result.Unavailable("You are not authorized to delete this organizer");
+            if (currentUser!.User!.Id != checkingOrganizer.Id) return Result.Error("You are not authorized to delete this organizer");
             unitOfWork.OrganizerRepository.Remove(checkingOrganizer);
 			if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to delete organizer");
 			return Result.SuccessWithMessage("Organizer is deleted successfully");
