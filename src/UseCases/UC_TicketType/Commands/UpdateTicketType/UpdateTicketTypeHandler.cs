@@ -8,16 +8,11 @@ public class UpdateTicketTypeHandler(IUnitOfWork unitOfWork) : IRequestHandler<U
 {
     public async Task<Result> Handle(UpdateTicketTypeCommand request, CancellationToken cancellationToken)
     {
-        TicketType? checkingTicketType = await unitOfWork.TicketTypeRepository.FindAsync(tt => tt.Id.Equals(request.Id), trackChanges: true, cancellationToken: cancellationToken);
+        TicketType? checkingTicketType = await unitOfWork.TicketTypeRepository.GetTicketIncludingEventAsync(request.Id, cancellationToken: cancellationToken);
         if (checkingTicketType is null) return Result.NotFound("Ticket type not found");
-        if (request.FromDate > request.ToDate) return Result.Error("From date should be less than to date");
-        if (request.Amount < 0) return Result.Error("Amount should be greater than 0");
-        if (request.LeastAmountBuy < 0) return Result.Error("Least amount buy should be greater than 0");
-        if (request.MostAmountBuy < 0) return Result.Error("Most amount buy should be greater than 0");
-        if (request.LeastAmountBuy > request.MostAmountBuy) return Result.Error("Least amount buy should be less than most amount buy");
-        if (request.Price < 0) return Result.Error("Price should be greater than 0");
-        if (request.Amount < request.LeastAmountBuy) return Result.Error("Amount should be greater than least amount buy");
-        if (request.Amount < request.MostAmountBuy) return Result.Error("Amount should be greater than most amount buy");
+        if (!IsEventDraftModifiable(checkingTicketType)) return Result.Error($"Its event status is {checkingTicketType.Event.Status}, can not modified");
+        var (validResult, message) = checkingTicketType.IsValid();
+        if (!validResult) return Result.Error(message);
         {
             checkingTicketType.Name = request.Name;
             checkingTicketType.Description = request.Description;
@@ -33,4 +28,6 @@ public class UpdateTicketTypeHandler(IUnitOfWork unitOfWork) : IRequestHandler<U
         if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to update ticket type");
         return Result.SuccessWithMessage("Ticket type is updated successfully");
     }
+    private bool IsEventDraftModifiable(TicketType checkingTicketType)
+        => checkingTicketType.Event.Status == Domain.Enums.EventStatusEnum.Draft;
 }
