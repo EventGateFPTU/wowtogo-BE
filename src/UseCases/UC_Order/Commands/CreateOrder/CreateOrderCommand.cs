@@ -5,6 +5,8 @@ using MediatR;
 namespace UseCases.UC_Order.Commands.CreateOrder;
 public record CreateOrderCommand(
     Guid TicketTypeId,
-    string Currency,
     string PhoneNumber,
+    string FirstName,
+    string LastName,
+    string Email,
     DateTimeOffset DateOfBirth) : IRequest<Result<CreateOrderResponse>>;
