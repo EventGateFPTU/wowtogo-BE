@@ -19,5 +19,5 @@ public class RemoveStaffHandler(IUnitOfWork unitOfWork, CurrentUser currentUser)
         return Result.SuccessWithMessage("Staff is removed successfully");
     }
     private bool IsCurrentUserOrganizerOrStaff(Event checkingEvent)
-        => checkingEvent.Organizer.Id.Equals(currentUser.User!.Id) || checkingEvent.Staffs.Any(s => s.UserId.Equals(currentUser.User!.Id));
+        => checkingEvent.Organizer.Id.Equals(currentUser.User!.Id);
 }
