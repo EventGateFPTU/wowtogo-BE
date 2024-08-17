@@ -10,20 +10,22 @@ public class WorkerService(IServiceProvider serviceProvider) : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
+            
             var workers = new List<Task>
             {
-                DisposeRemindEvent(TimeSpan.FromSeconds(5), stoppingToken)
+                DisposeRemindEvent(stoppingToken)
             };
 
             await Task.WhenAll(workers.ToArray());
         }
     }
 
-    private async Task DisposeRemindEvent(TimeSpan delay, CancellationToken stoppingToken)
+    private async Task DisposeRemindEvent(CancellationToken stoppingToken)
     {
+        var delay = TimeSpan.FromDays(1);
         var now = DateTimeOffset.UtcNow;
         var fromTime = now.AddDays(1);
-        var toTime = fromTime.AddSeconds(5);
+        var toTime = fromTime.AddDays(1);
         Console.WriteLine("worker at: " + now);
         Console.WriteLine("checking shows");
         Console.WriteLine("from: " + fromTime);

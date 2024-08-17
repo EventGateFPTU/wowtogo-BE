@@ -33,6 +33,7 @@ public class SendRemindMailToAttendeesHandler(IUnitOfWork unitOfWork, IMailServi
                 .Select(a => a.Email)
                 .ToArray();
             
+            // TODO: Log out if failed to send email
             if (emails.Length == 0)
                 isSuccess &= await mailService.SendReminderMainAsync(emails, show.Title, show.StartsAt.ToString());
         }
