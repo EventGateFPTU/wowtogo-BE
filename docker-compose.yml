@@ -8,17 +8,31 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '5000:8080'
+      - '5000:80'
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - PORT=8080
-      - CLIENT_ORIGIN_URL=${CLIENT_ORIGIN_URL} # frontend
+      - ASPNETCORE_URLS=http://+
+      - CLIENT_ORIGIN_URL=${CLIENT_ORIGIN_URL}
       - AUTH0_AUDIENCE=${AUTH0_AUDIENCE}
       - AUTH0_DOMAIN=${AUTH0_DOMAIN}
       - POSTGRES_CONSTR=${POSTGRES_CONSTR}
+      - CLOUDINARY_URL=${CLOUDINARY_URL}
+      - FGA_API_URL=${FGA_API_URL}
+      - HOST=${HOST}
+      - PORT=${PORT}
+      - USERNAME=${USERNAME}
+      - PASSWORD=${PASSWORD}
+      - TOKEN=${TOKEN}
+      - SENDER_NAME="WowToGo"
+      - SENDER_EMAIL="mailtrap@kaitoz11.me"
+      - TEMPLATE_ID=${TEMPLATE_ID}
+    depends_on:
+      - postgresdb
+    networks:
+      - open_fga
   
   postgresdb:
     image: postgres:14-alpine
+    container_name: postgres_db
     restart: always
     environment:
       - POSTGRES_USER=postgres
@@ -28,7 +42,8 @@ services:
       - '5432:5432'
     volumes:
       - pg_data:/var/lib/postgresql/data
-  
+    networks:
+      - open_fga
 
   open_fga_postgres:
     image: postgres:14-alpine
@@ -58,6 +73,7 @@ services:
       - open_fga
 
   open_fga:
+    container_name: openfga
     depends_on:
       open_fga_migrate:
         condition: service_completed_successfully
