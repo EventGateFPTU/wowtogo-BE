@@ -1,3 +1,4 @@
+using API.Services;
 using dotenv.net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -37,6 +38,7 @@ public static class DependencyInjection
 
         services.AddScoped<AuthMiddleware.AuthMiddleware>();
         services.AddScoped<CurrentUser>();
+        services.AddHostedService<WorkerService>();
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
