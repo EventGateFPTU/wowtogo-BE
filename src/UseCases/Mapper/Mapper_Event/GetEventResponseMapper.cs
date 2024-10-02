@@ -28,6 +28,7 @@ namespace UseCases.Mapper.Mapper_Event
                 Categories: mappingEvent.EventCategories.Select( ec => ec.Category.MapCategoryDB()).ToArray(),
                 // MaxTickets: mappingEvent.MaxTickets,
                 AdditionalImages: mappingEvent.AdditionalImages.Select(x => x.Url).ToArray(),
+                FromPrice: mappingEvent.TicketTypes.Min(t => t.Price),
                 CreatedAt: mappingEvent.CreatedAt
                 );
         }

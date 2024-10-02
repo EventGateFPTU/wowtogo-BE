@@ -30,6 +30,7 @@ namespace UseCases.UC_Event.Query.GetEvents
             var gettingEvent = unitOfWork.EventRepository.DBSet();
             var eventDB = await gettingEvent
                 .Include(e => e.AdditionalImages)
+                .Include(e => e.TicketTypes)
                 .Include(e => e.Organizer)
                 .Include(x => x.EventCategories)
                 .ThenInclude(y => y.Category)

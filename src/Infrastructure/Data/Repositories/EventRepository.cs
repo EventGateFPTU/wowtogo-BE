@@ -18,6 +18,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             eventQuery = eventQuery.Where(e => e.Title.Contains(searchTerm));
         }
         eventQuery = eventQuery
+            .Include(e => e.TicketTypes)
             .Include(e => e.Organizer)
             .Include(e => e.EventCategories).ThenInclude(ec => ec.Category)
             .Where(e => e.Status == EventStatusEnum.Published);
@@ -46,6 +47,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             eventQuery = eventQuery.Where(e => e.Title.Contains(searchTerm));
         }
         eventQuery = eventQuery
+            .Include(e => e.TicketTypes)
             .Include(e => e.Organizer)
             .Include(e => e.EventCategories).ThenInclude(ec => ec.Category)
             .Include(e => e.Shows).ThenInclude(s => s.TicketTypeShow).ThenInclude(tts => tts.TicketType).ThenInclude(tt => tt.Orders)
@@ -136,6 +138,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
         IQueryable<Event> query = _dbSet;
         if (!trackChanges) query = query.AsNoTracking();
         return await query
+            .Include(e => e.TicketTypes)
             .Include(e => e.Organizer)
             .Include(e => e.EventCategories).ThenInclude(ec => ec.Category)
             .Where(e => e.Id.Equals(eventId))
@@ -146,7 +149,10 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
     public async Task<PaginatedResponse<GetEventResponse>> GetEventsOfStaff(Guid staffId, int pageNumber, int pageSize, bool trackChanges = false, CancellationToken cancellationToken = default)
     {
         IQueryable<Event> query = trackChanges ? _dbSet : _dbSet.AsNoTracking();
-        query = query.Include(e => e.Staffs).Include(e => e.Organizer)
+        query = query
+            .Include(e => e.TicketTypes)
+            .Include(e => e.Staffs)
+            .Include(e => e.Organizer)
             .Where(e => e.Staffs.Any(s => s.UserId.Equals(staffId)));
         int count = await query.CountAsync(cancellationToken);
         IEnumerable<GetEventResponse> result = await query.Skip(pageSize * (pageNumber - 1))
