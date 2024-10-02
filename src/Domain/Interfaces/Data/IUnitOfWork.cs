@@ -18,5 +18,6 @@ public interface IUnitOfWork : IDisposable
     IUserRepository UserRepository { get; }
     ICheckinRepository CheckinRepository { get; }
     IShowStaffRepository ShowStaffRepository { get; }
+    IAdditionalImageRepository AdditionalImageRepository { get; }
     Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

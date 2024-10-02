@@ -36,21 +36,25 @@ public static class WowToGoDbContextSeed
         Ticket[] tickets = TicketGenerator.GenerateTickets(attendees, ticketTypes);
         TicketTypeShow[] ticketTypeShows = TicketTypeShowGenerator.GenerateTicketTypeShows(ticketTypes, shows);
         Checkin[] checkins = CheckinGenerator.GenerateCheckins(shows, tickets);
+        AdditionalImage[] additionalImages = AdditionalImageGenerator.Generate(events);
         // Seed data
-        await context.Articles.AddRangeAsync(articles);
-        await context.Users.AddRangeAsync(users);
-        await context.Organizers.AddRangeAsync(organizers);
-        await context.Events.AddRangeAsync(events);
-        await context.Categories.AddRangeAsync(categories);
-        await context.EventCategories.AddRangeAsync(eventCategories);
-        await context.Staffs.AddRangeAsync(staffs);
-        await context.Shows.AddRangeAsync(shows);
-        await context.TicketTypes.AddRangeAsync(ticketTypes);
-        await context.Attendees.AddRangeAsync(attendees);
-        await context.Orders.AddRangeAsync(orders);
-        await context.Tickets.AddRangeAsync(tickets);
-        await context.TicketTypeShows.AddRangeAsync(ticketTypeShows);
-        await context.Checkins.AddRangeAsync(checkins);
+        IList<Task> tasks = [];
+        tasks.Add(context.Articles.AddRangeAsync(articles));
+        tasks.Add(context.Users.AddRangeAsync(users));
+        tasks.Add(context.Organizers.AddRangeAsync(organizers));
+        tasks.Add(context.Events.AddRangeAsync(events));
+        tasks.Add(context.Categories.AddRangeAsync(categories));
+        tasks.Add(context.EventCategories.AddRangeAsync(eventCategories));
+        tasks.Add(context.Staffs.AddRangeAsync(staffs));
+        tasks.Add(context.Shows.AddRangeAsync(shows));
+        tasks.Add(context.TicketTypes.AddRangeAsync(ticketTypes));
+        tasks.Add(context.Attendees.AddRangeAsync(attendees));
+        tasks.Add(context.Orders.AddRangeAsync(orders));
+        tasks.Add(context.Tickets.AddRangeAsync(tickets));
+        tasks.Add(context.TicketTypeShows.AddRangeAsync(ticketTypeShows));
+        tasks.Add(context.Checkins.AddRangeAsync(checkins));
+        tasks.Add(context.AdditionalImages.AddRangeAsync(additionalImages));
+        await Task.WhenAll(tasks);
         await context.SaveChangesAsync();
     }
 }

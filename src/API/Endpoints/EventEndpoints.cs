@@ -42,13 +42,17 @@ public static class EventEndpoints
         group.MapPut("/{eventId}", UpdateEventEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Update an event"))
             .RequireAuthorization();
+        group.MapPut("/{eventId}/additional", UploadAdditionalImageEndpointHandler.Handle)
+            .DisableAntiforgery()
+            .WithMetadata(new SwaggerOperationAttribute("Upload additional image of an event"))
+            .RequireAuthorization();
         group.MapPut("/{eventId}/background", UploadBackgroundImageEndpointHandler.Handle)
             .DisableAntiforgery()
             .WithMetadata(new SwaggerOperationAttribute("Upload background image of an event"))
             .RequireAuthorization();
         group.MapPut("/{eventId}/banner", UploadBannerImageEndpointHandler.Handle)
             .DisableAntiforgery()
-            .WithMetadata(new SwaggerOperationAttribute("Upload background image of an event"))
+            .WithMetadata(new SwaggerOperationAttribute("Upload banner image of an event"))
             .RequireAuthorization();
         group.MapPut("/publish/{eventId}", PublishEventEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Publish Event"))

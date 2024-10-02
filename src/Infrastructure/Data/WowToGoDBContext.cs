@@ -1,5 +1,4 @@
 using Domain.Models;
-using Infrastructure.Data.DataGenerator;
 using Infrastructure.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +21,7 @@ public class WowToGoDBContext(DbContextOptions<WowToGoDBContext> options, IMedia
     public DbSet<User> Users => Set<User>();
     public DbSet<ShowStaff> ShowStaffs => Set<ShowStaff>();
     public DbSet<Checkin> Checkins => Set<Checkin>();
+    public DbSet<AdditionalImage> AdditionalImages => Set<AdditionalImage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -31,7 +31,7 @@ public class WowToGoDBContext(DbContextOptions<WowToGoDBContext> options, IMedia
         modelBuilder.Entity<User>().HasIndex(b => b.Subject).IsUnique();
 
         // // Seed data
-        
+
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
