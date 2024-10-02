@@ -36,6 +36,7 @@ public static class DependencyInjection
         services.AddScoped<IQRCoderServices, QRCoderServices>();
         services.AddOpenFGA(configuration);
         services.AddMailService(configuration);
+        // services.AddEventSettings(configuration);
         return services;
     }
 
@@ -103,4 +104,15 @@ public static class DependencyInjection
 
         return services;
     }
+
+    // public static IServiceCollection AddEventSettings(this IServiceCollection services, IConfiguration configuration)
+    // {
+    //     var maxImages = configuration.GetValue<int>("MAX_IMAGES");
+    //     services.Configure<EventSettings>(model =>
+    //     {
+    //         model.AdditionalImageMaxAmount = maxImages;
+    //     });
+    //     
+    //     return services;
+    // }
 }
