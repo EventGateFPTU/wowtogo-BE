@@ -14,6 +14,7 @@ namespace Domain.Responses.Responses_Event
         string OrganizerDescription,
         string BackgroundImageUrl,
         string BannerImageUrl,
+        decimal FromPrice,
         DateTimeOffset CreatedAt);
     public record EventDB(Guid Id, string Title,
         string Description,
