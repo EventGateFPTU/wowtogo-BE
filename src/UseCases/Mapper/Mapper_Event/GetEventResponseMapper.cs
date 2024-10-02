@@ -27,6 +27,7 @@ namespace UseCases.Mapper.Mapper_Event
                 BannerImageUrl: mappingEvent.BannerImageUrl,
                 Categories: mappingEvent.EventCategories.Select( ec => ec.Category.MapCategoryDB()).ToArray(),
                 // MaxTickets: mappingEvent.MaxTickets,
+                AdditionalImages: mappingEvent.AdditionalImages.Select(x => x.Url).ToArray(),
                 CreatedAt: mappingEvent.CreatedAt
                 );
         }
