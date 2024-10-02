@@ -9,6 +9,7 @@ using dotenv.net;
 using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.OpenApi.Models;
+using Net.payOS;
 using UseCases;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -100,6 +101,7 @@ else
 	app.MigrateDatabase<WowToGoDBContext>((_, _) => Task.CompletedTask);
 	app.UseCors(CorsPolicy.Production);
 }
+// var payOs = app.Services.GetRequiredService<PayOS>();
 
 app.MapHealthChecks("/health");
 

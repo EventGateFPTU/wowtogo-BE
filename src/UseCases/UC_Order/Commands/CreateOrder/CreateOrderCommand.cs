@@ -1,6 +1,6 @@
 using Ardalis.Result;
-using Domain.Responses.Responses_Order;
 using MediatR;
+using Net.payOS.Types;
 
 namespace UseCases.UC_Order.Commands.CreateOrder;
 public record CreateOrderCommand(
@@ -9,4 +9,4 @@ public record CreateOrderCommand(
     string FirstName,
     string LastName,
     string Email,
-    DateTimeOffset DateOfBirth) : IRequest<Result<CreateOrderResponse>>;
+    DateTimeOffset DateOfBirth) : IRequest<Result<CreatePaymentResult>>;

@@ -10,6 +10,7 @@ using Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Net.payOS;
 using OpenFga.Sdk.Client;
 using UseCases.Common.Contracts;
 using UseCases.Common.Shared;
@@ -27,6 +28,7 @@ public static class DependencyInjection
             options.EnableSensitiveDataLogging();
         });
         services.AddScoped<IAuth0Service, Auth0Service>();
+        services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IMailService, MailService>();
         services.AddAuth0(configuration);
@@ -34,6 +36,13 @@ public static class DependencyInjection
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IImageServices, ImageServices>();
         services.AddScoped<IQRCoderServices, QRCoderServices>();
+        services.AddSingleton<PayOS>(_ =>
+        {
+            PayOS payOs = new PayOS(configuration["PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment"),
+                configuration["PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment"),
+                configuration["PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment"));
+            return payOs;
+        });
         services.AddOpenFGA(configuration);
         services.AddMailService(configuration);
         return services;
