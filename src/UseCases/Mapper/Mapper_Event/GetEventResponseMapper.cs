@@ -14,6 +14,7 @@ namespace UseCases.Mapper.Mapper_Event
     {
         public static GetEventResponse MapToGetEventResponse(this Event mappingEvent)
         {
+            var minPrice = mappingEvent.TicketTypes.Count > 0 ? mappingEvent.TicketTypes.Min(t => t.Price) : 0;
             return new GetEventResponse(
                 Id: mappingEvent.Id,
                 Title: mappingEvent.Title,
@@ -28,7 +29,7 @@ namespace UseCases.Mapper.Mapper_Event
                 Categories: mappingEvent.EventCategories.Select( ec => ec.Category.MapCategoryDB()).ToArray(),
                 // MaxTickets: mappingEvent.MaxTickets,
                 AdditionalImages: mappingEvent.AdditionalImages.Select(x => x.Url).ToArray(),
-                FromPrice: mappingEvent.TicketTypes.Min(t => t.Price),
+                FromPrice: minPrice,
                 CreatedAt: mappingEvent.CreatedAt
                 );
         }
