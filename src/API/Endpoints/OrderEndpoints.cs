@@ -1,5 +1,8 @@
 using API.Endpoints.EndpointHandler.OrderEndpointHandler.Commands;
 using API.Endpoints.EndpointHandler.OrderEndpointHandler.Queries;
+using Microsoft.AspNetCore.Mvc;
+using Net.payOS;
+using Net.payOS.Types;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace API.Endpoints;
@@ -18,6 +21,10 @@ public static class OrderEndpoints
         group.MapPost("", CreateOrderEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Create an order"))
             .RequireAuthorization();
+        
+        group.MapPost("payos_transfer_handler", PayOsTransferHandler)
+            .WithMetadata(new SwaggerOperationAttribute("Confirm webhook"));
+        
         group.MapPut("confirm-paid/{orderId}", ConfirmPaidOrderEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Confirm an order as paid"))
             .RequireAuthorization();
@@ -25,5 +32,12 @@ public static class OrderEndpoints
             .WithMetadata(new SwaggerOperationAttribute("Cancel an order"))
             .RequireAuthorization();
         return group;
+    }
+
+    private static IResult PayOsTransferHandler(PayOS payOs, [FromBody] WebhookType body)
+    {
+        WebhookData data = payOs.verifyPaymentWebhookData(body);
+
+        return Results.Ok(data);
     }
 }

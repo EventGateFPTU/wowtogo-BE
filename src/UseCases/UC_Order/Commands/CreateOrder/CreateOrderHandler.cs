@@ -3,14 +3,16 @@ using Domain.Interfaces.Data;
 using Domain.Models;
 using Domain.Responses.Responses_Order;
 using MediatR;
+using Net.payOS;
+using Net.payOS.Types;
+using UseCases.Common.Contracts;
 using UseCases.Common.Models;
 using UseCases.Mapper.Mapper_Order;
 
 namespace UseCases.UC_Order.Commands.CreateOrder;
-public class CreateOrderHandler(IUnitOfWork unitOfWork, CurrentUser currentUser) : IRequestHandler<CreateOrderCommand, Result<CreateOrderResponse>>
+public class CreateOrderHandler(IUnitOfWork unitOfWork, CurrentUser currentUser, IPaymentService paymentService) : IRequestHandler<CreateOrderCommand, Result<CreatePaymentResult>>
 {
-
-    public async Task<Result<CreateOrderResponse>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+    public async Task<Result<CreatePaymentResult>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
         Guid currentUserId = currentUser.User!.Id;
         // Check if the ticket type is not found
@@ -33,6 +35,12 @@ public class CreateOrderHandler(IUnitOfWork unitOfWork, CurrentUser currentUser)
             Currency = "VND",
             Status = Domain.Enums.OrderStatusEnum.Pending,
         };
+        var createResult = await paymentService.CreatePaymentLink(ticketType.Name, ticketType.Description, decimal.ToInt32(ticketType.Price));
+        if (!createResult.IsSuccess)
+        {
+            return Result.Error("Failed to create payment");
+        }
+
         unitOfWork.OrderRepository.Add(order);
         Attendee attendee = new()
         {
@@ -47,6 +55,6 @@ public class CreateOrderHandler(IUnitOfWork unitOfWork, CurrentUser currentUser)
         unitOfWork.AttendeeRepository.Add(attendee);
 
         if (!await unitOfWork.SaveChangesAsync(cancellationToken)) return Result.Error("Failed to create order");
-        return Result.Success(order.MapToCreateOrderResponse(), "Create Order Successfully !");
+        return Result.Success(createResult, "Create Order Successfully !");
     }
 }

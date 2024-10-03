@@ -2,6 +2,7 @@ using Ardalis.Result;
 using Domain.Responses.Responses_Order;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Net.payOS.Types;
 using UseCases.UC_Order.Commands.CreateOrder;
 
 namespace API.Endpoints.EndpointHandler.OrderEndpointHandler.Commands;
@@ -9,7 +10,7 @@ public static class CreateOrderEndpointHandler
 {
     public static async Task<Microsoft.AspNetCore.Http.IResult> Handle(ISender sender, [FromBody] CreateOrderRequest request)
     {
-        Result<CreateOrderResponse> result = await sender.Send(
+        var result = await sender.Send(
                         new CreateOrderCommand(request.TicketTypeId,
                                 request.PhoneNumber,
                                 request.FirstName,
@@ -23,7 +24,7 @@ public static class CreateOrderEndpointHandler
                 return Results.NotFound(result);
             return Results.BadRequest(result);
         }
-        return Results.Created(result.SuccessMessage, result);
+        return Results.Ok(result);
     }
 }
 
