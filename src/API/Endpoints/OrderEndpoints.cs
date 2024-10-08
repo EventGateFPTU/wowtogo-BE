@@ -1,5 +1,7 @@
 using API.Endpoints.EndpointHandler.OrderEndpointHandler.Commands;
 using API.Endpoints.EndpointHandler.OrderEndpointHandler.Queries;
+using Domain.Enums;
+using Domain.Interfaces.Data;
 using Microsoft.AspNetCore.Mvc;
 using Net.payOS;
 using Net.payOS.Types;
@@ -25,6 +27,9 @@ public static class OrderEndpoints
         group.MapPost("payos_transfer_handler", PayOsTransferHandler)
             .WithMetadata(new SwaggerOperationAttribute("Confirm webhook"));
         
+        group.MapPost("confirm-webhook", ConfirmWebhookHandler)
+            .WithMetadata(new SwaggerOperationAttribute("Confirm webhook"));
+        
         group.MapPut("confirm-paid/{orderId}", ConfirmPaidOrderEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Confirm an order as paid"))
             .RequireAuthorization();
@@ -34,10 +39,33 @@ public static class OrderEndpoints
         return group;
     }
 
-    private static IResult PayOsTransferHandler(PayOS payOs, [FromBody] WebhookType body)
+    private static async Task<IResult> PayOsTransferHandler(PayOS payOs, [FromBody] WebhookType body, [FromServices] IUnitOfWork uow)
     {
         WebhookData data = payOs.verifyPaymentWebhookData(body);
 
+        if (!body.success)
+        {
+            return Results.NotFound();
+        }
+
+        var order = await uow.OrderRepository.FindAsync(x => x.Code == data.orderCode);
+        if (order is null)
+        {
+            return Results.NotFound();
+        }
+
+        order.Status = OrderStatusEnum.Paid;
+        await uow.SaveChangesAsync();
+        
         return Results.Ok(data);
+    }
+    public record ConfirmWebhook(
+        string webhook_url
+    );
+    private static async Task<IResult> ConfirmWebhookHandler(PayOS payOs, [FromBody] ConfirmWebhook body)
+    { 
+        await payOs.confirmWebhook(body.webhook_url);
+
+        return Results.Ok();
     }
 }

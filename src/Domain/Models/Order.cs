@@ -5,6 +5,7 @@ namespace Domain.Models;
 public class Order : BaseEntity
 {
     public decimal TotalPrice { get; set; } = 0;
+    public long Code { get; set; }
     public OrderStatusEnum Status { get; set; } = OrderStatusEnum.Pending;
     public string Currency { get; set; } = string.Empty;
     public required Guid TicketTypeId { get; set; }
