@@ -13,7 +13,7 @@ public interface IEventRepository : IRepositoryBase<Event>
     Task<PaginatedResponse<GetEventResponse>> GetFeaturedEventsAsync(int pageNumber = 1, int pageSize = 10, string? searchTerm = null,
         bool trackChanges = false, CancellationToken cancellationToken = default);
 
-    Task<PaginatedResponse<EventDB>> SearchEventsAsync(IEnumerable<Guid> categoryIds, int pageNumber = 1,
+    Task<PaginatedResponse<GetEventResponse>> SearchEventsAsync(IEnumerable<Guid> categoryIds, int pageNumber = 1,
         int pageSize = 10, string? searchTerm = null, string? location = null, DateTime? date = null,
         bool trackChanges = false, CancellationToken cancellationToken = default);
 
