@@ -38,6 +38,12 @@ public static class EventEndpoints
         group.MapPost("", CreateEventEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Create an event"))
             .RequireAuthorization();
+        
+        // PATCH
+        group.MapPatch("/{eventId}/like", LikeEventEndpointHandler.Handle)
+            .WithMetadata(new SwaggerOperationAttribute("Like/Unlike an event"))
+            .RequireAuthorization();
+        
         // PUT
         group.MapPut("/{eventId}", UpdateEventEndpointHandler.Handle)
             .WithMetadata(new SwaggerOperationAttribute("Update an event"))
