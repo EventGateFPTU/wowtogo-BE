@@ -50,13 +50,13 @@ public static class OrderEndpoints
 
         if (!body.success)
         {
-            return Results.NotFound();
+            return Results.Ok();
         }
 
         var order = await uow.OrderRepository.FindAsync(x => x.Code == data.orderCode);
         if (order is null)
         {
-            return Results.NotFound();
+            return Results.Ok();
         }
 
         order.Status = OrderStatusEnum.Paid;
