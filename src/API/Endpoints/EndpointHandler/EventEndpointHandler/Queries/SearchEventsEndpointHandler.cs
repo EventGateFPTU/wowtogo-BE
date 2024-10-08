@@ -21,7 +21,7 @@ public class SearchEventsEndpointHandler
             searchEventsParams.Location,
             searchEventsParams.Date
             );
-        Result<PaginatedResponse<EventDB>> result = await sender.Send(query);
+        Result<PaginatedResponse<GetEventResponse>> result = await sender.Send(query);
 
         if (!result.IsSuccess) return Results.NotFound(result);
         return Results.Ok(result);

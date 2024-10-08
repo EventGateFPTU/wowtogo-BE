@@ -74,7 +74,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
         );
     }
 
-    public async Task<PaginatedResponse<EventDB>> SearchEventsAsync(IEnumerable<Guid> categoryIds, int pageNumber = 1, int pageSize = 10, string? searchTerm = null,
+    public async Task<PaginatedResponse<GetEventResponse>> SearchEventsAsync(IEnumerable<Guid> categoryIds, int pageNumber = 1, int pageSize = 10, string? searchTerm = null,
         string? location = null, DateTime? date = null, bool trackChanges = false,
         CancellationToken cancellationToken = default)
     {
@@ -111,12 +111,12 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             eventQuery = eventQuery.Where(x => x.Shows.Any(y => y.StartsAt <= dateOnly && dateOnly <= y.EndsAt));
         }
         int count = await eventQuery.CountAsync(cancellationToken);
-        IEnumerable<EventDB> result = await eventQuery
+        IEnumerable<GetEventResponse> result = await eventQuery
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .Select(c => c.MapEventDB())
+            .Select(c => c.MapToGetEventResponse())
             .ToListAsync(cancellationToken);
-        return new PaginatedResponse<EventDB>(
+        return new PaginatedResponse<GetEventResponse>(
             Data: result,
             PageNumber: pageNumber,
             PageSize: pageSize,

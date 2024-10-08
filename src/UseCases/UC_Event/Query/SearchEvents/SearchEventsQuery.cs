@@ -10,5 +10,5 @@ public record SearchEventsQuery(
     int PageSize = 10,
     string? SearchTerm = null,
     string? Location = null,
-    DateTime? Date = null) : IRequest<PaginatedResponse<EventDB>>;
+    DateTime? Date = null) : IRequest<PaginatedResponse<GetEventResponse>>;
 
