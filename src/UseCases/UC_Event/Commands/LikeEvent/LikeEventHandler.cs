@@ -1,6 +1,8 @@
 using Ardalis.Result;
+using Domain.Enums;
 using Domain.Interfaces.Data;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using UseCases.Common.Models;
 
 namespace UseCases.UC_Event.Commands.LikeEvent;
@@ -10,6 +12,11 @@ public class LikeEventHandler(IUnitOfWork unitOfWork, CurrentUser currentUser): 
     public async Task<Result> Handle(LikeEventCommand request, CancellationToken cancellationToken)
     {
         // Check if event can be liked? publish...
+        var eventData = await unitOfWork.EventRepository.DBSet().AsNoTracking()
+            .Where(e => e.Id == request.EventId && e.Status != EventStatusEnum.Draft)
+            .FirstOrDefaultAsync(cancellationToken);
+        if (eventData is null)
+            return Result.NotFound();
         
         var userId = currentUser.User!.Id;
         var eventLikeRecord = await unitOfWork.LikeEventRepository.GetEventLike(

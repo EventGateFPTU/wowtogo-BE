@@ -18,6 +18,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             eventQuery = eventQuery.Where(e => e.Title.Contains(searchTerm));
         }
         eventQuery = eventQuery
+            .Include(e => e.LikeEvents)
             .Include(e => e.TicketTypes)
             .Include(e => e.Organizer)
             .Include(e => e.EventCategories).ThenInclude(ec => ec.Category)
@@ -47,6 +48,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             eventQuery = eventQuery.Where(e => e.Title.Contains(searchTerm));
         }
         eventQuery = eventQuery
+            .Include(e => e.LikeEvents)
             .Include(e => e.TicketTypes)
             .Include(e => e.Organizer)
             .Include(e => e.EventCategories).ThenInclude(ec => ec.Category)
@@ -138,6 +140,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
         IQueryable<Event> query = _dbSet;
         if (!trackChanges) query = query.AsNoTracking();
         return await query
+            .Include(e => e.LikeEvents)
             .Include(e => e.TicketTypes)
             .Include(e => e.Organizer)
             .Include(e => e.EventCategories).ThenInclude(ec => ec.Category)
@@ -150,6 +153,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
     {
         IQueryable<Event> query = trackChanges ? _dbSet : _dbSet.AsNoTracking();
         query = query
+            .Include(e => e.LikeEvents)
             .Include(e => e.TicketTypes)
             .Include(e => e.Staffs)
             .Include(e => e.Organizer)
