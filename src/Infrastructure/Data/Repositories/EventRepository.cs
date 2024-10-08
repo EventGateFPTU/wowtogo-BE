@@ -86,6 +86,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             eventQuery = eventQuery.AsNoTracking();
         }
         eventQuery = eventQuery
+            .Include(e => e.LikeEvents)
             .Include(e => e.Organizer)
             .Where(e => e.Status == EventStatusEnum.Published);
 
