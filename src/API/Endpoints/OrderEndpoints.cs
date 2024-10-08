@@ -53,13 +53,14 @@ public static class OrderEndpoints
             return Results.Ok();
         }
 
-        var order = await uow.OrderRepository.FindAsync(x => x.Code == data.orderCode);
+        var order = await uow.OrderRepository.FindAsync(x => x.Code == data.orderCode, true);
         if (order is null)
         {
             return Results.Ok();
         }
 
         order.Status = OrderStatusEnum.Paid;
+        
         await uow.SaveChangesAsync();
         
         return Results.Ok(data);
