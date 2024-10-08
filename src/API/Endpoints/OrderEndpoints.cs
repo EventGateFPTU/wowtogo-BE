@@ -41,7 +41,12 @@ public static class OrderEndpoints
 
     private static async Task<IResult> PayOsTransferHandler(PayOS payOs, [FromBody] WebhookType body, [FromServices] IUnitOfWork uow)
     {
+
         WebhookData data = payOs.verifyPaymentWebhookData(body);
+        if (data.description == "Ma giao dich thu nghiem" || data.accountNumber == "VQRIO123")
+        {
+            return Results.Ok();
+        }
 
         if (!body.success)
         {
@@ -64,8 +69,8 @@ public static class OrderEndpoints
     );
     private static async Task<IResult> ConfirmWebhookHandler(PayOS payOs, [FromBody] ConfirmWebhook body)
     { 
-        await payOs.confirmWebhook(body.webhook_url);
-
+        var e = await payOs.confirmWebhook(body.webhook_url);
+        Console.WriteLine(e);
         return Results.Ok();
     }
 }
