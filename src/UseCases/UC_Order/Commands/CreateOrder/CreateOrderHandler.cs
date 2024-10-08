@@ -27,6 +27,11 @@ public class CreateOrderHandler(IUnitOfWork unitOfWork, CurrentUser currentUser,
         // Check if the user is not found
         User? user = await unitOfWork.UserRepository.FindAsync(u => u.Id.Equals(currentUserId), cancellationToken: cancellationToken);
         if (user is null) return Result.NotFound("User not found");
+        var createResult = await paymentService.CreatePaymentLink(ticketType.Name, ticketType.Description, decimal.ToInt32(ticketType.Price));
+        if (!createResult.IsSuccess)
+        {
+            return Result.Error("Failed to create payment");
+        }
         Order order = new()
         {
             TicketTypeId = request.TicketTypeId,
@@ -34,12 +39,8 @@ public class CreateOrderHandler(IUnitOfWork unitOfWork, CurrentUser currentUser,
             TotalPrice = ticketType.Price,
             Currency = "VND",
             Status = Domain.Enums.OrderStatusEnum.Pending,
+            Code = createResult.Value.orderCode,
         };
-        var createResult = await paymentService.CreatePaymentLink(ticketType.Name, ticketType.Description, decimal.ToInt32(ticketType.Price));
-        if (!createResult.IsSuccess)
-        {
-            return Result.Error("Failed to create payment");
-        }
 
         unitOfWork.OrderRepository.Add(order);
         Attendee attendee = new()
