@@ -11,7 +11,8 @@ public static class OrderResponseMapper
             TotalPrice: order.TotalPrice,
             Status: order.Status.ToString(),
             Currency: order.Currency,
-            CreatedAt: order.CreatedAt
+            CreatedAt: order.CreatedAt,
+            Email: order.User.Email
         );
     }
 }

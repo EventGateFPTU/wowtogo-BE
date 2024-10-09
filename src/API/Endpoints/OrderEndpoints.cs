@@ -1,11 +1,16 @@
 using API.Endpoints.EndpointHandler.OrderEndpointHandler.Commands;
 using API.Endpoints.EndpointHandler.OrderEndpointHandler.Queries;
+using Ardalis.Result;
 using Domain.Enums;
 using Domain.Interfaces.Data;
+using Domain.Responses.Responses_Ticket;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Net.payOS;
 using Net.payOS.Types;
 using Swashbuckle.AspNetCore.Annotations;
+using UseCases.UC_Order.Commands.ConfirmPaidOrder;
+using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace API.Endpoints;
 public static class OrderEndpoints
@@ -38,8 +43,7 @@ public static class OrderEndpoints
             .RequireAuthorization();
         return group;
     }
-
-    private static async Task<IResult> PayOsTransferHandler(PayOS payOs, [FromBody] WebhookType body, [FromServices] IUnitOfWork uow)
+    private static async Task<IResult> PayOsTransferHandler(PayOS payOs, [FromServices] ISender sender, [FromBody] WebhookType body, [FromServices] IUnitOfWork uow)
     {
 
         WebhookData data = payOs.verifyPaymentWebhookData(body);
@@ -58,7 +62,10 @@ public static class OrderEndpoints
         {
             return Results.Ok();
         }
+        Result<CreateTicketResponse> result = await sender.Send(new ConfirmPaidOrderCommand(order.Id));
 
+        if (!result.IsSuccess) return Results.Ok();
+        
         order.Status = OrderStatusEnum.Paid;
         
         await uow.SaveChangesAsync();
