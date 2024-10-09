@@ -14,6 +14,7 @@ namespace UseCases.Mapper.Mapper_Event
     {
         public static GetEventResponse MapToGetEventResponse(this Event mappingEvent)
         {
+            var likes = mappingEvent.LikeEvents.Count;
             var minPrice = mappingEvent.TicketTypes.Count > 0 ? mappingEvent.TicketTypes.Min(t => t.Price) : 0;
             return new GetEventResponse(
                 Id: mappingEvent.Id,
@@ -30,6 +31,7 @@ namespace UseCases.Mapper.Mapper_Event
                 // MaxTickets: mappingEvent.MaxTickets,
                 AdditionalImages: mappingEvent.AdditionalImages.Select(x => x.Url).ToArray(),
                 FromPrice: minPrice,
+                Likes: likes,
                 CreatedAt: mappingEvent.CreatedAt
                 );
         }

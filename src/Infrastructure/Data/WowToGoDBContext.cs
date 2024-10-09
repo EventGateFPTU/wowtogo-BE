@@ -22,6 +22,7 @@ public class WowToGoDBContext(DbContextOptions<WowToGoDBContext> options, IMedia
     public DbSet<ShowStaff> ShowStaffs => Set<ShowStaff>();
     public DbSet<Checkin> Checkins => Set<Checkin>();
     public DbSet<AdditionalImage> AdditionalImages => Set<AdditionalImage>();
+    public DbSet<LikeEvent> LikeEvents => Set<LikeEvent>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

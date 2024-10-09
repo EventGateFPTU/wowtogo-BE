@@ -29,6 +29,7 @@ namespace UseCases.UC_Event.Query.GetEvents
             var getEventOrganizer = await unitOfWork.EventRepository.GetEventWithOrganizer(request.EventID);
             var gettingEvent = unitOfWork.EventRepository.DBSet();
             var eventDB = await gettingEvent
+                .Include(e => e.LikeEvents)
                 .Include(e => e.AdditionalImages)
                 .Include(e => e.TicketTypes)
                 .Include(e => e.Organizer)
