@@ -17,6 +17,7 @@ public class OrderRepository(WowToGoDBContext context) : RepositoryBase<Order>(c
                     .ThenInclude(tt => tt.TicketTypeShows)
                     .ThenInclude(tts => tts.Show)
                     .ThenInclude(s => s.Event)
+                    .Include(x => x.User)
                     .Where(o => o.TicketType.TicketTypeShows.Any(tts => tts.Show.Event.Id.Equals(eventId)));
         int count = query.Count();
         IEnumerable<OrderResponse> result = await query.Skip((pageNumber - 1) * pageSize)
@@ -34,7 +35,9 @@ public class OrderRepository(WowToGoDBContext context) : RepositoryBase<Order>(c
     public async Task<PaginatedResponse<PaidOrderDB>> GetPaidOrdersAsync(Guid userId, int pageNumber = 1, int pageSize = 10, bool trackChanges = false, CancellationToken cancellationToken = default)
     {
         IQueryable<Order> query = _dbSet;
-        if (!trackChanges) query = query.AsNoTracking();
+        if (!trackChanges) query = query
+            .Include(x => x.User)
+            .AsNoTracking();
         int count = await query.Where(o => o.Status == OrderStatusEnum.Paid && o.UserId == userId).CountAsync(cancellationToken);
         IEnumerable<PaidOrderDB> result = await query.Where(o => o.Status == OrderStatusEnum.Paid && o.UserId == userId)
             .Skip((pageNumber - 1) * pageSize)
@@ -52,7 +55,9 @@ public class OrderRepository(WowToGoDBContext context) : RepositoryBase<Order>(c
     public async Task<PaginatedResponse<PendingOrderDB>> GetPendingOrdersAsync(Guid userId, int pageNumber = 1, int pageSize = 10, bool trackChanges = false, CancellationToken cancellationToken = default)
     {
         IQueryable<Order> query = _dbSet;
-        if (!trackChanges) query = query.AsNoTracking();
+        if (!trackChanges) query = query
+            .Include(x => x.User)
+            .AsNoTracking();
         int count = await query.Where(o => o.Status == OrderStatusEnum.Pending && o.UserId == userId).CountAsync(cancellationToken);
         IEnumerable<PendingOrderDB> result = await query.Where(o => o.Status == OrderStatusEnum.Pending && o.UserId == userId)
             .Skip((pageNumber - 1) * pageSize)

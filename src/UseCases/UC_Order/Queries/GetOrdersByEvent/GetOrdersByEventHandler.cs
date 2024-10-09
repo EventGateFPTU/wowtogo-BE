@@ -13,7 +13,6 @@ public class GetOrdersByEventHandler(IUnitOfWork unitOfWork, CurrentUser current
     {
         Event? checkingEvent = await unitOfWork.EventRepository.GetEventWithOrganizer(request.Id, cancellationToken: cancellationToken);
         if (checkingEvent is null) return Result.NotFound("Event is not found");
-        if (!IsCurrentUserOrganizerOrStaff(checkingEvent)) return Result.Forbidden();
         PaginatedResponse<OrderResponse> result = await unitOfWork.OrderRepository.GetOrdersByEventAsync(request.Id, request.PageNumber, request.PageSize, cancellationToken: cancellationToken);
         return Result.Success(result, "Get Order Successfully");
     }
