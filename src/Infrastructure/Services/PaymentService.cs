@@ -15,7 +15,7 @@ public class PaymentService(IConfiguration configuration, PayOS payOs) : IPaymen
         List<ItemData> items = [item];
         var returnUrl = $"{configuration["CLIENT_ORIGIN_URL"]}/after-checkout";
         var cancelUrl = $"{configuration["CLIENT_ORIGIN_URL"]}/canceled";
-        PaymentData paymentData = new PaymentData(orderCode, price, "vé", items, cancelUrl, returnUrl);
+        PaymentData paymentData = new PaymentData(orderCode, price, $"Chuyen tien mua ve Ticketo - {productName} - Su kien {description}", items, cancelUrl, returnUrl);
         
         CreatePaymentResult createPayment = await payOs.createPaymentLink(paymentData);
         return createPayment;

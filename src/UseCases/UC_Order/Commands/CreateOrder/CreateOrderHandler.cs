@@ -27,7 +27,7 @@ public class CreateOrderHandler(IUnitOfWork unitOfWork, CurrentUser currentUser,
         // Check if the user is not found
         User? user = await unitOfWork.UserRepository.FindAsync(u => u.Id.Equals(currentUserId), cancellationToken: cancellationToken);
         if (user is null) return Result.NotFound("User not found");
-        var createResult = await paymentService.CreatePaymentLink(ticketType.Name, ticketType.Description, decimal.ToInt32(ticketType.Price));
+        var createResult = await paymentService.CreatePaymentLink(ticketType.Name, checkingEvent.Title, decimal.ToInt32(ticketType.Price));
         if (!createResult.IsSuccess)
         {
             return Result.Error("Failed to create payment");
