@@ -27,10 +27,10 @@ public class ComfirmPaidOrderHandler(IUnitOfWork unitOfWork, ISender sender, Cur
         }
         // Check if the user is valid
         // TODO: Check if user is the ticket owner
-        if (!IsCurrentUserOwnOrder(order)) return Result.Forbidden();
+        // if (!IsCurrentUserOwnOrder(order)) return Result.Forbidden();
         // get user
-        User? user = await unitOfWork.UserRepository.FindAsync(u => u.Id.Equals(order.UserId), cancellationToken: cancellationToken);
-        if (user is null) return Result.NotFound("User not found");
+        // User? user = await unitOfWork.UserRepository.FindAsync(u => u.Id.Equals(order.UserId), cancellationToken: cancellationToken);
+        // if (user is null) return Result.NotFound("User not found");
         if (order.Status != OrderStatusEnum.Pending)
             return Result.Error("Order should be pending");
         // Check if the event is valid
