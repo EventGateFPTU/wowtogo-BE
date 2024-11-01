@@ -24,6 +24,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             .Where(e => e.Status == EventStatusEnum.Published);
         int count = await eventQuery.CountAsync(cancellationToken);
         IEnumerable<GetEventResponse> result = await eventQuery
+            .OrderByDescending(x => x.CreatedAt)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .Select(c => c.MapToGetEventResponse())
@@ -113,6 +114,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
         }
         int count = await eventQuery.CountAsync(cancellationToken);
         IEnumerable<GetEventResponse> result = await eventQuery
+            .OrderByDescending(x => x.CreatedAt)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .Select(c => c.MapToGetEventResponse())
