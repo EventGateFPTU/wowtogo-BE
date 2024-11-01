@@ -65,6 +65,7 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .Select(c => c.Event)
+            .OrderByDescending(e => e.CreatedAt)
             .ToListAsync(cancellationToken);
         return new PaginatedResponse<GetEventResponse>(
             Data: result,
