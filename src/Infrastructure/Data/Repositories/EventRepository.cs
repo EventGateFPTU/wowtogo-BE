@@ -54,18 +54,18 @@ public class EventRepository(WowToGoDBContext context) : RepositoryBase<Event>(c
             .Where(e => e.Status == EventStatusEnum.Published);
         int count = await eventQuery.CountAsync(cancellationToken: cancellationToken);
         IEnumerable<GetEventResponse> result = await eventQuery
-            .Select(e => new
-            {
-                Event = e.MapToGetEventResponse(),
-                Rate = e.Shows.SelectMany(s => s.TicketTypeShow)
-                    .Select(tts => tts.TicketType)
-                    .Select(tt => tt.Orders).Count() / ((DateTime.UtcNow - e.CreatedAt).Days <= 0 ? 1 : (DateTime.UtcNow - e.CreatedAt).Days),
-            })
-            .OrderByDescending(o => o.Rate)
+            // .Select(e => new
+            // {
+            //     Event = e.MapToGetEventResponse(),
+            //     Rate = e.Shows.SelectMany(s => s.TicketTypeShow)
+            //         .Select(tts => tts.TicketType)
+            //         .Select(tt => tt.Orders).Count() / ((DateTime.UtcNow - e.CreatedAt).Days <= 0 ? 1 : (DateTime.UtcNow - e.CreatedAt).Days),
+            // })
+            // .OrderByDescending(o => o.Rate)
+            .OrderByDescending(x => x.CreatedAt)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .Select(c => c.Event)
-            .OrderByDescending(e => e.CreatedAt)
+            .Select(e => e.MapToGetEventResponse())
             .ToListAsync(cancellationToken);
         return new PaginatedResponse<GetEventResponse>(
             Data: result,
