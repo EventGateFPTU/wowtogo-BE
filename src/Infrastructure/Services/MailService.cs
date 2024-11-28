@@ -62,4 +62,14 @@ public class MailService(IOptionsMonitor<MailSettings> mailSettings, IQRCoderSer
         if (response.StatusCode != HttpStatusCode.OK) return false;
         return true;
     }
+
+    public async Task<bool> SendReminderMainAsync(string[] toEmails, string show, string startTime)
+    {
+        foreach (string email in toEmails)
+        {
+            Console.WriteLine(email);
+        }
+        
+        return true;
+    }
 }

@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <Folder Include="Common\Exceptions\" />
+    <Folder Include="UC_Attendees\Queries\" />
     <Folder Include="UC_User\Commands\" />
   </ItemGroup>
 
