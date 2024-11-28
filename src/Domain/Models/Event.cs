@@ -22,6 +22,7 @@ public class Event : BaseEntity
     public ICollection<EventCategory> EventCategories { get; set; } = [];
     public ICollection<Attendee> Attendees { get; set; } = [];
     public ICollection<AdditionalImage> AdditionalImages { get; set; } = [];
+    public ICollection<LikeEvent> LikeEvents { get; set; } = [];
 
     public void Publish()
         => Status = EventStatusEnum.Published;
